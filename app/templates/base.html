@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+	{% if title %}
+	{{ title }} - Global Victory Church
+	{% else %}
+	Welcome to GBL's Portal
+	{% endif %}
+	</title>
+  	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+	<link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+	    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=ooHigtQeK5Lq6lfFpttd&callback=initMap"></script>
+</head>
+
+<body>
+    <div class="container-xxl sticky-top">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<div class="container-fluid">
+				 <a class="navbar-brand" href="{{ url_for('index') }}">Global Victory Church</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						<li class="nav-item">
+							<a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ url_for('explore') }}">Explore</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{ url_for('songbook') }}">Songbook</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{ url_for('tag_list') }}">Genre&Tags</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{ url_for('sermons') }}">Sermon list</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{ url_for('add_sermon') }}">Set a new sermon</a></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						{% if current_user.is_anonymous %}
+						<li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+						<li class="nav-item"><a class="nav-link disabled">Profile</a></li>
+						{% else %}
+						<li class="nav-item"><a class="nav-link" href="{{ url_for('user', username=current_user.username) }}">Profile</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+						{% endif %}
+					</ul>
+					<form class="d-flex">
+						<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+						<button class="btn btn-outline-success" type="submit">Search</button>
+					</form>
+				</div>
+			</div>
+		</nav>
+	</div>
+	<div class="container-xxl">
+{% block content %}
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-info" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {# application content needs to be provided in the app_content block #}
+        {% block app_content %}{% endblock %}
+    </div>
+{% endblock %}
+	</div>
+	
+{% block scripts %}
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=ooHigtQeK5Lq6lfFpttd&callback=initMap"></script>
+    
+{% endblock %}
+
+</body>
+</html>

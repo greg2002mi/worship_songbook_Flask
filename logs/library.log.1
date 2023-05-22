@@ -1,0 +1,80 @@
+2023-05-14 20:55:13,243 ERROR: Exception on /sermons [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 166, in sermons
+    return render_template('sermons.html', title='Sermons', sermons=sermons.items,
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1301, in render
+    self.environment.handle_exception()
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\_projects\church\app\templates\sermons.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "D:\_projects\church\app\templates\base.html", line 1, in top-level template code
+    {% extends 'bootstrap/base.html' %}
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
+    {% block doc -%}
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block 'doc'
+    {%- block html %}
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 54, in block 'html'
+    {% block body -%}
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 57, in block 'body'
+    {% block content -%}
+  File "D:\_projects\church\app\templates\base.html", line 52, in block 'content'
+    {% block app_content %}{% endblock %}
+  File "D:\_projects\church\app\templates\sermons.html", line 15, in block 'app_content'
+    {% include '_sermon.html' %}
+  File "D:\_projects\church\app\templates\_sermon.html", line 9, in top-level template code
+    <a href="{{ url_for('.edit_sermon', id=sermon.id) }}">Edit</a>
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1697, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1686, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+  File "D:\_projects\church\lib\site-packages\werkzeug\routing\map.py", line 947, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'edit_sermon' with values ['id']. Did you mean 'edit_song' instead?
+2023-05-14 21:05:52,742 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-14 21:09:28,414 ERROR: Exception on /edit_sermon/1 [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+  File "D:\_projects\church\app\routes.py", line 178, in edit_sermon
+    return render_template('edit_sermon.html', title='Edit Sermon', form=form)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 150, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1081, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1010, in get_template
+    return self._load_template(name, globals)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 969, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "D:\_projects\church\lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 64, in get_source
+    return self._get_source_fast(environment, template)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 98, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: edit_sermon.html
+2023-05-19 18:38:57,347 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 18:49:05,316 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 18:49:25,215 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 18:49:34,371 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 18:49:58,901 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]

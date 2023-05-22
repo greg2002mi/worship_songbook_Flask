@@ -1,0 +1,12 @@
+        <tr valign="top">
+            <td>{{ song.id }}</td>
+			<td><a href="{{ url_for('.view_song', id=song.id) }}">{{ song.title }}</a></td>
+            <td>{{ song.singer }}</td>
+			<td>
+			{% if current_user.is_anonymous %}
+			To edit login required
+			{% else %}
+			<a href="{{ url_for('.edit_song', id=song.id) }}">Edit</a>
+			{% endif %}
+			</td>
+        </tr>

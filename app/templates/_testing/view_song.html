@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.7.0/dist/css/bootstrap.min.css">
+ 
+    <style>
+        .chord {
+            position: relative;
+        }
+        
+        .chord-container {
+            position: absolute;
+            top: -1em;
+            left: 0;
+            font-size: 0.8em;
+            color: #888888;
+            background-color: white;
+            padding: 0 2px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block app_content %}
+    
+
+	
+	<div class="container">
+        <h1>Title: {{ song.title }}</h1>
+		<h2>Artist: {{ song.singer }}</h2>
+        <div class="row">
+			<div class="col-md-4">
+				{{ wtf.quick_form(form) }}
+			</div>
+			<p>Key: {{ ori_key }}</p>
+            <div class="col-lg-6">
+                {% if html %}
+                    <h2>HTML Output</h2>
+                    <pre>{{ html|safe }}</pre>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.7.0/dist/js/bootstrap.bundle.min.js"></script>
+<!--
+<script>
+        // Get all elements with the 'chord' class
+        var chordElements = document.getElementsByClassName('chord');
+
+        // Iterate through each chord element
+        for (var i = 0; i < chordElements.length; i++) {
+            var chordElement = chordElements[i];
+
+            // Get the chord value from the 'data-chord' attribute
+            var chordValue = chordElement.getAttribute('data-chord');
+
+            // Create a new span element to wrap the chord value
+            var chordContainerElement = document.createElement('span');
+            chordContainerElement.className = 'chord-container';
+
+            // Create a new span element to display the chord value
+            var chordValueElement = document.createElement('span');
+            chordValueElement.textContent = chordValue;
+
+            // Append the chord value element to the container element
+            chordContainerElement.appendChild(chordValueElement);
+
+            // Insert the chord container element before the chord element
+            chordElement.parentNode.insertBefore(chordContainerElement, chordElement);
+        }
+    </script>-->
+{% endblock %}

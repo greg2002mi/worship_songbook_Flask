@@ -1,0 +1,37 @@
+		<div class="row g-0">
+			<div class="col-auto">
+				
+			<form class="row g-2" action method="post">
+			
+			{{ form.hidden_tag() }}
+			{% if form.errors %}
+				{{ form.errors }}
+			{% endif %}
+			{{ form.key.label }}
+			{{ form.key(class="form-control") }}
+			{{ form.submit(class="btn btn-success") }}
+			</form>
+			</div>
+		</div>
+		<br>
+		<div class="row g-0">
+			<div class="col-auto">
+				Original key: {{ ori_key }}</div>
+			
+			<br>
+			<br>			
+			<div class="col-auto">
+				Tags: 
+				{% if tagged_list is not none %}
+				{% for t in tagged_list %}
+				{{ ori_key }}
+				{% endfor %}
+				{% else %}
+				None
+				{% endif %}
+				</div>
+			
+			
+			
+		</div>
+		{{ html|safe }}

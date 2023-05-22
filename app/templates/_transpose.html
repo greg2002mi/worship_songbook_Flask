@@ -1,0 +1,30 @@
+	
+	<form class="row g-2" action method="post">
+	{{ form.hidden_tag() }}
+		{% if form.errors %}
+			{{ form.errors }}
+		{% endif %}
+    	{{ form.key.label }}
+		{{ form.key(class="form-control") }}
+		{{ form.submit(class="btn btn-success") }}
+
+	</form>
+	
+	
+	
+	
+	
+<!--
+{{ form.hidden_tag() }}
+		{% if form.errors %}
+			{{ form.errors }}
+		{% endif %}
+		{% for subfield in form.key %}
+		<div class="col-auto">
+		  {{ subfield(class_='form-check-input') }} {{ subfield.label(class_='form-check-label') }}
+		</div>
+		{% endfor %}
+		<div class="col-auto">
+		{{ form.submit(class="btn btn-success") }}
+		</div>
+-->

@@ -1,0 +1,98 @@
+2023-05-10 15:56:37,209 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-10 15:56:53,404 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 10:17:30,825 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 10:17:38,228 ERROR: Exception on /add_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+  File "D:\_projects\church\app\routes.py", line 103, in add_song
+    form = AddSong()
+NameError: name 'AddSong' is not defined
+2023-05-11 10:18:59,246 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 10:21:52,536 ERROR: Exception on /add_song [POST] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+  File "D:\_projects\church\app\routes.py", line 109, in add_song
+    return redirect(url_for('songs'))
+  File "D:\_projects\church\lib\site-packages\flask\helpers.py", line 225, in url_for
+    return current_app.url_for(
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1697, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1686, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+  File "D:\_projects\church\lib\site-packages\werkzeug\routing\map.py", line 947, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'songs'. Did you mean 'songbook' instead?
+2023-05-11 10:23:25,572 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 10:23:31,392 ERROR: Exception on /songbook [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 34, in songbook
+    return render_template('songbook.html', title='Songbook', songs=songs)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1301, in render
+    self.environment.handle_exception()
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\_projects\church\app\templates\songbook.html", line 3, in top-level template code
+    {% extends "base.html" %}
+  File "D:\_projects\church\app\templates\base.html", line 33, in top-level template code
+    {% block content %}{% endblock %}
+  File "D:\_projects\church\app\templates\songbook.html", line 8, in block 'content'
+    {% include '_song.html' %}
+  File "D:\_projects\church\app\templates\_song.html", line 3, in top-level template code
+    <td>{{ post.singer }}</td>
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 485, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'post' is undefined
+2023-05-11 10:26:20,391 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 10:39:03,922 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 10:39:17,158 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 10:42:18,414 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 11:08:48,838 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:09:17,306 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:09:21,892 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:09:29,189 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:15:45,555 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:21:52,621 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:21:56,814 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:22:59,081 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:23:02,691 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:35:22,232 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:35:25,089 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:35:52,332 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:35:55,378 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:38:14,295 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:38:53,889 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:39:02,746 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:39:22,366 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:39:27,099 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:39:44,660 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-11 12:39:56,925 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]

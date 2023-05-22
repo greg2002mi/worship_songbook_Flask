@@ -1,0 +1,131 @@
+2023-05-12 15:17:47,834 ERROR: Exception on /view_song/1 [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 187, in view_song
+    html = Chordpro_html(lyrics, key = ori_key)
+TypeError: Chordpro_html() got an unexpected keyword argument 'key'
+2023-05-12 15:17:49,388 ERROR: Exception on /view_song/1 [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 187, in view_song
+    html = Chordpro_html(lyrics, key = ori_key)
+TypeError: Chordpro_html() got an unexpected keyword argument 'key'
+2023-05-12 15:19:07,319 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-12 15:19:11,503 ERROR: Exception on /view_song/1 [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 188, in view_song
+    return render_template('view_song.html', title='View Song', html=html, song=song, ori_key=ori_key)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1301, in render
+    self.environment.handle_exception()
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\_projects\church\app\templates\view_song.html", line 2, in top-level template code
+    {% import 'bootstrap/wtf.html' as wtf %}
+  File "D:\_projects\church\app\templates\base.html", line 1, in top-level template code
+    {% extends 'bootstrap/base.html' %}
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
+    {% block doc -%}
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block 'doc'
+    {%- block html %}
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 54, in block 'html'
+    {% block body -%}
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 57, in block 'body'
+    {% block content -%}
+  File "D:\_projects\church\app\templates\base.html", line 50, in block 'content'
+    {% block app_content %}{% endblock %}
+  File "D:\_projects\church\app\templates\view_song.html", line 10, in block 'app_content'
+    {{ wtf.quick_form(form) }}
+  File "D:\_projects\church\lib\site-packages\jinja2\runtime.py", line 777, in _invoke
+    rv = self._func(*arguments)
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\wtf.html", line 200, in template
+    {{ form.hidden_tag() }}
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 485, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'form' is undefined
+2023-05-12 15:21:09,952 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-12 15:21:14,095 ERROR: Exception on /view_song/1 [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 187, in view_song
+    return render_template('view_song.html', title='View Song', html=html, song=song, ori_key=ori_key)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1301, in render
+    self.environment.handle_exception()
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\_projects\church\app\templates\view_song.html", line 2, in top-level template code
+    {% import 'bootstrap/wtf.html' as wtf %}
+  File "D:\_projects\church\app\templates\base.html", line 1, in top-level template code
+    {% extends 'bootstrap/base.html' %}
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
+    {% block doc -%}
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block 'doc'
+    {%- block html %}
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 54, in block 'html'
+    {% block body -%}
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 57, in block 'body'
+    {% block content -%}
+  File "D:\_projects\church\app\templates\base.html", line 50, in block 'content'
+    {% block app_content %}{% endblock %}
+  File "D:\_projects\church\app\templates\view_song.html", line 10, in block 'app_content'
+    {{ wtf.quick_form(form) }}
+  File "D:\_projects\church\lib\site-packages\jinja2\runtime.py", line 777, in _invoke
+    rv = self._func(*arguments)
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\wtf.html", line 200, in template
+    {{ form.hidden_tag() }}
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 485, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'form' is undefined
+2023-05-12 15:24:38,925 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-12 15:24:46,618 ERROR: Exception on /view_song/1 [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 186, in view_song
+    form.title.data = song.title
+AttributeError: 'Transpose' object has no attribute 'title'
+2023-05-12 15:26:20,306 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-12 15:47:29,006 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-12 15:51:56,262 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]

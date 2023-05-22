@@ -1,0 +1,132 @@
+2023-05-12 15:52:04,591 ERROR: Exception on /view_song/1 [POST] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 186, in view_song
+    return redirect(url_for('view_song'))
+  File "D:\_projects\church\lib\site-packages\flask\helpers.py", line 225, in url_for
+    return current_app.url_for(
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1697, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1686, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+  File "D:\_projects\church\lib\site-packages\werkzeug\routing\map.py", line 947, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'view_song'. Did you forget to specify values ['id']?
+2023-05-12 16:24:25,790 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-12 22:05:03,746 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-14 11:35:04,777 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-14 19:39:39,311 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-14 19:41:53,377 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-14 19:42:20,742 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-14 19:42:28,657 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-14 19:42:43,952 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-14 19:42:54,277 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-14 20:34:49,192 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-14 20:34:58,058 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-14 20:35:02,353 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-14 20:41:05,111 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-14 20:42:53,125 ERROR: Exception on /add_sermon [POST] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+  File "D:\_projects\church\app\routes.py", line 150, in add_sermon
+    sermon = Sermon(pickdate=form.pickdate.data, sermon_title=form.sermon_title.data, leader_name=form.leader_name.data, publisher=current_user)
+  File "<string>", line 4, in __init__
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\state.py", line 566, in _initialize_instance
+    with util.safe_reraise():
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\util\langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\state.py", line 564, in _initialize_instance
+    manager.original_init(*mixed[1:], **kwargs)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\decl_base.py", line 2146, in _declarative_constructor
+    raise TypeError(
+TypeError: 'pickdate' is an invalid keyword argument for Sermon
+2023-05-14 20:46:32,852 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-14 20:46:56,998 ERROR: Exception on /sermons [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 160, in sermons
+    sermons = Sermon.query.order_by(Sermon.pickdate.desc()).paginate(
+AttributeError: type object 'Sermon' has no attribute 'pickdate'
+2023-05-14 20:53:05,146 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-14 20:53:10,984 ERROR: Exception on /sermons [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 160, in sermons
+    sermons = Sermon.query.order_by(Sermon.pickdate.desc()).paginate(
+AttributeError: type object 'Sermon' has no attribute 'pickdate'
+2023-05-14 20:54:55,608 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-14 20:54:55,903 ERROR: Exception on /sermons [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 166, in sermons
+    return render_template('sermons.html', title='Sermons', sermons=sermons.items,
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1301, in render
+    self.environment.handle_exception()
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\_projects\church\app\templates\sermons.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "D:\_projects\church\app\templates\base.html", line 1, in top-level template code
+    {% extends 'bootstrap/base.html' %}
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
+    {% block doc -%}
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block 'doc'
+    {%- block html %}
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 54, in block 'html'
+    {% block body -%}
+  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 57, in block 'body'
+    {% block content -%}
+  File "D:\_projects\church\app\templates\base.html", line 52, in block 'content'
+    {% block app_content %}{% endblock %}
+  File "D:\_projects\church\app\templates\sermons.html", line 15, in block 'app_content'
+    {% include '_sermon.html' %}
+  File "D:\_projects\church\app\templates\_sermon.html", line 9, in top-level template code
+    <a href="{{ url_for('.edit_sermon', id=sermon.id) }}">Edit</a>
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1697, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1686, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+  File "D:\_projects\church\lib\site-packages\werkzeug\routing\map.py", line 947, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'edit_sermon' with values ['id']. Did you mean 'edit_song' instead?

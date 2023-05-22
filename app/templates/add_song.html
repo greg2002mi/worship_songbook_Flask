@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+
+{% block app_content %}
+    <h1>Add a New Song</h1>
+    <form class="form-floating needs-validation" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="row mb-3">
+            {{ form.title.label(class_='col-sm-2 col-form-label') }}
+			<div class="col-10">
+            {{ form.title(class='form-control', style='min-width: 100%') }}<br>
+            {% for error in form.title.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+			</div>
+        </div>
+		<div class="row mb-3">
+            {{ form.singer.label(class_='col-sm-2 col-form-label') }}
+			<div class="col-10">
+            {{ form.singer(class='form-control', style='min-width: 100%') }}<br>
+            {% for error in form.singer.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+			</div>
+        </div>
+        <div class="row mb-3">
+            {{ form.info.label(class_='col-sm-2 col-form-label') }}
+			<div class="col-10">
+            {{ form.info(class='form-control', style='min-width: 100%', style='height: 100px') }}
+            {% for error in form.info.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+			</div>      
+		</div>
+		<div class="row mb-3">
+            {{ form.key.label(class_='col-sm-2 col-form-label') }}
+			<div class="col-10">
+            {{ form.key(class="form-control") }}
+            {% for error in form.key.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+			</div>      
+		</div>
+		<div class="row mb-3">
+            {{ form.language.label(class_='col-sm-2 col-form-label') }}
+			<div class="col-10">
+            {{ form.language(class="form-control") }}
+            {% for error in form.language.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+			</div>      
+		</div>
+		<div class="row mb-3">
+            {{ form.lyrics.label(class_='col-sm-2 col-form-label') }}
+			<div class="col-10">
+            {{ form.lyrics(class='form-control', style='min-width: 100%', style='height: 400px') }}
+            {% for error in form.lyrics.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+			</div>      
+		</div>
+        <div class="d-grid gap-2 col-2 mx-auto">
+		{{ form.submit(class="btn btn-success") }}
+		</div>
+    </form>
+{% endblock %}

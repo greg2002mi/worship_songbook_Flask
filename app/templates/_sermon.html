@@ -1,0 +1,13 @@
+        <tr valign="top">
+            <td></td>
+			<td><a href="{{ url_for('.sermons', id=sermon.id) }}">{{ sermon.date_time }}</a></td>
+            <td>{{ sermon.sermon_title }}</td>
+			<td>{{ sermon.leader_name }}</td>
+			<td>
+			{% if current_user.is_anonymous %}
+			To edit login required
+			{% else %}
+			<a href="{{ url_for('.edit_sermon', id=sermon.id) }}">Edit</a>
+			{% endif %}
+			</td>
+        </tr>
