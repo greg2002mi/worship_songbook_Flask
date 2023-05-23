@@ -1,4 +1,19 @@
-2023-05-12 15:52:04,591 ERROR: Exception on /view_song/1 [POST] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+2023-05-23 09:48:36,141 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\coercions.py", line 813, in _literal_coercion
+    return expr._bind_param(operator, element, type_=bindparam_type)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\elements.py", line 4459, in _bind_param
+    return BindParameter(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\elements.py", line 2050, in __init__
+    self.type = _compared_to_type.coerce_compared_value(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\type_api.py", line 1086, in coerce_compared_value
+    _coerced_type = _resolve_value_to_type(value)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\sqltypes.py", line 3819, in _resolve_value_to_type
+    raise exc.ArgumentError(
+sqlalchemy.exc.ArgumentError: Object <Tag slow> is not legal as a SQL literal value
+
+The above exception was the direct cause of the following exception:
+
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -8,31 +23,39 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 186, in view_song
-    return redirect(url_for('view_song'))
-  File "D:\_projects\church\lib\site-packages\flask\helpers.py", line 225, in url_for
-    return current_app.url_for(
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1697, in url_for
-    return self.handle_url_build_error(error, endpoint, values)
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1686, in url_for
-    rv = url_adapter.build(  # type: ignore[union-attr]
-  File "D:\_projects\church\lib\site-packages\werkzeug\routing\map.py", line 947, in build
-    raise BuildError(endpoint, values, method, self)
-werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'view_song'. Did you forget to specify values ['id']?
-2023-05-12 16:24:25,790 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-12 22:05:03,746 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-14 11:35:04,777 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-14 19:39:39,311 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-14 19:41:53,377 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-14 19:42:20,742 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-14 19:42:28,657 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-14 19:42:43,952 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-14 19:42:54,277 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-14 20:34:49,192 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-14 20:34:58,058 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-14 20:35:02,353 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-14 20:41:05,111 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-14 20:42:53,125 ERROR: Exception on /add_sermon [POST] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+  File "D:\_projects\church\app\routes.py", line 245, in view_song
+    tags = Tag.query.filter(Tag.id in selected_tags).all()
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\operators.py", line 539, in __eq__
+    return self.operate(eq, other)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\attributes.py", line 450, in operate
+    return op(self.comparator, *other, **kwargs)  # type: ignore[return-value]  # noqa: E501
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\operators.py", line 539, in __eq__
+    return self.operate(eq, other)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\properties.py", line 478, in operate
+    return op(self.__clause_element__(), *other, **kwargs)  # type: ignore[return-value]  # noqa: E501
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\annotation.py", line 378, in __eq__
+    return self.__element.__class__.__eq__(self, other)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\operators.py", line 539, in __eq__
+    return self.operate(eq, other)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\elements.py", line 1538, in operate
+    return op(self.comparator, *other, **kwargs)  # type: ignore[return-value]  # noqa: E501
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\operators.py", line 539, in __eq__
+    return self.operate(eq, other)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\type_api.py", line 194, in operate
+    return op_fn(self.expr, op, *other, **addtl_kw)  # type: ignore
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\default_comparator.py", line 122, in _boolean_compare
+    obj = coercions.expect(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\coercions.py", line 413, in expect
+    resolved = impl._literal_coercion(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\coercions.py", line 815, in _literal_coercion
+    self._raise_for_expected(element, err=err)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\coercions.py", line 800, in _raise_for_expected
+    return super()._raise_for_expected(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\coercions.py", line 536, in _raise_for_expected
+    raise exc.ArgumentError(msg, code=code) from err
+sqlalchemy.exc.ArgumentError: SQL expression element or literal value expected, got <Tag slow>.
+2023-05-23 09:50:50,204 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 09:50:53,087 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -42,22 +65,11 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 290, in decorated_view
-    return current_app.ensure_sync(func)(*args, **kwargs)
-  File "D:\_projects\church\app\routes.py", line 150, in add_sermon
-    sermon = Sermon(pickdate=form.pickdate.data, sermon_title=form.sermon_title.data, leader_name=form.leader_name.data, publisher=current_user)
-  File "<string>", line 4, in __init__
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\state.py", line 566, in _initialize_instance
-    with util.safe_reraise():
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\util\langhelpers.py", line 147, in __exit__
-    raise exc_value.with_traceback(exc_tb)
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\state.py", line 564, in _initialize_instance
-    manager.original_init(*mixed[1:], **kwargs)
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\decl_base.py", line 2146, in _declarative_constructor
-    raise TypeError(
-TypeError: 'pickdate' is an invalid keyword argument for Sermon
-2023-05-14 20:46:32,852 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-14 20:46:56,998 ERROR: Exception on /sermons [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+  File "D:\_projects\church\app\routes.py", line 245, in view_song
+    tags = Tag.query.filter(Tag.id in selected_tags.id).all()
+AttributeError: 'list' object has no attribute 'id'
+2023-05-23 09:55:27,275 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 09:55:31,934 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -67,11 +79,11 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 160, in sermons
-    sermons = Sermon.query.order_by(Sermon.pickdate.desc()).paginate(
-AttributeError: type object 'Sermon' has no attribute 'pickdate'
-2023-05-14 20:53:05,146 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-14 20:53:10,984 ERROR: Exception on /sermons [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+  File "D:\_projects\church\app\routes.py", line 245, in view_song
+    tags = Tag.query.filter(Tag.id.in_(selected_tags.id)).all()
+AttributeError: 'list' object has no attribute 'id'
+2023-05-23 09:55:57,694 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 09:56:00,646 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -81,52 +93,43 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 160, in sermons
-    sermons = Sermon.query.order_by(Sermon.pickdate.desc()).paginate(
-AttributeError: type object 'Sermon' has no attribute 'pickdate'
-2023-05-14 20:54:55,608 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-14 20:54:55,903 ERROR: Exception on /sermons [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
-Traceback (most recent call last):
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
-    response = self.full_dispatch_request()
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 166, in sermons
-    return render_template('sermons.html', title='Sermons', sermons=sermons.items,
-  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
-    return _render(app, template, context)
-  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
-    rv = template.render(context)
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1301, in render
-    self.environment.handle_exception()
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "D:\_projects\church\app\templates\sermons.html", line 1, in top-level template code
-    {% extends "base.html" %}
-  File "D:\_projects\church\app\templates\base.html", line 1, in top-level template code
-    {% extends 'bootstrap/base.html' %}
-  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
-    {% block doc -%}
-  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block 'doc'
-    {%- block html %}
-  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 54, in block 'html'
-    {% block body -%}
-  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 57, in block 'body'
-    {% block content -%}
-  File "D:\_projects\church\app\templates\base.html", line 52, in block 'content'
-    {% block app_content %}{% endblock %}
-  File "D:\_projects\church\app\templates\sermons.html", line 15, in block 'app_content'
-    {% include '_sermon.html' %}
-  File "D:\_projects\church\app\templates\_sermon.html", line 9, in top-level template code
-    <a href="{{ url_for('.edit_sermon', id=sermon.id) }}">Edit</a>
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1697, in url_for
-    return self.handle_url_build_error(error, endpoint, values)
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1686, in url_for
-    rv = url_adapter.build(  # type: ignore[union-attr]
-  File "D:\_projects\church\lib\site-packages\werkzeug\routing\map.py", line 947, in build
-    raise BuildError(endpoint, values, method, self)
-werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'edit_sermon' with values ['id']. Did you mean 'edit_song' instead?
+  File "D:\_projects\church\app\routes.py", line 245, in view_song
+    tags = Tag.query.filter(Tag.id.in_(selected_tags)).all()
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\operators.py", line 883, in in_
+    return self.operate(in_op, other)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\attributes.py", line 450, in operate
+    return op(self.comparator, *other, **kwargs)  # type: ignore[return-value]  # noqa: E501
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\operators.py", line 2054, in in_op
+    return a.in_(b)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\operators.py", line 883, in in_
+    return self.operate(in_op, other)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\properties.py", line 478, in operate
+    return op(self.__clause_element__(), *other, **kwargs)  # type: ignore[return-value]  # noqa: E501
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\operators.py", line 2054, in in_op
+    return a.in_(b)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\operators.py", line 883, in in_
+    return self.operate(in_op, other)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\elements.py", line 1538, in operate
+    return op(self.comparator, *other, **kwargs)  # type: ignore[return-value]  # noqa: E501
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\operators.py", line 2054, in in_op
+    return a.in_(b)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\operators.py", line 883, in in_
+    return self.operate(in_op, other)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\type_api.py", line 194, in operate
+    return op_fn(self.expr, op, *other, **addtl_kw)  # type: ignore
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\default_comparator.py", line 221, in _in_impl
+    seq_or_selectable = coercions.expect(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\coercions.py", line 413, in expect
+    resolved = impl._literal_coercion(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\coercions.py", line 884, in _literal_coercion
+    return expr._bind_param(operator, element, expanding=True)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\elements.py", line 4459, in _bind_param
+    return BindParameter(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\elements.py", line 2050, in __init__
+    self.type = _compared_to_type.coerce_compared_value(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\type_api.py", line 1086, in coerce_compared_value
+    _coerced_type = _resolve_value_to_type(value)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\sqltypes.py", line 3819, in _resolve_value_to_type
+    raise exc.ArgumentError(
+sqlalchemy.exc.ArgumentError: Object <Tag slow> is not legal as a SQL literal value
+2023-05-23 09:57:28,689 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]

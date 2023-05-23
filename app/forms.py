@@ -2,12 +2,8 @@ from flask_wtf import FlaskForm
 from wtforms import SelectMultipleField, StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField, RadioField, DateField, DateTimeField 
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
 from wtforms.widgets import ListWidget, CheckboxInput
-from app.models import User, Song, Tags
+from app.models import User, Song, Tag
 from sqlalchemy import and_
-from app import app, db
-
-app.app_context().push()
-db.create_all()
 
 chordnote=[
     (0, 'Empty'),
@@ -24,6 +20,7 @@ chordnote=[
     (11, 'A#'),
     (12, 'B')
     ]
+
 
 class EmptyForm(FlaskForm):
     submit = SubmitField('Submit')
@@ -142,9 +139,7 @@ class EditSermon(FlaskForm):
     submit = SubmitField('Set sermon')
 
 class TagsForm(FlaskForm):
-    # tag_list = db.session.query(Tags).all()
-    # switches = list(tag_list.items())
-    tags = SelectMultipleField('Tags', validators=[DataRequired()])
+    name = SelectMultipleField('Tags', validators=[DataRequired()])
     submit = SubmitField('Add Tags')
     
     # def __init__(self, *args, **kwargs):
@@ -152,9 +147,9 @@ class TagsForm(FlaskForm):
     #     self.tags.choices = [(tag.id, tag.tag) for tag in Tags.query.all()]
     
 class AddTag(FlaskForm):
-    tag = StringField('Tag', validators=[DataRequired()], render_kw={"class": "form-control"})
+    name = StringField('Tag', validators=[DataRequired()], render_kw={"class": "form-control"})
     submit = SubmitField('Add a new tag')
     def validate_tag(self, tag):
-        tag = Tags.query.filter_by(tag=tag.data).first()
-        if tag is not None:
+        name = Tag.query.filter_by(name=name.data).first()
+        if name is not None:
             raise ValidationError('This tag is already in Database.')

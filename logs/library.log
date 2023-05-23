@@ -1,0 +1,40 @@
+2023-05-23 13:44:44,506 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 289, in view_song
+    return render_template('view_song.html', title='View Song', html=html, tagged_list=tagged_list, tag_states=tag_states, tags=tags, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, ori_key=ori_key)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1301, in render
+    self.environment.handle_exception()
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\_projects\church\app\templates\view_song.html", line 2, in top-level template code
+    <!--{% import 'bootstrap/wtf.html' as wtf %}-->
+  File "D:\_projects\church\app\templates\base.html", line 54, in top-level template code
+    {% block content %}
+  File "D:\_projects\church\app\templates\view_song.html", line 49, in block 'content'
+    {% include '_offcanvas.html' %}
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\_projects\church\app\templates\_offcanvas.html", line 10, in template
+    <input class="form-check-input" type="checkbox" id="{{ name.id }}" name="tags" value="{{ name.id }}" {% if tag_states[{{ name.id }}] %}checked{% endif %}>
+jinja2.exceptions.TemplateSyntaxError: expected token ':', got '}'
+2023-05-23 13:48:48,346 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 13:55:53,401 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 13:56:02,805 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 14:03:50,237 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 14:19:13,221 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 14:20:27,255 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 14:23:58,777 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 14:25:09,876 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 14:46:50,987 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]

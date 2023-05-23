@@ -1,0 +1,125 @@
+2023-05-19 07:35:39,620 ERROR: Exception on /songbook [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\default.py", line 920, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such column: song.info
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 55, in songbook
+    songs = Song.query.order_by(Song.title.desc()).paginate(
+  File "D:\_projects\church\lib\site-packages\flask_sqlalchemy\query.py", line 99, in paginate
+    return QueryPagination(
+  File "D:\_projects\church\lib\site-packages\flask_sqlalchemy\pagination.py", line 69, in __init__
+    items = self._query_items()
+  File "D:\_projects\church\lib\site-packages\flask_sqlalchemy\pagination.py", line 354, in _query_items
+    out = query.limit(self.per_page).offset(self._query_offset).all()
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\query.py", line 2688, in all
+    return self._iter().all()  # type: ignore
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\query.py", line 2842, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\session.py", line 2231, in execute
+    return self._execute_internal(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\session.py", line 2126, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\context.py", line 292, in orm_execute_statement
+    result = conn.execute(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\base.py", line 1413, in execute
+    return meth(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\elements.py", line 483, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\base.py", line 1637, in _execute_clauseelement
+    ret = self._execute_context(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\base.py", line 1841, in _execute_context
+    return self._exec_single_context(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\base.py", line 1982, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\default.py", line 920, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: song.info
+[SQL: SELECT song.id AS song_id, song.title AS song_title, song.singer AS song_singer, song.info AS song_info, song."key" AS song_key, song.lyrics AS song_lyrics, song.language AS song_language, song.timestamp AS song_timestamp, song.user_id AS song_user_id 
+FROM song ORDER BY song.title DESC
+ LIMIT ? OFFSET ?]
+[parameters: (50, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2023-05-19 07:36:19,789 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 07:36:27,820 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 07:36:31,383 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 07:52:50,204 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 07:56:22,059 ERROR: Exception on /tag_list [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 201, in tag_list
+    return render_template('tag_list.html', title='Tag list', tags=tags, form=form)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 150, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1081, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1010, in get_template
+    return self._load_template(name, globals)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 969, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "D:\_projects\church\lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 64, in get_source
+    return self._get_source_fast(environment, template)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 98, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: tag_list.html
+2023-05-19 07:56:24,482 ERROR: Exception on /tag_list [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 201, in tag_list
+    return render_template('tag_list.html', title='Tag list', tags=tags, form=form)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 150, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1081, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1010, in get_template
+    return self._load_template(name, globals)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 969, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "D:\_projects\church\lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 64, in get_source
+    return self._get_source_fast(environment, template)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 98, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: tag_list.html
+2023-05-19 08:02:56,726 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 08:11:11,225 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 09:49:26,511 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 09:50:33,215 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 09:50:49,905 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 09:50:58,946 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 10:27:45,020 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 10:49:21,009 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]

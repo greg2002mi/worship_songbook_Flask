@@ -1,4 +1,11 @@
-2023-05-12 09:05:00,355 ERROR: Exception on /add_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+2023-05-22 15:37:07,237 ERROR: Exception on /tag_list [POST] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\base.py", line 2179, in _entity_namespace_key
+    return getattr(ns, key)  # type: ignore
+AttributeError: type object 'Tag' has no attribute 'tag'
+
+The above exception was the direct cause of the following exception:
+
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -8,38 +15,29 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 290, in decorated_view
-    return current_app.ensure_sync(func)(*args, **kwargs)
-  File "D:\_projects\church\app\routes.py", line 142, in add_song
-    return render_template('add_song.html', title='Add a song', form=form)
-  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
-    return _render(app, template, context)
-  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
-    rv = template.render(context)
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1301, in render
-    self.environment.handle_exception()
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "D:\_projects\church\app\templates\add_song.html", line 1, in top-level template code
-    {% extends "base.html" %}
-  File "D:\_projects\church\app\templates\base.html", line 1, in top-level template code
-    {% extends 'bootstrap/base.html' %}
-  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
-    {% block doc -%}
-  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block 'doc'
-    {%- block html %}
-  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 20, in block 'html'
-    {% block body -%}
-  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 23, in block 'body'
-    {% block content -%}
-  File "D:\_projects\church\app\templates\base.html", line 50, in block 'content'
-    {% block app_content %}{% endblock %}
-  File "D:\_projects\church\app\templates\add_song.html", line 7, in block 'app_content'
-    {{ wtf.quick_form(form) }}
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 485, in getattr
-    return getattr(obj, attribute)
-jinja2.exceptions.UndefinedError: 'wtf' is undefined
-2023-05-12 09:05:08,242 ERROR: Exception on /add_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+  File "D:\_projects\church\app\routes.py", line 195, in tag_list
+    if form.validate_on_submit():
+  File "D:\_projects\church\lib\site-packages\flask_wtf\form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+  File "D:\_projects\church\lib\site-packages\wtforms\form.py", line 329, in validate
+    return super().validate(extra)
+  File "D:\_projects\church\lib\site-packages\wtforms\form.py", line 146, in validate
+    if not field.validate(self, extra):
+  File "D:\_projects\church\lib\site-packages\wtforms\fields\core.py", line 242, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+  File "D:\_projects\church\lib\site-packages\wtforms\fields\core.py", line 262, in _run_validation_chain
+    validator(form, self)
+  File "D:\_projects\church\app\forms.py", line 153, in validate_tag
+    tag = Tag.query.filter_by(tag=tag.data).first()
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\query.py", line 1998, in filter_by
+    clauses = [
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\query.py", line 1999, in <listcomp>
+    _entity_namespace_key(from_entity, key) == value
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\base.py", line 2181, in _entity_namespace_key
+    raise exc.InvalidRequestError(
+sqlalchemy.exc.InvalidRequestError: Entity namespace for "tag" has no property "tag"
+2023-05-22 15:40:17,746 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-22 15:40:21,059 ERROR: Exception on /tag_list [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -49,10 +47,8 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 290, in decorated_view
-    return current_app.ensure_sync(func)(*args, **kwargs)
-  File "D:\_projects\church\app\routes.py", line 142, in add_song
-    return render_template('add_song.html', title='Add a song', form=form)
+  File "D:\_projects\church\app\routes.py", line 201, in tag_list
+    return render_template('tag_list.html', title='Tag list', tags=tags, form=form)
   File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
     return _render(app, template, context)
   File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
@@ -61,26 +57,17 @@ Traceback (most recent call last):
     self.environment.handle_exception()
   File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
     raise rewrite_traceback_stack(source=source)
-  File "D:\_projects\church\app\templates\add_song.html", line 1, in top-level template code
+  File "D:\_projects\church\app\templates\tag_list.html", line 1, in top-level template code
     {% extends "base.html" %}
-  File "D:\_projects\church\app\templates\base.html", line 1, in top-level template code
-    {% extends 'bootstrap/base.html' %}
-  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
-    {% block doc -%}
-  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block 'doc'
-    {%- block html %}
-  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 20, in block 'html'
-    {% block body -%}
-  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 23, in block 'body'
-    {% block content -%}
-  File "D:\_projects\church\app\templates\base.html", line 50, in block 'content'
-    {% block app_content %}{% endblock %}
-  File "D:\_projects\church\app\templates\add_song.html", line 7, in block 'app_content'
-    {{ wtf.quick_form(form) }}
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 485, in getattr
-    return getattr(obj, attribute)
-jinja2.exceptions.UndefinedError: 'wtf' is undefined
-2023-05-12 09:05:11,017 ERROR: Exception on /add_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+  File "D:\_projects\church\app\templates\base.html", line 54, in top-level template code
+    {% block content %}
+  File "D:\_projects\church\app\templates\tag_list.html", line 12, in block 'content'
+    {{ form.name() }}
+  File "D:\_projects\church\lib\site-packages\jinja2\utils.py", line 83, in from_obj
+    if hasattr(obj, "jinja_pass_arg"):
+jinja2.exceptions.UndefinedError: 'app.forms.AddTag object' has no attribute 'name'
+2023-05-22 15:45:21,705 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-22 15:53:40,624 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -90,35 +77,65 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 290, in decorated_view
-    return current_app.ensure_sync(func)(*args, **kwargs)
-  File "D:\_projects\church\app\routes.py", line 142, in add_song
-    return render_template('add_song.html', title='Add a song', form=form)
-  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
-    return _render(app, template, context)
-  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
-    rv = template.render(context)
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1301, in render
-    self.environment.handle_exception()
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "D:\_projects\church\app\templates\add_song.html", line 1, in top-level template code
-    {% extends "base.html" %}
-  File "D:\_projects\church\app\templates\base.html", line 1, in top-level template code
-    {% extends 'bootstrap/base.html' %}
-  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
-    {% block doc -%}
-  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block 'doc'
-    {%- block html %}
-  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 20, in block 'html'
-    {% block body -%}
-  File "D:\_projects\church\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 23, in block 'body'
-    {% block content -%}
-  File "D:\_projects\church\app\templates\base.html", line 50, in block 'content'
-    {% block app_content %}{% endblock %}
-  File "D:\_projects\church\app\templates\add_song.html", line 7, in block 'app_content'
-    {{ wtf.quick_form(form) }}
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 485, in getattr
-    return getattr(obj, attribute)
-jinja2.exceptions.UndefinedError: 'wtf' is undefined
-2023-05-12 09:30:03,251 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+  File "D:\_projects\church\app\routes.py", line 241, in view_song
+    tagged_list = db.session.query(Tag).join(Song.tag).filter(Song.id == song.id)
+AttributeError: type object 'Song' has no attribute 'tag'
+2023-05-22 15:53:42,533 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 241, in view_song
+    tagged_list = db.session.query(Tag).join(Song.tag).filter(Song.id == song.id)
+AttributeError: type object 'Song' has no attribute 'tag'
+2023-05-22 15:55:37,720 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 241, in view_song
+    tagged_list = db.session.query(Tag).join(Song.tags).filter(Song.id == song.id)
+AttributeError: type object 'Song' has no attribute 'tag'
+2023-05-22 15:55:51,650 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-22 15:57:08,045 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-22 15:58:56,323 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-22 16:20:41,190 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-22 16:22:57,254 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-22 16:23:05,001 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-22 16:37:01,985 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-22 16:38:45,128 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 07:09:37,677 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 07:24:48,478 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 07:26:27,437 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 07:33:09,478 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 07:38:13,090 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 07:39:34,984 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 07:39:42,170 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 07:45:32,323 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 07:45:36,767 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 07:48:12,632 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 07:48:46,613 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 241, in view_song
+    tagged_list = song.tags.data
+AttributeError: 'AppenderQuery' object has no attribute 'data'
+2023-05-23 07:49:34,953 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 07:54:58,365 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]

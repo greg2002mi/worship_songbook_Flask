@@ -32,8 +32,6 @@
 							<a class="nav-link" href="{{ url_for('explore') }}">Explore</a></li>
 						<li class="nav-item"><a class="nav-link" href="{{ url_for('songbook') }}">Songbook</a></li>
 						<li class="nav-item"><a class="nav-link" href="{{ url_for('tag_list') }}">Genre&Tags</a></li>
-						<li class="nav-item"><a class="nav-link" href="{{ url_for('sermons') }}">Sermon list</a></li>
-						<li class="nav-item"><a class="nav-link" href="{{ url_for('add_sermon') }}">Set a new sermon</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						{% if current_user.is_anonymous %}

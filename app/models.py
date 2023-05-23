@@ -6,6 +6,7 @@ from hashlib import md5
 from time import time
 import jwt
 
+
           
 # class Permission:
 #     FOLLOW = 1
@@ -61,7 +62,6 @@ class User(UserMixin, db.Model):
     # role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     songs = db.relationship('Song', backref='publisher', lazy='dynamic')
-    sermons = db.relationship('Sermon', backref='publisher', lazy='dynamic')
     # lists = db.relationship('Worshiplist', backref='leader', lazy='dynamic')
     followed = db.relationship(
         'User', secondary=followers,
@@ -131,7 +131,7 @@ class Post(db.Model):
 
 songtags = db.Table('songtags', 
                     db.Column('song_id', db.Integer, db.ForeignKey('song.id')), 
-                    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id')))
+                    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')))
 
   # many to many relationship sermon and songs  
 # songlist = db.Table('songlist', 
@@ -153,45 +153,36 @@ class Song(db.Model):
     # later need to find a way to bind same songs in other languages (maybe same code as with following)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    tags = db.relationship('Tags', secondary=songtags, backref='song')
-    # inlist = db.relationship('Sermon', secondary=songlist,
-    #     backref=db.backref('songlist', lazy='dynamic'), lazy='dynamic')
+    tags = db.relationship('Tag', secondary=songtags, 
+                           backref='songs', lazy='dynamic')
+    # inlist = db.relationship(
+    #     'Sermon', secondary=songlist, backref='song')
+    
+    def __repr__(self):
+        return '<Song {}>'.format(self.title)
     
     # assigning song to tags
-    def add_tag(self, tag):
-        if not self.in_tags(tag):
-            self.tags.append(tag)
+    # def add_tag(self, tag):
+    #     if not self.in_tags(tag):
+    #         self.tags.append(tag)
 
-    def remove_tag(self, tag):
-        if self.in_tags(tag):
-            self.tags.remove(tag)
+    # def remove_tag(self, tag):
+    #     if self.in_tags(tag):
+    #         self.tags.remove(tag)
     
-    def in_tags(self, tag):
-        return self.tags.filter(
-            Tags.id == tag.id).count() > 0
+    # def in_tags(self, tag):
+    #     return self.tags.filter(songtags.c.tag_id == tag.id).count() > 0
     
-    # assigning song in sermon
-    # def add_to_sermon(song, sermon):
-    #     if not song.in_sermon(sermon):
-    #         song.songlist.append(sermon)
-
-    # def remove__from_sermon(song, sermon):
-    #     if song.in_sermon(sermon):
-    #         song.songlist.remove(sermon)
-    
-    # def in_sermon(song, sermon):
-    #     return song.songlist.filter(
-    #         songlist.c.song_id == sermon.id).count() > 0
-    
-    
+        
     # many to many relationship genre and songs
    
-class Tags(db.Model):
+class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    tag = db.Column(db.String)
-       
-    def __repr__(self):
-        return '<Tag {}>'.format(self.tag)
+    name = db.Column(db.String)
+    
+    
+    # def __repr__(self):
+    #     return '<Tag {}>'.format(self.name)
 
  # need to make a list of songs, something like favorites. debating on relationship and structure
 # class Worshiplist(db.Model):
@@ -209,12 +200,12 @@ class Lists(db.Model):
     # many-to-many relationship with user. so we can assign specific people to this list
     assigned = db.relationship('User', secondary=list_user, backref='lists')
     
+    
     def __repr__(self):
         return '<Lists {}>'.format(self.list_title)
     
 class ListItems(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    item_order = db.Column(db.Integer)
     list_id = db.Column(db.Integer, db.ForeignKey('lists.id'))
     title = db.Column(db.String(140))
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -224,14 +215,14 @@ class ListItems(db.Model):
     def __repr__(self):
         return '<ListItems {}>'.format(self.title)        
     
-class Sermon(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    sermon_title = db.Column(db.String, default='Sunday service')
-    date_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    leader_name = db.Column(db.String, index=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+# class Sermon(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     sermon_title = db.Column(db.String, default='Sunday service')
+#     date_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+#     leader_name = db.Column(db.String, index=True)
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     
-    def __repr__(self):
-        return '<Sermon {}>'.format(self.date_time)
+#     def __repr__(self):
+#         return '<Sermon {}>'.format(self.date_time)
 
     

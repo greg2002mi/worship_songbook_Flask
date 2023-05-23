@@ -1,13 +1,14 @@
 from flask import render_template, flash, redirect, url_for, request, abort
 from app import app, db
 from werkzeug.urls import url_parse
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddSong, EditSong, EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm, Transpose, AddSermon
-from app.forms import EditSermon, AddTag, TagsForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddSong, EditSong, EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm, Transpose
+from app.forms import AddTag, TagsForm
 from flask_login import current_user, login_user, login_required, logout_user
-from app.models import User, Song, Post, Sermon, Tags
+from app.models import User, Song, Post, Tag
 from datetime import datetime
 from app.email import send_password_reset_email
 from app.core import Chordpro_html
+import logging
 
 @app.before_request
 def before_request():
@@ -142,59 +143,59 @@ def add_song():
         return redirect(url_for('songbook'))
     return render_template('add_song.html', title='Add a song', form=form)
 
-@app.route('/add_sermon', methods=['GET', 'POST'])
-@login_required
-def add_sermon():
-    form = AddSermon()
-    if form.validate_on_submit():
-        sermon = Sermon(date_time=form.date_time.data, sermon_title=form.sermon_title.data, leader_name=form.leader_name.data, publisher=current_user)
-        db.session.add(sermon)
-        db.session.commit()
-        flash('Sermon is set')
-        return redirect(url_for('sermons'))
-    return render_template('add_sermon.html', title='Set new sermon', form=form)
+# @app.route('/add_sermon', methods=['GET', 'POST'])
+# @login_required
+# def add_sermon():
+#     form = AddSermon()
+#     if form.validate_on_submit():
+#         sermon = Sermon(date_time=form.date_time.data, sermon_title=form.sermon_title.data, leader_name=form.leader_name.data, publisher=current_user)
+#         db.session.add(sermon)
+#         db.session.commit()
+#         flash('Sermon is set')
+#         return redirect(url_for('sermons'))
+#     return render_template('add_sermon.html', title='Set new sermon', form=form)
 
-@app.route('/edit_sermon/<int:id>', methods=['GET', 'POST'])
-@login_required
-def edit_sermon(id):
-    sermon = Sermon.query.get_or_404(id)
-    # if current_user != song.publisher and not current_user.can(Permission.ADMIN):
-    # if current_user != song.publisher:
-    #     abort(403)
-    form = EditSermon()
-    if form.validate_on_submit():
-        sermon.date_time = form.date_time.data
-        sermon.sermon_title = form.sermon_title.data
-        sermon.leader_name = form.leader_name.data
-        db.session.add(sermon)
-        db.session.commit()
-        flash('Changes to the sermon have been saved.')
-        return redirect(url_for('sermons')) #later change it to view song mode
-    elif request.method == 'GET':
-        form.date_time.data = sermon.date_time
-        form.sermon_title.data = sermon.sermon_title
-        form.leader_name.data = sermon.leader_name
-    return render_template('edit_sermon.html', title='Edit Sermon', form=form) 
+# @app.route('/edit_sermon/<int:id>', methods=['GET', 'POST'])
+# @login_required
+# def edit_sermon(id):
+#     sermon = Sermon.query.get_or_404(id)
+#     # if current_user != song.publisher and not current_user.can(Permission.ADMIN):
+#     # if current_user != song.publisher:
+#     #     abort(403)
+#     form = EditSermon()
+#     if form.validate_on_submit():
+#         sermon.date_time = form.date_time.data
+#         sermon.sermon_title = form.sermon_title.data
+#         sermon.leader_name = form.leader_name.data
+#         db.session.add(sermon)
+#         db.session.commit()
+#         flash('Changes to the sermon have been saved.')
+#         return redirect(url_for('sermons')) #later change it to view song mode
+#     elif request.method == 'GET':
+#         form.date_time.data = sermon.date_time
+#         form.sermon_title.data = sermon.sermon_title
+#         form.leader_name.data = sermon.leader_name
+#     return render_template('edit_sermon.html', title='Edit Sermon', form=form) 
 
-@app.route('/sermons')
-def sermons():
-    page = request.args.get('page', 1, type=int)
-    sermons = Sermon.query.order_by(Sermon.date_time.desc()).paginate(
-        page=page, per_page=app.config['ITEMS_PER_PAGE'], error_out=False)
-    next_url = url_for('sermons', page=sermons.next_num) \
-        if sermons.has_next else None
-    prev_url = url_for('sermons', page=sermons.prev_num) \
-        if sermons.has_prev else None
-    return render_template('sermons.html', title='Sermons', sermons=sermons.items, 
-                           next_url=next_url, prev_url=prev_url)
+# @app.route('/sermons')
+# def sermons():
+#     page = request.args.get('page', 1, type=int)
+#     sermons = Sermon.query.order_by(Sermon.date_time.desc()).paginate(
+#         page=page, per_page=app.config['ITEMS_PER_PAGE'], error_out=False)
+#     next_url = url_for('sermons', page=sermons.next_num) \
+#         if sermons.has_next else None
+#     prev_url = url_for('sermons', page=sermons.prev_num) \
+#         if sermons.has_prev else None
+#     return render_template('sermons.html', title='Sermons', sermons=sermons.items, 
+#                            next_url=next_url, prev_url=prev_url)
 
 @app.route('/tag_list', methods=['GET', 'POST'])
 def tag_list():
     form = AddTag()
-    tags = Tags.query.all()
+    tags = Tag.query.all()
     if form.validate_on_submit():
-        tag = Tags(tag=form.tag.data)   
-        db.session.add(tag)
+        t = Tag(name=form.name.data) 
+        db.session.add(t)
         db.session.commit()
         flash('A new tag has been saved.')
         return redirect(url_for('tag_list'))      
@@ -237,12 +238,23 @@ def view_song():
     id = request.args.get('id', type=int)
     key = request.args.get('key', type=int)
     song = Song.query.get_or_404(id)
-    tags = Tags.query.all()
-    tagged_list = db.session.query(Tags).join(Song.tags).filter(Song.id == song.id)
+    tags = Tag.query.all()
+    tag_states = {}
+    tagged_list = ([tagged.name for tagged in song.tags])
+    # if I want to find tags based on songs tagged
+    # selected_tags = Tag.query.filter(Tag.songs.any(song.id==id)).all()
+    # tagged_list_int = ([t.id for t in tags])
+    # print(tagged_list_int)
+    # tags = Tag.query.filter(Tag.id.in_(tagged_list_int)).all()
+    # print(tags)
     ori_key_int = song.key
     lyrics = song.lyrics
     form = Transpose()
     tags_form = TagsForm()
+    # populate choices for tags_form from db
+    choices = [(t.id, t.name) for t in tags]
+    tags_form.name.choices = choices
+    print(choices)
     keyset = ('Empty', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B')
     if key is None:
         transpose = ori_key_int
@@ -263,18 +275,34 @@ def view_song():
             # Handle the submit of transpose chord action
             key = form.key.data
             return redirect(url_for('.view_song', id=song.id, key=key))
-        elif tags_form.validate_on_submit():
+        elif request.method == "POST" and tags_form.validate_on_submit():
             # Handle addition of tags to a song
-            selected_tags = tags_form.tags.data
-            tags = Tags.query.filter(Tags.id.in_(selected_tags)).all()
-            for t in tags:
-                song.add_tag(t)
+            logging.basicConfig(filename='debug.log', level=logging.DEBUG)
+            selected_tags = request.form['name']
+            logging.debug(selected_tags)
+            for tag_id in selected_tags:
+                t = Tag.query.get(tag_id)
+                print(t)
+                if t is not None and t not in song.tags:
+                    song.tags.append(t)
+            # list = Tag.query.filter(Tag.id.in_(selected_tags)).all()
+            # for t in list:
+            #     is_tagged = t in song.tags.all()
+            #     if not is_tagged:
+            #         song.tags.append(t)
+            #         db.session.add(song)
+            #         db.session.commit()
+            # for t in tags:
+            #     song.add_tag(t)
+            db.session.add(song)
             db.session.commit()
-            return redirect(url_for('.view_song', id=song.id, key=key))
+            # return redirect(url_for('.view_song', id=song.id, key=key))
         elif request.method == 'GET':
             form.key.data = song.key
-            tags_form.tags.data = [tag.tag for tag in tags]
-        return render_template('view_song.html', title='View Song', html=html, tagged_list=tagged_list, tags=tags, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, ori_key=ori_key)
+            for tag in tags:
+                tag_states[tag.id] = tag in song.tags
+            print(tag_states)
+        return render_template('view_song.html', title='View Song', html=html, tagged_list=tagged_list, tag_states=tag_states, tags=tags, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, ori_key=ori_key)
 
 @app.route('/follow/<username>', methods=['POST'])
 @login_required

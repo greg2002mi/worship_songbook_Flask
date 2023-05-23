@@ -6,8 +6,11 @@
 		<div class="col">
 			<form class="row needs-validation" action method="post" novalidate>
 			{{ form.hidden_tag() }}
-			{{ form.tag() }}
-			{% for error in form.tag.errors %}
+			{% if form.errors %}
+				{{ form.errors }}
+			{% endif %}
+			{{ form.name() }}
+			{% for error in form.name.errors %}
 			<span style="color: red;">[{{ error }}]</span>
 			{% endfor %}
 			{{ form.submit() }}	

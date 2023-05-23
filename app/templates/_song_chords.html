@@ -17,21 +17,20 @@
 		<div class="row g-0">
 			<div class="col-auto">
 				Original key: {{ ori_key }}</div>
-			
-			<br>
-			<br>			
+		</div>
+		<div class="row g-0">		
 			<div class="col-auto">
 				Tags: 
 				{% if tagged_list is not none %}
 				{% for t in tagged_list %}
-				{{ ori_key }}
+				{{ t }}
 				{% endfor %}
 				{% else %}
 				None
 				{% endif %}
-				</div>
+			</div>
+		</div>	
 			
 			
-			
-		</div>
+		
 		{{ html|safe }}
