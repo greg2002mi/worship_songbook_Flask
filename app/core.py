@@ -139,6 +139,7 @@ def Transpose(thischord, condition, ori_key, transpose):
   
   
 def Process_chord(segment, condition, key, transpose):
+    # strips from square brackets
     temp_chord = segment.strip('[]')
     slash = "/"
     # checks for the dual chord with slash
@@ -191,7 +192,7 @@ def Chordpro_html(chordpro_text, condition, key, transpose):
                         else:    
                             # Check if the segment is a chord
                             if re.match(r'\[[^\]]+\]', segment):
-                                # strips from square brackets
+                                
                                 
                                 chord = Process_chord(segment, condition, key, transpose)
                                 
@@ -215,8 +216,9 @@ def Chordpro_html(chordpro_text, condition, key, transpose):
                 
                 # searching for chorus verse Bridge and intro. assign section-name class and make it bold.
                 # later add logic to add comments using "c:" tag
-                elif re.search(r'\{Chorus\}|\{Verse \d+\}|\{Bridge\}|\{Intro\}|\{Ending\}|\{Retard\}|\{Instrumental\}|\{Pre-Chorus\}', line):
-                    section_line = line.replace('{', '').replace('}', '')
+                # LAST STAGE
+                elif re.search(r'\{Chorus\}|\{Verse \d+\}|\{Bridge\}|\{Intro\}|\{Ending\}|\{Retard\}|\{Instrumental\}|\{Pre-Chorus\}|\{end\}', line):
+                    section_line = line.replace('{end}', '&nbsp;').replace('{', '').replace('}', '')
                     #section_line = line.strip('{}')
                     html_lines.append('<div class="row g-0"><div class="col-auto"><div class="chordpro_segment"><span class="ChordContainer"><span class="Chord"></span><span class="suffix">&nbsp;</span></span></div><div class="lyric_section">{}:</div></div></div>'.format(section_line))
                 
@@ -227,7 +229,7 @@ def Chordpro_html(chordpro_text, condition, key, transpose):
     else:
         for line in lines:
             line_without_chords = re.sub(r'\[[^\]]+\]', '', line)
-            line = line_without_chords.replace('{', '<br>').replace('}', ':').replace('Intro}', '')
+            line = line_without_chords.replace('{end}', '&nbsp;').replace('{', '<br>').replace('}', ':').replace('Intro}', '')
             html_lines.append('<div class="row g-0"><div class="lyric">{}</div></div>'.format(''.join(line)))
             
     html_code = ''.join(html_lines)

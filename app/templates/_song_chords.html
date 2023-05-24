@@ -23,7 +23,7 @@
 				Tags: 
 				{% if tagged_list is not none %}
 				{% for t in tagged_list %}
-				{{ t }}
+				<span class="badge bg-secondary">{{ t }}</span>
 				{% endfor %}
 				{% else %}
 				None
@@ -32,5 +32,24 @@
 		</div>	
 			
 			
-		
+		<div class="row">
+		<div class="col-8">
 		{{ html|safe }}
+		</div>
+		<div class="col-4">
+		
+		<div class="card" style="width: 18rem;">
+		  <div class="card-body">
+			<h5 class="card-title">Description</h5>
+			<h6 class="card-subtitle mb-2 text-muted">Functionality and features</h6>
+			<p class="card-text">Underneath of title and singer/author there are several tabs:<br>
+			<ul>
+			  <li>Lyrics with chords - is a current page with main features, which will be described below.</li>
+			  <li>Lyrics - page without any chords.</li>
+			  <li>Links - media section, where there will be links and players. Gives you a chance to listen, learn and prepare for service.</li>
+			  <li>Genre - this section might be deleted. currently on hold.</li>
+			</ul></p>
+
+		  </div>
+		</div>
+		</div>

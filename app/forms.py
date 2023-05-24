@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectMultipleField, StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField, RadioField, DateField, DateTimeField 
+from wtforms import SelectMultipleField, StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField, DateField, DateTimeField, widgets
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
-from wtforms.widgets import ListWidget, CheckboxInput
+# from wtforms.widgets import ListWidget, CheckboxInput
 from app.models import User, Song, Tag
 from sqlalchemy import and_
+from markupsafe import Markup
 
 chordnote=[
     (0, 'Empty'),
@@ -21,6 +22,36 @@ chordnote=[
     (12, 'B')
     ]
 
+class BootstrapListWidget(widgets.ListWidget):
+ 
+    # def __call__(self, field, **kwargs):
+    #     kwargs.setdefault("id", field.id)
+    #     html = [f"<{self.html_tag} {widgets.html_params(**kwargs)}>"]
+    #     for subfield in field:
+    #         is_checked = subfield.data in field.data
+    #         if self.prefix_label:
+    #             html.append(f"<div class='form-check form-switch'>{subfield.label(class_='form-check-label')} {subfield(class_='form-check-input', checked=is_checked)}</div>")
+    #         else:
+    #             html.append(f"<div class='form-check form-switch'>{subfield(class_='form-check-input', checked=is_checked)} {subfield.label(class_='form-check-label')}</div>")
+    #     html.append("</%s>" % self.html_tag)
+    #     return Markup("".join(html))
+    def __call__(self, field, **kwargs):
+        kwargs.setdefault("id", field.id)
+        html = [f"<{self.html_tag} {widgets.html_params(**kwargs)}>"]
+        for subfield in field:
+            is_checked = subfield.id in field.id
+            id_suffix = f"{subfield.id}"
+            if self.prefix_label:
+                html.append(f"<div class='form-check form-switch'>{subfield.label(class_='form-check-label', for_=id_suffix)} {subfield(class_='form-check-input', id=id_suffix, checked=is_checked)}</div>")
+            else:
+                html.append(f"<div class='form-check form-switch'>{subfield(class_='form-check-input', id=id_suffix, checked=is_checked)} {subfield.label(class_='form-check-label', for_=id_suffix)}</div>")
+        html.append("</%s>" % self.html_tag)
+        return Markup("".join(html))
+
+
+class MultiCheckboxField(SelectMultipleField):
+    widget = BootstrapListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
 
 class EmptyForm(FlaskForm):
     submit = SubmitField('Submit')
@@ -94,9 +125,9 @@ class AddSong(FlaskForm):
             raise ValidationError('Please use a different combination of title and singer.')
 
 
-class MultiCheckboxField(SelectMultipleField):
-    widget = ListWidget(prefix_label=False)
-    option_widget = CheckboxInput()
+# class MultiCheckboxField(SelectMultipleField):
+#     widget = ListWidget(prefix_label=False)
+#     option_widget = CheckboxInput()
 
 # class SelectGenre(FlaskForm):
 #     genre = MultiCheckboxField('Genre', coerce=int, choices=[(1, "Fast"), (2, "Slow"), (3, "Average")])
@@ -139,7 +170,7 @@ class EditSermon(FlaskForm):
     submit = SubmitField('Set sermon')
 
 class TagsForm(FlaskForm):
-    name = SelectMultipleField('Tags', validators=[DataRequired()])
+    name = MultiCheckboxField('Tags', coerce=int)
     submit = SubmitField('Add Tags')
     
     # def __init__(self, *args, **kwargs):
@@ -149,7 +180,7 @@ class TagsForm(FlaskForm):
 class AddTag(FlaskForm):
     name = StringField('Tag', validators=[DataRequired()], render_kw={"class": "form-control"})
     submit = SubmitField('Add a new tag')
-    def validate_tag(self, tag):
+    def validate_tag(self, name):
         name = Tag.query.filter_by(name=name.data).first()
         if name is not None:
             raise ValidationError('This tag is already in Database.')

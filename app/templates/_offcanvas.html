@@ -1,16 +1,19 @@
-<form id="tags_form" class="form-floating needs-validation" method="POST">
+<form class="form-floating needs-validation" method="POST">
 	{{ tags_form.hidden_tag() }}
-		
-
 	{% if tags_form.errors %}
-			{{ tags_form.errors }}
-		{% endif %}
-	{% for tag in tags %}
-	<div class="form-check form-switch">
-	  <input class="form-check-input" type="checkbox" id="{{ tag.id }}" name="tags" value="{{ tag.id }}" {% if tag_states[tag.id] %}checked{% endif %}>
-	  <label class="form-check-label" for="{{ tag.id }}">{{ tag.name }}</label>
-	</div>
+		{{ tags_form.errors }}
+	{% endif %}
+	{% for name in tags_form.name %}
+		<div class="form-check form-switch">
+		{% set is_checked = name.id in song.tags %}
+		{% set a = name.id[5:] %}
+		{% set aa = a|int + 1|int %}
+		{{ tag_states[aa|int] }}
+		{{ name(class_="form-check-input", checked=tag_states[aa|int]) }}
+		{{ name.label(class_="form-check-label") }}
+		</div>
 	{% endfor %}
 
-	{{ tags_form.submit(class="btn btn-success", form="tags_form") }}
+	{{ tags_form.submit(class="btn btn-success") }}
 </form>
+

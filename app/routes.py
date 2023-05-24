@@ -241,20 +241,15 @@ def view_song():
     tags = Tag.query.all()
     tag_states = {}
     tagged_list = ([tagged.name for tagged in song.tags])
-    # if I want to find tags based on songs tagged
-    # selected_tags = Tag.query.filter(Tag.songs.any(song.id==id)).all()
-    # tagged_list_int = ([t.id for t in tags])
-    # print(tagged_list_int)
-    # tags = Tag.query.filter(Tag.id.in_(tagged_list_int)).all()
-    # print(tags)
     ori_key_int = song.key
     lyrics = song.lyrics
     form = Transpose()
-    tags_form = TagsForm()
+    # e = Tag.query.filter(Tag.id.in_([t.id for t in song.tags]))
+    tags_form = TagsForm(obj=song)
     # populate choices for tags_form from db
     choices = [(t.id, t.name) for t in tags]
     tags_form.name.choices = choices
-    print(choices)
+    # print(choices)
     keyset = ('Empty', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B')
     if key is None:
         transpose = ori_key_int
@@ -282,27 +277,16 @@ def view_song():
             logging.debug(selected_tags)
             for tag_id in selected_tags:
                 t = Tag.query.get(tag_id)
-                print(t)
                 if t is not None and t not in song.tags:
                     song.tags.append(t)
-            # list = Tag.query.filter(Tag.id.in_(selected_tags)).all()
-            # for t in list:
-            #     is_tagged = t in song.tags.all()
-            #     if not is_tagged:
-            #         song.tags.append(t)
-            #         db.session.add(song)
-            #         db.session.commit()
-            # for t in tags:
-            #     song.add_tag(t)
             db.session.add(song)
             db.session.commit()
-            # return redirect(url_for('.view_song', id=song.id, key=key))
+            return redirect(url_for('.view_song', id=song.id, key=key))
         elif request.method == 'GET':
             form.key.data = song.key
             for tag in tags:
                 tag_states[tag.id] = tag in song.tags
-            print(tag_states)
-        return render_template('view_song.html', title='View Song', html=html, tagged_list=tagged_list, tag_states=tag_states, tags=tags, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, ori_key=ori_key)
+        return render_template('view_song.html', title='View Song', html=html, tagged_list=tagged_list, tag_states=tag_states, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, ori_key=ori_key)
 
 @app.route('/follow/<username>', methods=['POST'])
 @login_required
