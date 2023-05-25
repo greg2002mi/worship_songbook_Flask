@@ -8,7 +8,6 @@
 		{% set is_checked = name.id in song.tags %}
 		{% set a = name.id[5:] %}
 		{% set aa = a|int + 1|int %}
-		{{ tag_states[aa|int] }}
 		{{ name(class_="form-check-input", checked=tag_states[aa|int]) }}
 		{{ name.label(class_="form-check-label") }}
 		</div>

@@ -154,7 +154,7 @@ class Song(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tags = db.relationship('Tag', secondary=songtags, 
-                           backref='songs', lazy='dynamic')
+                           backref=db.backref('songs', lazy='dynamic'), lazy='dynamic')
     # inlist = db.relationship(
     #     'Sermon', secondary=songlist, backref='song')
     

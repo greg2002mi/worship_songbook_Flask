@@ -7,7 +7,7 @@
 	
 	<ul class="nav nav-tabs" id="myTab" role="tablist">
 	  <li class="nav-item" role="presentation">
-		<button class="nav-link active" id="song-tab" data-bs-toggle="tab" data-bs-target="#lyrics-with-chords" type="button" role="tab" aria-controls="lyrics-with-chords" aria-selected="true">Lyrics with chords</button>
+		<button class="nav-link active" id="song-tab" data-bs-toggle="tab" data-bs-target="#song-tab-pane" type="button" role="tab" aria-controls="song-tab-pane" aria-selected="true">Lyrics with chords</button>
 	  </li>
 	  <li class="nav-item" role="presentation">
 		<button class="nav-link" id="lyrics-tab" data-bs-toggle="tab" data-bs-target="#lyrics-tab-pane" type="button" role="tab" aria-controls="lyrics-tab-pane" aria-selected="false">Lyrics</button>
@@ -21,24 +21,32 @@
 	</ul>
 	<div class="tab-content" id="myTabContent">
 	<br>
-	  <div class="tab-pane fade show active" id="lyrics-with-chords" role="tabpanel" aria-labelledby="song-tab" tabindex="1">
+	  <div class="tab-pane fade show active" id="song-tab-pane" role="tabpanel" aria-labelledby="song-tab" tabindex="1">
 		<br>
 		<div class="btn-toolbar justify-content-md-end" role="toolbar" aria-label="edit-delete-genre">
 			<div class="btn-group me-2" role="group" aria-label="First group">
 				<a class="btn btn-primary btn-sm" href="{{ url_for('.edit_song', id=song.id) }}" role="button">Edit</a>
 			</div>
 			<div class="btn-group me-2" role="group" aria-label="Second group">
-				<button type="button" class="btn btn-secondary btn-sm">Delete</button>
+				<a class="btn btn-secondary btn-sm" href="#" role="button">Delete</a>
 			</div>
-			<div class="btn-group" role="group" aria-label="Third group">
+			<div class="btn-group me-2" role="group" aria-label="Third group">
 				<button class="btn btn-primary btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
 				  Genre/Tag
 				</button>
 			</div>
 		</div>	  
-			<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="genre_and_tags">
+	<br>
+	  {% include '_song_chords.html' %}
+	  </div>
+		<div class="tab-pane fade" id="lyrics-tab-pane" role="tabpanel" aria-labelledby="lyrics-tab" tabindex="2">{% include '_song_lyrics.html' %}</div>
+		<div class="tab-pane fade" id="links-tab-pane" role="tabpanel" aria-labelledby="links-tab" tabindex="3">{% include '_song_links.html' %}</div>
+		<div class="tab-pane fade" id="genre-tab-pane" role="tabpanel" aria-labelledby="genre-tab" tabindex="3">{{ genre|safe }}</div>
+	</div>
+	
+				<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
 				<div class="offcanvas-header">
-					<h5 class="offcanvas-title" id="genre_and_tags">Genre and tags</h5>
+					<h5 class="offcanvas-title" id="offcanvasRightLabel">Genre and tags</h5>
 					<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 				</div>
 				<div class="offcanvas-body">
@@ -52,12 +60,6 @@
 				</div>
 			</div>	
 	<br>
-	  {% include '_song_chords.html' %}
-	  </div>
-	  <div class="tab-pane fade" id="lyrics-tab-pane" role="tabpanel" aria-labelledby="lyrics-tab" tabindex="2">{% include '_song_lyrics.html' %}</div>
-	  <div class="tab-pane fade" id="links-tab-pane" role="tabpanel" aria-labelledby="links-tab" tabindex="3">{% include '_song_links.html' %}</div>
-	  <div class="tab-pane fade" id="genre-tab-pane" role="tabpanel" aria-labelledby="genre-tab" tabindex="3">{{ genre|safe }}</div>
-	</div>
-	<br>
+
 	
 {% endblock %}

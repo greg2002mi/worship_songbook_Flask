@@ -11,7 +11,7 @@
 			{% for t in tags %}
 				<tr valign="top">
 					<td>{{ t.id }}</td>
-					<td><a href="#">{{ t.name }}</a></td>
+					<td><a href="{{ url_for('.tag_songlist', tagid=t.id) }}">{{ t.name }}</a></td>
 				</tr>
 			{% endfor %}
 			</tbody>

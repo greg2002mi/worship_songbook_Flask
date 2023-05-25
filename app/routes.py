@@ -190,8 +190,10 @@ def add_song():
 #                            next_url=next_url, prev_url=prev_url)
 
 @app.route('/tag_list', methods=['GET', 'POST'])
+@login_required
 def tag_list():
     form = AddTag()
+    untag_form = EmptyForm()
     tags = Tag.query.all()
     if form.validate_on_submit():
         t = Tag(name=form.name.data) 
@@ -199,7 +201,82 @@ def tag_list():
         db.session.commit()
         flash('A new tag has been saved.')
         return redirect(url_for('tag_list'))      
-    return render_template('tag_list.html', title='Tag list', tags=tags, form=form)
+    return render_template('tag_list.html', title='Tag list', tags=tags, form=form, untag_form=untag_form)
+
+@app.route('/tag_songlist')
+@login_required
+def tag_songlist():
+    tagid = request.args.get('tagid', type=int)
+    tag = Tag.query.filter_by(id=tagid).first_or_404()
+    page = request.args.get('page', 1, type=int)
+    songs = tag.songs.order_by(Song.title).paginate(
+        page=page, per_page=app.config['ITEMS_PER_PAGE'], error_out=False)
+    next_url = url_for('tag_songlist', tagid=tag.id, page=songs.next_num) \
+        if songs.has_next else None
+    prev_url = url_for('tag_songlist', tagid=tag.id, page=songs.prev_num) \
+        if songs.has_prev else None
+    form = EmptyForm()
+    return render_template('tag_songlist.html', tag=tag, songs=songs.items,
+                            next_url=next_url, prev_url=prev_url, form=form)
+    # return render_template('tag_songlist.html', tag=tag, songs=songs, form=form)
+
+@app.route('/untag')
+@login_required
+def untag():
+    tagid = request.args.get('tagid', type=int)
+    songid = request.args.get('songid', type=int)
+    form = EmptyForm()
+    if form.validate_on_submit():
+        tag = Tag.query.filter_by(id=tagid).first_or_404()
+        song = Song.query.filter_by(id=songid).first_or_404()
+        if tag is None:
+            flash('Tag {} not found.'.format(tag.name))
+            return redirect(url_for('tag_list'))
+        if song is None:
+            flash('Song {} not found.'.format(song.title))
+            return redirect(url_for('tag_songlist', tagid=tagid))
+        song.tags.remove(tag)#issue. does not remove tag from song.
+        db.session.commit()
+        flash('Song has been removed from tag {}.'.format(tag.name))
+        return redirect(url_for('tag_songlist', tagid=tagid))
+    else:
+        return redirect(url_for('tag_list'))
+
+# @app.route('/remove_tag/<tag>', methods=['POST'])
+# @login_required
+# def remove_tag(tag):
+#     # first untag all songs from specific tag in relational database
+#     # second remove tag from Tag database
+#     untag_form = EmptyForm()
+#     tags = Tag.query.all()
+#     if untag_form.validate_on_submit():
+#         if 
+#         tagged_songs = Song.query.filter(Song.id.in_([s.id for s in tag.songs]))
+#         for tsong in tagged_songs:
+#             tsong.tags.remove(tag)
+#         db.session.commit()
+#         flash('Tag has been unlinked from all songs and removed from Database')
+#         return redirect(url_for('tag_list'))
+    
+# @app.route('/remove_tag/<tag>', methods=['POST'])
+# @login_required
+# def unfollow(username):
+#     form = EmptyForm()
+#     if form.validate_on_submit():
+#         user = User.query.filter_by(username=username).first()
+#         if user is None:
+#             flash('User {} not found.'.format(username))
+#             return redirect(url_for('index'))
+#         if user == current_user:
+#             flash('You cannot unfollow yourself!')
+#             return redirect(url_for('user', username=username))
+#         current_user.unfollow(user)
+#         db.session.commit()
+#         flash('You are not following {}.'.format(username))
+#         return redirect(url_for('user', username=username))
+#     else:
+#         return redirect(url_for('index'))    
+    
 
 @app.route('/edit_song/<int:id>', methods=['GET', 'POST'])
 @login_required

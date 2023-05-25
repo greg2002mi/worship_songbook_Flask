@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<div class="row">
+	<div class="col-9">{{ tag.name }}</div>
+</div>
+<div class="row">	
+		<div class="col">
+			<table class="table table-hover">
+			<thead>
+			  <tr>
+				 <th>No.</th>
+				 <th>Title</th>
+				 <th>Artist/singer</th>
+				 <th>Functions</th>
+			  </tr>
+			</thead>
+			<tbody>
+			{% for song in songs %}			
+				<tr valign="top">
+					<td>{{ song.id }}</td>
+					<td><a href="{{ url_for('.view_song', id=song.id) }}">{{ song.title }}</a></td>
+					<td>{{ song.singer }}</td>
+					<td>
+					{% if current_user.is_anonymous %}
+					To remove login required
+					{% else %}
+					<a href="{{ url_for('.untag', tagid=tag.id, songid=song.id) }}">Remove</a>
+					{% endif %}
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+			</table>
+		<nav aria-label="...">
+			<ul class="pager">
+				<li class="previous{% if not prev_url %} disabled{% endif %}">
+					<a href="{{ prev_url or '#' }}">
+						<span aria-hidden="true">&larr;</span> Previous
+					</a>
+				</li>
+				<li class="next{% if not next_url %} disabled{% endif %}">
+					<a href="{{ next_url or '#' }}">
+						Next <span aria-hidden="true">&rarr;</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+		</div>
+	</div>
+
+
+{% endblock %}
