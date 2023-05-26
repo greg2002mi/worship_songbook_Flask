@@ -1,0 +1,48 @@
+<h3>Add translation to {{ song.title }} from the list of existing song titles</h3>
+    <form class="form-floating needs-validation" action="{{ url_for('.add_transl', id=song.id) }}" method="post" novalidate>
+		{{ transl_form.hidden_tag() }}
+		<div class="row mb-3">
+            {{ transl_form.tr_song_id.label(class_='col-sm-2 col-form-label') }}
+			<div class="col-10">
+            {{ transl_form.tr_song_id(class="form-control") }}
+            {% for error in transl_form.tr_song_id.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+			</div>      
+		</div>
+        <div class="d-grid gap-2 col-2 mx-auto">
+		{{ transl_form.submit(class='btn btn-success', value='Link') }}
+		</div>
+    </form>
+
+<div class="row">	
+		<div class="col">
+			<table class="table table-responsive-sm table-hover">
+			<thead>
+			  <tr>
+				 <th class="th-lg" scope="col">Songs</th>
+				 <th class="th-sm" scope="col">Language</th>
+				 <th class="th-sm" scope="col">Actions</th>
+			  </tr>
+			</thead>
+			<tbody>
+			{% for tr in t_songlist %}
+				<tr valign="top">
+					<td><a href="{{ url_for('.view_song', id=tr.id) }}">{{ tr.title }}</a></td>
+					<td>{{ lang[tr.language] }}</td>
+					<td>
+					{% if current_user.is_anonymous %}
+					To unlink login required
+					{% else %}
+					<form action="{{ url_for('.remove_transl', selsong_id=tr.id, cursong_id=song.id) }}" method="post">
+						{{ remove_transl_form.hidden_tag() }}
+						{{ remove_transl_form.submit(value='Unlink') }}
+					</form>
+					{% endif %}
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+			</table>
+		</div>
+	</div>

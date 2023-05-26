@@ -1,18 +1,68 @@
-2023-05-22 09:25:17,867 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 09:25:22,848 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 09:29:46,942 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 09:30:04,855 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 09:30:09,629 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 09:30:14,487 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 09:30:22,996 ERROR: Exception on / [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+2023-05-23 08:51:25,626 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\clsregistry.py", line 515, in _resolve_name
-    rval = d[token]
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\util\_collections.py", line 346, in __missing__
-    self[key] = val = self.creator(key)
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\clsregistry.py", line 483, in _access_cls
-    return self.fallback[key]
-KeyError: 'Sermon'
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 279, in view_song
+    return render_template('view_song.html', title='View Song', html=html, tagged_list=tagged_list, tags=tags, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, ori_key=ori_key)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1301, in render
+    self.environment.handle_exception()
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\_projects\church\app\templates\view_song.html", line 2, in top-level template code
+    <!--{% import 'bootstrap/wtf.html' as wtf %}-->
+  File "D:\_projects\church\app\templates\base.html", line 54, in top-level template code
+    {% block content %}
+  File "D:\_projects\church\app\templates\view_song.html", line 49, in block 'content'
+    {% include '_offcanvas.html' %}
+  File "D:\_projects\church\app\templates\_offcanvas.html", line 8, in top-level template code
+    {% for t, n in tags_form.name %}
+TypeError: cannot unpack non-iterable _Option object
+2023-05-23 08:52:49,441 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 09:25:22,315 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 09:28:17,927 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 09:28:48,971 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 09:38:24,589 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 09:41:08,140 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 09:41:14,932 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 242, in view_song
+    tags = Tag.query.filter(Tag.songs.any(song_id=id)).all()
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\interfaces.py", line 896, in any
+    return self.operate(  # type: ignore
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\attributes.py", line 450, in operate
+    return op(self.comparator, *other, **kwargs)  # type: ignore[return-value]  # noqa: E501
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\interfaces.py", line 793, in _any_op
+    return a.any(b, **kwargs)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\relationships.py", line 912, in any
+    return self._criterion_exists(criterion, **kwargs)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\relationships.py", line 811, in _criterion_exists
+    crit = getattr(self.property.mapper.class_, k) == kwargs[k]
+AttributeError: type object 'Song' has no attribute 'song_id'
+2023-05-23 09:42:48,080 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 09:47:03,489 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 09:47:07,389 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\elements.py", line 1521, in __getattr__
+    return getattr(self.comparator, key)
+AttributeError: 'Comparator' object has no attribute 'any'
 
 The above exception was the direct cause of the following exception:
 
@@ -21,112 +71,25 @@ Traceback (most recent call last):
     response = self.full_dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
     rv = self.handle_user_exception(e)
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1482, in full_dispatch_request
-    rv = self.preprocess_request()
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1974, in preprocess_request
-    rv = self.ensure_sync(before_func)()
-  File "D:\_projects\church\app\routes.py", line 14, in before_request
-    if current_user.is_authenticated:
-  File "D:\_projects\church\lib\site-packages\werkzeug\local.py", line 311, in __get__
-    obj = instance._get_current_object()
-  File "D:\_projects\church\lib\site-packages\werkzeug\local.py", line 515, in _get_current_object
-    return get_name(local())  # type: ignore
-  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 25, in <lambda>
-    current_user = LocalProxy(lambda: _get_user())
-  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 372, in _get_user
-    current_app.login_manager._load_user()
-  File "D:\_projects\church\lib\site-packages\flask_login\login_manager.py", line 364, in _load_user
-    user = self._user_callback(user_id)
-  File "D:\_projects\church\app\models.py", line 121, in load_user
-    return User.query.get(int(id)) #flask-login passes id as string, thus converted to int.
-  File "D:\_projects\church\lib\site-packages\flask_sqlalchemy\model.py", line 30, in __get__
-    return cls.query_class(
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\query.py", line 273, in __init__
-    self._set_entities(entities)
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\query.py", line 282, in _set_entities
-    self._raw_columns = [
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\query.py", line 283, in <listcomp>
-    coercions.expect(
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\coercions.py", line 406, in expect
-    insp._post_inspect
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\util\langhelpers.py", line 1257, in __get__
-    obj.__dict__[self.__name__] = result = self.fget(obj)
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\mapper.py", line 2681, in _post_inspect
-    self._check_configure()
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\mapper.py", line 2362, in _check_configure
-    _configure_registries({self.registry}, cascade=True)
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\mapper.py", line 4177, in _configure_registries
-    _do_configure_registries(registries, cascade)
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\mapper.py", line 4219, in _do_configure_registries
-    mapper._post_configure_properties()
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\mapper.py", line 2379, in _post_configure_properties
-    prop.init()
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\interfaces.py", line 549, in init
-    self.do_init()
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\relationships.py", line 1632, in do_init
-    self._setup_entity()
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\relationships.py", line 1851, in _setup_entity
-    self._clsregistry_resolve_name(argument)(),
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\clsregistry.py", line 519, in _resolve_name
-    self._raise_for_name(name, err)
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\clsregistry.py", line 500, in _raise_for_name
-    raise exc.InvalidRequestError(
-sqlalchemy.exc.InvalidRequestError: When initializing mapper Mapper[User(user)], expression 'Sermon' failed to locate a name ('Sermon'). If this is a class name, consider adding this relationship() to the <class 'app.models.User'> class after both dependent classes have been defined.
-2023-05-22 09:30:26,959 ERROR: Exception on / [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
-Traceback (most recent call last):
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
-    response = self.full_dispatch_request()
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1482, in full_dispatch_request
-    rv = self.preprocess_request()
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1974, in preprocess_request
-    rv = self.ensure_sync(before_func)()
-  File "D:\_projects\church\app\routes.py", line 14, in before_request
-    if current_user.is_authenticated:
-  File "D:\_projects\church\lib\site-packages\werkzeug\local.py", line 311, in __get__
-    obj = instance._get_current_object()
-  File "D:\_projects\church\lib\site-packages\werkzeug\local.py", line 515, in _get_current_object
-    return get_name(local())  # type: ignore
-  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 25, in <lambda>
-    current_user = LocalProxy(lambda: _get_user())
-  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 372, in _get_user
-    current_app.login_manager._load_user()
-  File "D:\_projects\church\lib\site-packages\flask_login\login_manager.py", line 364, in _load_user
-    user = self._user_callback(user_id)
-  File "D:\_projects\church\app\models.py", line 121, in load_user
-    return User.query.get(int(id)) #flask-login passes id as string, thus converted to int.
-  File "D:\_projects\church\lib\site-packages\flask_sqlalchemy\model.py", line 30, in __get__
-    return cls.query_class(
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\query.py", line 273, in __init__
-    self._set_entities(entities)
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\query.py", line 282, in _set_entities
-    self._raw_columns = [
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\query.py", line 283, in <listcomp>
-    coercions.expect(
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\coercions.py", line 406, in expect
-    insp._post_inspect
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\util\langhelpers.py", line 1257, in __get__
-    obj.__dict__[self.__name__] = result = self.fget(obj)
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\mapper.py", line 2681, in _post_inspect
-    self._check_configure()
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\mapper.py", line 2362, in _check_configure
-    _configure_registries({self.registry}, cascade=True)
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\mapper.py", line 4177, in _configure_registries
-    _do_configure_registries(registries, cascade)
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\mapper.py", line 4215, in _do_configure_registries
-    raise e
-sqlalchemy.exc.InvalidRequestError: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[User(user)]'. Original exception was: When initializing mapper Mapper[User(user)], expression 'Sermon' failed to locate a name ('Sermon'). If this is a class name, consider adding this relationship() to the <class 'app.models.User'> class after both dependent classes have been defined.
-2023-05-22 09:34:35,801 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 09:34:42,084 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 09:34:47,737 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 09:34:57,203 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 09:42:47,926 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 15:29:27,038 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 15:29:31,365 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 15:32:47,682 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 15:32:55,923 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 15:33:09,961 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 15:34:23,082 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 15:34:33,981 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-22 15:34:39,974 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 244, in view_song
+    tags = Tag.query.filter(Tag.id.any(2))
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\interfaces.py", line 896, in any
+    return self.operate(  # type: ignore
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\attributes.py", line 450, in operate
+    return op(self.comparator, *other, **kwargs)  # type: ignore[return-value]  # noqa: E501
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\interfaces.py", line 793, in _any_op
+    return a.any(b, **kwargs)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\interfaces.py", line 896, in any
+    return self.operate(  # type: ignore
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\properties.py", line 478, in operate
+    return op(self.__clause_element__(), *other, **kwargs)  # type: ignore[return-value]  # noqa: E501
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\interfaces.py", line 793, in _any_op
+    return a.any(b, **kwargs)
+  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\elements.py", line 1523, in __getattr__
+    raise AttributeError(
+AttributeError: Neither 'AnnotatedColumn' object nor 'Comparator' object has an attribute 'any'
+2023-05-23 09:48:33,144 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]

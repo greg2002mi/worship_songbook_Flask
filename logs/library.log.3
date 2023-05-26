@@ -1,4 +1,4 @@
-2023-05-23 08:51:25,626 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+2023-05-23 13:44:44,506 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -8,8 +8,8 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 279, in view_song
-    return render_template('view_song.html', title='View Song', html=html, tagged_list=tagged_list, tags=tags, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, ori_key=ori_key)
+  File "D:\_projects\church\app\routes.py", line 289, in view_song
+    return render_template('view_song.html', title='View Song', html=html, tagged_list=tagged_list, tag_states=tag_states, tags=tags, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, ori_key=ori_key)
   File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
     return _render(app, template, context)
   File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
@@ -24,16 +24,35 @@ Traceback (most recent call last):
     {% block content %}
   File "D:\_projects\church\app\templates\view_song.html", line 49, in block 'content'
     {% include '_offcanvas.html' %}
-  File "D:\_projects\church\app\templates\_offcanvas.html", line 8, in top-level template code
-    {% for t, n in tags_form.name %}
-TypeError: cannot unpack non-iterable _Option object
-2023-05-23 08:52:49,441 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 09:25:22,315 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 09:28:17,927 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 09:28:48,971 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 09:38:24,589 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 09:41:08,140 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 09:41:14,932 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\_projects\church\app\templates\_offcanvas.html", line 10, in template
+    <input class="form-check-input" type="checkbox" id="{{ name.id }}" name="tags" value="{{ name.id }}" {% if tag_states[{{ name.id }}] %}checked{% endif %}>
+jinja2.exceptions.TemplateSyntaxError: expected token ':', got '}'
+2023-05-23 13:48:48,346 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 13:55:53,401 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 13:56:02,805 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 14:03:50,237 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 14:19:13,221 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 14:20:27,255 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 14:23:58,777 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 14:25:09,876 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 14:46:50,987 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-24 15:07:19,262 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-24 15:23:40,182 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-24 15:24:09,104 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-24 15:59:08,711 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-24 16:00:00,220 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-24 16:00:55,652 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-25 07:58:32,336 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-25 08:08:19,034 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-25 08:10:53,713 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-25 08:19:22,911 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-25 08:21:49,213 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-25 08:24:50,453 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-25 13:02:50,077 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-25 15:24:16,558 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-25 15:24:23,705 ERROR: Exception on /tag_songlist [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -43,29 +62,15 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 242, in view_song
-    tags = Tag.query.filter(Tag.songs.any(song_id=id)).all()
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\interfaces.py", line 896, in any
-    return self.operate(  # type: ignore
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\attributes.py", line 450, in operate
-    return op(self.comparator, *other, **kwargs)  # type: ignore[return-value]  # noqa: E501
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\interfaces.py", line 793, in _any_op
-    return a.any(b, **kwargs)
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\relationships.py", line 912, in any
-    return self._criterion_exists(criterion, **kwargs)
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\relationships.py", line 811, in _criterion_exists
-    crit = getattr(self.property.mapper.class_, k) == kwargs[k]
-AttributeError: type object 'Song' has no attribute 'song_id'
-2023-05-23 09:42:48,080 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 09:47:03,489 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 09:47:07,389 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
-Traceback (most recent call last):
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\elements.py", line 1521, in __getattr__
-    return getattr(self.comparator, key)
-AttributeError: 'Comparator' object has no attribute 'any'
-
-The above exception was the direct cause of the following exception:
-
+  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+  File "D:\_projects\church\app\routes.py", line 212, in tag_songlist
+    songs = tag.songs.order_by(Song.title).paginate(
+AttributeError: 'InstrumentedList' object has no attribute 'order_by'
+2023-05-25 15:25:28,488 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-25 15:56:32,678 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-25 16:39:22,269 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-25 16:39:29,517 ERROR: Exception on /tag_songlist [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -75,21 +80,26 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 244, in view_song
-    tags = Tag.query.filter(Tag.id.any(2))
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\interfaces.py", line 896, in any
-    return self.operate(  # type: ignore
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\attributes.py", line 450, in operate
-    return op(self.comparator, *other, **kwargs)  # type: ignore[return-value]  # noqa: E501
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\interfaces.py", line 793, in _any_op
-    return a.any(b, **kwargs)
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\interfaces.py", line 896, in any
-    return self.operate(  # type: ignore
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\properties.py", line 478, in operate
-    return op(self.__clause_element__(), *other, **kwargs)  # type: ignore[return-value]  # noqa: E501
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\interfaces.py", line 793, in _any_op
-    return a.any(b, **kwargs)
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\elements.py", line 1523, in __getattr__
-    raise AttributeError(
-AttributeError: Neither 'AnnotatedColumn' object nor 'Comparator' object has an attribute 'any'
-2023-05-23 09:48:33,144 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+  File "D:\_projects\church\app\routes.py", line 219, in tag_songlist
+    return render_template('tag_songlist.html', tag=tag, songs=songs.items,
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1301, in render
+    self.environment.handle_exception()
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\_projects\church\app\templates\tag_songlist.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "D:\_projects\church\app\templates\base.html", line 52, in top-level template code
+    {% block content %}
+  File "D:\_projects\church\app\templates\base.html", line 63, in block 'content'
+    {% block app_content %}{% endblock %}
+  File "D:\_projects\church\app\templates\tag_songlist.html", line 20, in block 'app_content'
+    <td>{{ song.id }}</td>
+  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 485, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'song' is undefined

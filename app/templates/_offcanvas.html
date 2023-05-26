@@ -1,4 +1,4 @@
-<form class="form-floating needs-validation" method="POST">
+<form class="form-floating needs-validation" action="{{ url_for('.tagging', id=song.id) }}" method="POST">
 	{{ tags_form.hidden_tag() }}
 	{% if tags_form.errors %}
 		{{ tags_form.errors }}

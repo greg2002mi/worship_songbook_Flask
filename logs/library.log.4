@@ -1,21 +1,4 @@
-2023-05-23 07:56:17,965 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 07:56:22,840 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 07:56:42,404 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 07:56:48,959 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 07:56:54,445 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 07:58:00,130 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 08:01:10,100 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 08:04:35,988 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 08:04:48,857 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 08:05:03,155 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 08:05:09,648 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 08:06:28,214 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 08:12:22,700 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 08:23:37,607 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 08:24:30,258 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 08:29:21,912 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 08:35:39,778 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 08:44:09,074 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+2023-05-23 09:57:31,249 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -25,8 +8,76 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 279, in view_song
-    return render_template('view_song.html', title='View Song', html=html, tagged_list=tagged_list, tags=tags, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, ori_key=ori_key)
+  File "D:\_projects\church\app\routes.py", line 244, in view_song
+    tagged_list_int = ([t.id for t in tagged_list])
+  File "D:\_projects\church\app\routes.py", line 244, in <listcomp>
+    tagged_list_int = ([t.id for t in tagged_list])
+AttributeError: 'str' object has no attribute 'id'
+2023-05-23 09:58:17,251 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 09:58:19,930 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 244, in view_song
+    tagged_list_int = ([t.id for t in tagged_list])
+  File "D:\_projects\church\app\routes.py", line 244, in <listcomp>
+    tagged_list_int = ([t.id for t in tagged_list])
+AttributeError: 'str' object has no attribute 'id'
+2023-05-23 09:59:01,562 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 10:04:33,232 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 10:06:20,119 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 10:07:12,618 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 10:12:04,793 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 10:13:51,047 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 10:13:54,188 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 286, in view_song
+    if test is not None:
+UnboundLocalError: local variable 'test' referenced before assignment
+2023-05-23 10:15:11,929 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 10:23:38,531 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 10:28:55,316 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 13:26:48,270 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 13:26:58,575 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 287, in view_song
+    tags_states[tag.id] = tag in song.tags
+NameError: name 'tags_states' is not defined
+2023-05-23 13:27:59,278 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 13:28:04,587 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 288, in view_song
+    return render_template('view_song.html', title='View Song', html=html, tagged_list=tagged_list, tag_states=tag_states, tags=tags, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, ori_key=ori_key)
   File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
     return _render(app, template, context)
   File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
@@ -41,12 +92,14 @@ Traceback (most recent call last):
     {% block content %}
   File "D:\_projects\church\app\templates\view_song.html", line 49, in block 'content'
     {% include '_offcanvas.html' %}
-  File "D:\_projects\church\app\templates\_offcanvas.html", line 15, in top-level template code
-    {{ tags_form.key.label(class_='form-check-label') }}
+  File "D:\_projects\church\app\templates\_offcanvas.html", line 10, in top-level template code
+    <input class="form-check-input" type="checkbox" id="{{ name.id }}" name="tags" value="{{ name.id }}" {% if tag_states[tag.id] %}checked{% endif %}>
   File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 485, in getattr
     return getattr(obj, attribute)
-jinja2.exceptions.UndefinedError: 'app.forms.TagsForm object' has no attribute 'key'
-2023-05-23 08:44:09,928 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+jinja2.exceptions.UndefinedError: 'tag' is undefined
+2023-05-23 13:29:27,695 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 13:30:25,914 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-23 13:44:43,175 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -56,8 +109,8 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 279, in view_song
-    return render_template('view_song.html', title='View Song', html=html, tagged_list=tagged_list, tags=tags, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, ori_key=ori_key)
+  File "D:\_projects\church\app\routes.py", line 289, in view_song
+    return render_template('view_song.html', title='View Song', html=html, tagged_list=tagged_list, tag_states=tag_states, tags=tags, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, ori_key=ori_key)
   File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
     return _render(app, template, context)
   File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
@@ -72,39 +125,8 @@ Traceback (most recent call last):
     {% block content %}
   File "D:\_projects\church\app\templates\view_song.html", line 49, in block 'content'
     {% include '_offcanvas.html' %}
-  File "D:\_projects\church\app\templates\_offcanvas.html", line 15, in top-level template code
-    {{ tags_form.key.label(class_='form-check-label') }}
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 485, in getattr
-    return getattr(obj, attribute)
-jinja2.exceptions.UndefinedError: 'app.forms.TagsForm object' has no attribute 'key'
-2023-05-23 08:44:11,416 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
-Traceback (most recent call last):
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
-    response = self.full_dispatch_request()
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 279, in view_song
-    return render_template('view_song.html', title='View Song', html=html, tagged_list=tagged_list, tags=tags, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, ori_key=ori_key)
-  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
-    return _render(app, template, context)
-  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
-    rv = template.render(context)
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1301, in render
-    self.environment.handle_exception()
   File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
     raise rewrite_traceback_stack(source=source)
-  File "D:\_projects\church\app\templates\view_song.html", line 2, in top-level template code
-    <!--{% import 'bootstrap/wtf.html' as wtf %}-->
-  File "D:\_projects\church\app\templates\base.html", line 54, in top-level template code
-    {% block content %}
-  File "D:\_projects\church\app\templates\view_song.html", line 49, in block 'content'
-    {% include '_offcanvas.html' %}
-  File "D:\_projects\church\app\templates\_offcanvas.html", line 15, in top-level template code
-    {{ tags_form.key.label(class_='form-check-label') }}
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 485, in getattr
-    return getattr(obj, attribute)
-jinja2.exceptions.UndefinedError: 'app.forms.TagsForm object' has no attribute 'key'
+  File "D:\_projects\church\app\templates\_offcanvas.html", line 10, in template
+    <input class="form-check-input" type="checkbox" id="{{ name.id }}" name="tags" value="{{ name.id }}" {% if tag_states[{{ name.id }}] %}checked{% endif %}>
+jinja2.exceptions.TemplateSyntaxError: expected token ':', got '}'

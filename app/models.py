@@ -133,6 +133,9 @@ songtags = db.Table('songtags',
                     db.Column('song_id', db.Integer, db.ForeignKey('song.id')), 
                     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')))
 
+translation = db.Table('translation',
+    db.Column('song_id', db.Integer, db.ForeignKey('song.id')),
+    db.Column('translated_id', db.Integer, db.ForeignKey('song.id')))
   # many to many relationship sermon and songs  
 # songlist = db.Table('songlist', 
 #                     db.Column('sermon_id', db.Integer, db.ForeignKey('sermon.id')), 
@@ -155,11 +158,28 @@ class Song(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tags = db.relationship('Tag', secondary=songtags, 
                            backref=db.backref('songs', lazy='dynamic'), lazy='dynamic')
+    translated = db.relationship(
+        'Song', secondary=translation,
+        primaryjoin=(translation.c.song_id == id),
+        secondaryjoin=(translation.c.translated_id == id),
+        backref=db.backref('translation', lazy='dynamic'), lazy='dynamic')
     # inlist = db.relationship(
     #     'Sermon', secondary=songlist, backref='song')
     
     def __repr__(self):
         return '<Song {}>'.format(self.title)
+    
+    def add_transl(self, song):
+        if not self.transl_exist(song):
+            self.translated.append(song)
+
+    def remove_transl(self, song):
+        if self.transl_exist(song):
+            self.translated.remove(song)
+
+    def transl_exist(self, song):
+        return self.translated.filter(
+            translation.c.translated_id == song.id).count() > 0
     
     # assigning song to tags
     # def add_tag(self, tag):

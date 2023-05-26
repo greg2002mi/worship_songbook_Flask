@@ -1,4 +1,4 @@
-2023-05-23 09:57:31,249 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+2023-05-26 13:36:52,669 ERROR: Exception on /add_transl [POST] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -8,13 +8,24 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 244, in view_song
-    tagged_list_int = ([t.id for t in tagged_list])
-  File "D:\_projects\church\app\routes.py", line 244, in <listcomp>
-    tagged_list_int = ([t.id for t in tagged_list])
-AttributeError: 'str' object has no attribute 'id'
-2023-05-23 09:58:17,251 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 09:58:19,930 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+  File "D:\_projects\church\app\routes.py", line 325, in add_transl
+    if transl_form.validate_on_submit():
+  File "D:\_projects\church\lib\site-packages\flask_wtf\form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+  File "D:\_projects\church\lib\site-packages\wtforms\form.py", line 329, in validate
+    return super().validate(extra)
+  File "D:\_projects\church\lib\site-packages\wtforms\form.py", line 146, in validate
+    if not field.validate(self, extra):
+  File "D:\_projects\church\lib\site-packages\wtforms\fields\core.py", line 231, in validate
+    self.pre_validate(form)
+  File "D:\_projects\church\lib\site-packages\wtforms\fields\choices.py", line 136, in pre_validate
+    raise TypeError(self.gettext("Choices cannot be None."))
+TypeError: Choices cannot be None.
+2023-05-26 13:38:49,375 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-26 13:40:44,371 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-26 13:40:50,718 ERROR: Exception on /add_transl [POST] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -24,18 +35,16 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 244, in view_song
-    tagged_list_int = ([t.id for t in tagged_list])
-  File "D:\_projects\church\app\routes.py", line 244, in <listcomp>
-    tagged_list_int = ([t.id for t in tagged_list])
-AttributeError: 'str' object has no attribute 'id'
-2023-05-23 09:59:01,562 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 10:04:33,232 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 10:06:20,119 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 10:07:12,618 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 10:12:04,793 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 10:13:51,047 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 10:13:54,188 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+  File "D:\_projects\church\app\routes.py", line 342, in add_transl
+    flash('Issues: Either {} or {} is missing.'.format(cur_song.title, tr_song.title))
+UnboundLocalError: local variable 'cur_song' referenced before assignment
+2023-05-26 13:41:36,925 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-26 13:42:17,064 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-26 13:44:10,749 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-26 13:46:15,027 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-26 13:46:20,442 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -45,39 +54,8 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 286, in view_song
-    if test is not None:
-UnboundLocalError: local variable 'test' referenced before assignment
-2023-05-23 10:15:11,929 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 10:23:38,531 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 10:28:55,316 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 13:26:48,270 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 13:26:58,575 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
-Traceback (most recent call last):
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
-    response = self.full_dispatch_request()
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 287, in view_song
-    tags_states[tag.id] = tag in song.tags
-NameError: name 'tags_states' is not defined
-2023-05-23 13:27:59,278 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 13:28:04,587 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
-Traceback (most recent call last):
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
-    response = self.full_dispatch_request()
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 288, in view_song
-    return render_template('view_song.html', title='View Song', html=html, tagged_list=tagged_list, tag_states=tag_states, tags=tags, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, ori_key=ori_key)
+  File "D:\_projects\church\app\routes.py", line 410, in view_song
+    return render_template('view_song.html', title='View Song', html=html, transl_form=transl_form,
   File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
     return _render(app, template, context)
   File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
@@ -88,18 +66,22 @@ Traceback (most recent call last):
     raise rewrite_traceback_stack(source=source)
   File "D:\_projects\church\app\templates\view_song.html", line 2, in top-level template code
     <!--{% import 'bootstrap/wtf.html' as wtf %}-->
-  File "D:\_projects\church\app\templates\base.html", line 54, in top-level template code
+  File "D:\_projects\church\app\templates\base.html", line 52, in top-level template code
     {% block content %}
-  File "D:\_projects\church\app\templates\view_song.html", line 49, in block 'content'
-    {% include '_offcanvas.html' %}
-  File "D:\_projects\church\app\templates\_offcanvas.html", line 10, in top-level template code
-    <input class="form-check-input" type="checkbox" id="{{ name.id }}" name="tags" value="{{ name.id }}" {% if tag_states[tag.id] %}checked{% endif %}>
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 485, in getattr
-    return getattr(obj, attribute)
-jinja2.exceptions.UndefinedError: 'tag' is undefined
-2023-05-23 13:29:27,695 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 13:30:25,914 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-23 13:44:43,175 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+  File "D:\_projects\church\app\templates\base.html", line 63, in block 'content'
+    {% block app_content %}{% endblock %}
+  File "D:\_projects\church\app\templates\view_song.html", line 44, in block 'app_content'
+    <div class="tab-pane fade" id="translation-tab-pane" role="tabpanel" aria-labelledby="translation-tab" tabindex="3">{% include '_translations.html' %}</div>
+  File "D:\_projects\church\app\templates\_translations.html", line 36, in top-level template code
+    <form action="{{ url_for('.remove_transl', id=tr.id) }}" method="post">
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1697, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1686, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+  File "D:\_projects\church\lib\site-packages\werkzeug\routing\map.py", line 947, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'remove_transl' with values ['id']. Did you mean 'remove_tag' instead?
+2023-05-26 13:46:21,667 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -109,8 +91,8 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 289, in view_song
-    return render_template('view_song.html', title='View Song', html=html, tagged_list=tagged_list, tag_states=tag_states, tags=tags, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, ori_key=ori_key)
+  File "D:\_projects\church\app\routes.py", line 410, in view_song
+    return render_template('view_song.html', title='View Song', html=html, transl_form=transl_form,
   File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
     return _render(app, template, context)
   File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
@@ -121,12 +103,20 @@ Traceback (most recent call last):
     raise rewrite_traceback_stack(source=source)
   File "D:\_projects\church\app\templates\view_song.html", line 2, in top-level template code
     <!--{% import 'bootstrap/wtf.html' as wtf %}-->
-  File "D:\_projects\church\app\templates\base.html", line 54, in top-level template code
+  File "D:\_projects\church\app\templates\base.html", line 52, in top-level template code
     {% block content %}
-  File "D:\_projects\church\app\templates\view_song.html", line 49, in block 'content'
-    {% include '_offcanvas.html' %}
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "D:\_projects\church\app\templates\_offcanvas.html", line 10, in template
-    <input class="form-check-input" type="checkbox" id="{{ name.id }}" name="tags" value="{{ name.id }}" {% if tag_states[{{ name.id }}] %}checked{% endif %}>
-jinja2.exceptions.TemplateSyntaxError: expected token ':', got '}'
+  File "D:\_projects\church\app\templates\base.html", line 63, in block 'content'
+    {% block app_content %}{% endblock %}
+  File "D:\_projects\church\app\templates\view_song.html", line 44, in block 'app_content'
+    <div class="tab-pane fade" id="translation-tab-pane" role="tabpanel" aria-labelledby="translation-tab" tabindex="3">{% include '_translations.html' %}</div>
+  File "D:\_projects\church\app\templates\_translations.html", line 36, in top-level template code
+    <form action="{{ url_for('.remove_transl', id=tr.id) }}" method="post">
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1697, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1686, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+  File "D:\_projects\church\lib\site-packages\werkzeug\routing\map.py", line 947, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'remove_transl' with values ['id']. Did you mean 'remove_tag' instead?
+2023-05-26 13:55:51,352 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-26 13:59:20,122 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]

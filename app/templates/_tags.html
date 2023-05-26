@@ -1,10 +1,11 @@
 <div class="row">	
 		<div class="col">
-			<table class="table table-hover">
+			<table class="table table-responsive-sm table-hover">
 			<thead>
 			  <tr>
-				 <th>No.</th>
-				 <th>Tags</th>
+				 <th class="th-sm" scope="col">No.</th>
+				 <th class="th-lg" scope="col">Tags</th>
+				 <th class="th-sm" scope="col">Functions</th>
 			  </tr>
 			</thead>
 			<tbody>
@@ -12,6 +13,16 @@
 				<tr valign="top">
 					<td>{{ t.id }}</td>
 					<td><a href="{{ url_for('.tag_songlist', tagid=t.id) }}">{{ t.name }}</a></td>
+					<td>
+					{% if current_user.is_anonymous %}
+					To delete login required
+					{% else %}
+					<form action="{{ url_for('.remove_tag', tagid=t.id) }}" method="post">
+						{{ form.hidden_tag() }}
+						{{ form.submit(value='Delete') }}
+					</form>
+					{% endif %}
+					</td>
 				</tr>
 			{% endfor %}
 			</tbody>

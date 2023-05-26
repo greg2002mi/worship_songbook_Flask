@@ -2,13 +2,15 @@ from flask import render_template, flash, redirect, url_for, request, abort
 from app import app, db
 from werkzeug.urls import url_parse
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddSong, EditSong, EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm, Transpose
-from app.forms import AddTag, TagsForm
+from app.forms import AddTag, TagsForm, SongsForm
 from flask_login import current_user, login_user, login_required, logout_user
 from app.models import User, Song, Post, Tag
 from datetime import datetime
 from app.email import send_password_reset_email
 from app.core import Chordpro_html
 import logging
+
+lang = ('None', 'Eng', 'Kor', 'Rus')
 
 @app.before_request
 def before_request():
@@ -52,6 +54,7 @@ def index():
 
 @app.route('/songbook')
 def songbook():
+    keyset = ('Empty', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B')
     page = request.args.get('page', 1, type=int)
     songs = Song.query.order_by(Song.title.desc()).paginate(
         page=page, per_page=app.config['SONGS_PER_PAGE'], error_out=False)
@@ -60,7 +63,7 @@ def songbook():
     prev_url = url_for('songbook', page=songs.prev_num) \
         if songs.has_prev else None
     return render_template('songbook.html', title='Songbook', songs=songs.items, 
-                           next_url=next_url, prev_url=prev_url)
+                           next_url=next_url, prev_url=prev_url, keyset=keyset, lang=lang)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -190,7 +193,6 @@ def add_song():
 #                            next_url=next_url, prev_url=prev_url)
 
 @app.route('/tag_list', methods=['GET', 'POST'])
-@login_required
 def tag_list():
     form = AddTag()
     untag_form = EmptyForm()
@@ -204,7 +206,6 @@ def tag_list():
     return render_template('tag_list.html', title='Tag list', tags=tags, form=form, untag_form=untag_form)
 
 @app.route('/tag_songlist')
-@login_required
 def tag_songlist():
     tagid = request.args.get('tagid', type=int)
     tag = Tag.query.filter_by(id=tagid).first_or_404()
@@ -218,9 +219,8 @@ def tag_songlist():
     form = EmptyForm()
     return render_template('tag_songlist.html', tag=tag, songs=songs.items,
                             next_url=next_url, prev_url=prev_url, form=form)
-    # return render_template('tag_songlist.html', tag=tag, songs=songs, form=form)
 
-@app.route('/untag')
+@app.route('/untag', methods=['POST'])
 @login_required
 def untag():
     tagid = request.args.get('tagid', type=int)
@@ -242,41 +242,49 @@ def untag():
     else:
         return redirect(url_for('tag_list'))
 
-# @app.route('/remove_tag/<tag>', methods=['POST'])
-# @login_required
-# def remove_tag(tag):
-#     # first untag all songs from specific tag in relational database
-#     # second remove tag from Tag database
-#     untag_form = EmptyForm()
-#     tags = Tag.query.all()
-#     if untag_form.validate_on_submit():
-#         if 
-#         tagged_songs = Song.query.filter(Song.id.in_([s.id for s in tag.songs]))
-#         for tsong in tagged_songs:
-#             tsong.tags.remove(tag)
-#         db.session.commit()
-#         flash('Tag has been unlinked from all songs and removed from Database')
-#         return redirect(url_for('tag_list'))
+@app.route('/remove_tag', methods=['POST'])
+@login_required
+def remove_tag():
+    # first untag all songs from specific tag in relational database
+    # second remove tag from Tag database
+    tagid = request.args.get('tagid', type=int)
+    tag = Tag.query.filter_by(id=tagid).first_or_404() 
+    untag_form = EmptyForm()
+    if untag_form.validate_on_submit():
+        if tag is None:
+            flash('Tag {} does not exist.'.format(tag.name))
+            return redirect(url_for('tag_list'))
+        if tag.songs is not None:
+            t_songs = tag.songs.all()
+            for ts in t_songs:
+                ts.tags.remove(tag)   
+        db.session.delete(tag)
+        db.session.commit()
+        flash('Tag has been unlinked from all songs and removed from Database')
+        return redirect(url_for('tag_list'))
+    else:
+        return redirect(url_for('tag_list'))
     
-# @app.route('/remove_tag/<tag>', methods=['POST'])
-# @login_required
-# def unfollow(username):
-#     form = EmptyForm()
-#     if form.validate_on_submit():
-#         user = User.query.filter_by(username=username).first()
-#         if user is None:
-#             flash('User {} not found.'.format(username))
-#             return redirect(url_for('index'))
-#         if user == current_user:
-#             flash('You cannot unfollow yourself!')
-#             return redirect(url_for('user', username=username))
-#         current_user.unfollow(user)
-#         db.session.commit()
-#         flash('You are not following {}.'.format(username))
-#         return redirect(url_for('user', username=username))
-#     else:
-#         return redirect(url_for('index'))    
-    
+@app.route('/delete_song', methods=['POST'])
+@login_required
+def delete_song():
+    songid = request.args.get('songid', type=int)
+    delete_form = EmptyForm()
+    if delete_form.validate_on_submit():
+        song = Song.query.filter_by(id=songid).first_or_404() 
+        if song is None:
+            flash('Song {} not found.'.format(song.title))
+            return redirect(url_for('songbook'))
+        if song.tags is not None:
+            songtags = song.tags.all()
+            for s_tags in songtags:
+                s_tags.songs.delete(song)
+        db.session.delete(song)
+        db.session.commit()
+        flash('Song {} is deleted.'.format(song.title))
+        return redirect(url_for('songbook'))
+    else:
+        return redirect(url_for('songbook'))     
 
 @app.route('/edit_song/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -310,6 +318,56 @@ def edit_song(id):
         form.lyrics.data = song.lyrics
     return render_template('edit_song.html', title='Edit Song', form=form) 
 
+@app.route('/add_transl/<int:id>', methods=['POST'])
+@login_required
+def add_transl(id):
+    # cur_song_id = request.args.get('cur_song_id', type=int)
+    transl_form = SongsForm()
+    if request.method == "POST" and transl_form.submit():
+        cur_song = Song.query.filter_by(id=id).first_or_404() 
+        tr_song_id = transl_form.tr_song_id.data
+        tr_song = Song.query.filter_by(id=int(tr_song_id)).first_or_404() 
+        if cur_song is None or tr_song is None:
+            flash('Song {} or {} not found.'.format(cur_song.title, tr_song.title))
+            return redirect(url_for('songbook'))
+        if cur_song.language == tr_song.language:
+            flash('You cannot link songs of same language!')
+            return redirect(url_for('.view_song', id=cur_song.id))
+        # cur_song.add_transl(tr_song)
+        cur_song.translated.append(tr_song)
+        db.session.add(cur_song)
+        db.session.commit()
+        flash('The song {} now has a translated song {}.'.format(cur_song.title, tr_song.title))
+        return redirect(url_for('.view_song', id=id))
+    else:
+        flash('Issues: Validation not passed.')
+        return redirect(url_for('.view_song', id=id))
+    
+@app.route('/remove_transl', methods=['POST'])
+@login_required
+def remove_transl():
+    cursong_id = request.args.get('cursong_id', type=int)
+    selsong_id = request.args.get('selsong_id', type=int)
+    remove_transl_form = EmptyForm()
+    if remove_transl_form.validate_on_submit():
+        cursong = Song.query.filter_by(id=cursong_id).first_or_404() 
+        selsong = Song.query.filter_by(id=selsong_id).first_or_404() 
+        if cursong is None or selsong is None:
+            flash('Song {} or {} not found.'.format(cursong.title, selsong.title))
+            return redirect(url_for('.view_song', id=cursong.id))
+        if selsong not in cursong.translated:
+            flash('Current song does not have a link with selected song!')
+            return redirect(url_for('.view_song', id=cursong.id))
+        # cur_song.add_transl(tr_song)
+        cursong.translated.remove(selsong)
+        db.session.add(cursong)
+        db.session.commit()
+        flash('The song {} and  song {} are now not linked.'.format(cursong.title, selsong.title))
+        return redirect(url_for('.view_song', id=cursong.id))
+    else:
+        flash('Issues: Validation not passed.')
+        return redirect(url_for('.view_song', id=cursong_id))
+
 @app.route('/view_song', methods=['GET', 'POST'])
 def view_song():
     id = request.args.get('id', type=int)
@@ -321,7 +379,19 @@ def view_song():
     ori_key_int = song.key
     lyrics = song.lyrics
     form = Transpose()
-    # e = Tag.query.filter(Tag.id.in_([t.id for t in song.tags]))
+    transl_form = SongsForm()
+    remove_transl_form = EmptyForm()
+    #to get a list of songs with condition, other language, and not already linked ones
+    other_songs = Song.query.filter(Song.language!=song.language).all()
+    if song.translated is not None:
+        linked = song.translated.all()
+        for l in linked:
+            other_songs.remove(l)
+    tr_list = [(s.id, s.title) for s in other_songs]
+    transl_form.tr_song_id.choices = tr_list
+    # list of translated songs
+    t_songlist = song.translated.order_by(Song.title)
+    delete_form = EmptyForm()
     tags_form = TagsForm(obj=song)
     # populate choices for tags_form from db
     choices = [(t.id, t.name) for t in tags]
@@ -363,7 +433,33 @@ def view_song():
             form.key.data = song.key
             for tag in tags:
                 tag_states[tag.id] = tag in song.tags
-        return render_template('view_song.html', title='View Song', html=html, tagged_list=tagged_list, tag_states=tag_states, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, ori_key=ori_key)
+        return render_template('view_song.html', title='View Song', html=html, transl_form=transl_form, 
+                               remove_transl_form=remove_transl_form, delete_form=delete_form, tagged_list=tagged_list, 
+                               tag_states=tag_states, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, 
+                               ori_key=ori_key, t_songlist=t_songlist, lang=lang)
+
+# @app.route('/tagging', methods=['POST'])
+# @login_required
+# def tagging():
+#     songid = request.args.get('id', type=int)
+#     tags_form = TagsForm(obj=song)
+#     if request.method == "POST" and tags_form.submit():
+#         # tag = Tag.query.filter_by(id=tagid).first_or_404()
+#         # song = Song.query.filter_by(id=songid).first_or_404()
+#         # if tag is None:
+#         #     flash('Tag {} not found.'.format(tag.name))
+#         #     return redirect(url_for('tag_list'))
+#         # if song is None:
+#         #     flash('Song {} not found.'.format(song.title))
+#         #     return redirect(url_for('tag_songlist', tagid=tagid))
+#         # song.tags.remove(tag)#issue. does not remove tag from song.
+#         # db.session.commit()
+#         # flash('Song has been removed from tag {}.'.format(tag.name))
+#         return redirect(url_for('tag_songlist', tagid=tagid))
+#     else:
+#         return redirect(url_for('tag_list'))
+
+
 
 @app.route('/follow/<username>', methods=['POST'])
 @login_required
@@ -403,24 +499,6 @@ def unfollow(username):
     else:
         return redirect(url_for('index'))
 
-# @app.route('/adding_genre', methods=['POST'])
-# @login_required
-# def adding_genre(username):
-#     id = request.args.get('id', type=int)
-    
-#     form = SelectGenre()
-#     if form.validate_on_submit():
-#         song = Song.query.get_or_404(id)
-        
-#         if song is None:
-#             flash('Song {} not found.'.format(str(id)))
-#             return redirect(url_for('view_song'))
-#         song.adding_genre(genre)
-#         db.session.commit()
-#         flash('You are following {}!'.format(username))
-#         return redirect(url_for('user', username=username))
-#     else:
-#         return redirect(url_for('index'))
 
 @app.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():

@@ -1,0 +1,85 @@
+<JS code>
+
+<!-- 
+function hide_table_elements(table_id, visible) {
+    // Shows only the first `visible` table elements
+    table_elements = document.getElementById(table_id).children[1].children
+
+    for (const element of table_elements) {
+        if (visible == 0) {
+            element.style.display = 'none'
+        }
+        else {
+            element.style.display = 'table-row'
+            visible -= 1
+        }
+    }
+}
+
+// Use below solution for <td> without `value` attribute
+// const getCellValue = (tr, idx) => tr.children[idx].innerText.replace('$', '') || tr.children[idx].textContent.replace('$', '');
+const getCellValue = (tr, idx) => tr.children[idx].getAttribute('value')
+
+const comparer = (idx, asc) => (a, b) =>
+    ((v1, v2) => v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2))
+    (getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx))
+
+const reload_table = () => hide_table_elements('coins-table', document.getElementById('form-select-coins').value)
+
+window.addEventListener('load', function () {   
+    reload_table()
+
+    // Show per page
+    document.getElementById('form-select-coins').addEventListener('change', function() {
+        counter = this.value
+        hide_table_elements('coins-table', this.value)
+    });
+
+
+
+
+-->
+
+<HTML code>
+<!-- 
+<form>
+    <input placeholder="Search" id="search-in-table" onkeypress="return event.keyCode != 13;">
+</form>
+
+<p>Show per page:</p>
+<select id="form-select-coins">
+    <option value="10" selected>10</option>
+    <option value="20">20</option>
+    <option value="30">30</option>
+</select>
+
+<table id="coins-table">
+
+    <thead>
+
+        <tr>
+            <th>Name</th>
+            <th>Holdings</th>
+            <th>Price</th>
+            <th>Avg. Buy Price</th>
+            <th>Wallet Balance</th>
+            <th>Profit/Loss</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        <tr coin="COIN">
+            <td value="COIN">COIN</td>
+            <td value="TOTAL_COINS">TOTAL_COINS</td>
+            <td value="CURRENT_PRICE">CURRENT_PRICE</td>
+            <td value="AVG_BUY_PRICE">AVG_BUY_PRICE</td>
+            <td value="WALLET_BALANCE">WALLET_BALANCE</td>
+            <td value="PROFIT_LOSS">PROFIT_LOSS</td>
+        </tr>
+
+    </tbody>
+
+</table>
+-->

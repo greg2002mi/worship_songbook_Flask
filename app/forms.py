@@ -55,6 +55,10 @@ class MultiCheckboxField(SelectMultipleField):
 
 class EmptyForm(FlaskForm):
     submit = SubmitField('Submit')
+
+class SongsForm(FlaskForm):
+    tr_song_id = SelectField('List of songs', coerce=int, choices=[], validators=[DataRequired()])
+    submit = SubmitField('Submit')
     
 class PostForm(FlaskForm):
     post = TextAreaField('Say something', validators=[DataRequired(), Length(min=1, max=140)])

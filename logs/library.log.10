@@ -1,4 +1,4 @@
-2023-05-18 15:42:05,770 ERROR: Exception on /genre [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+2023-05-19 11:35:35,382 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -8,30 +8,13 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 194, in genre
-    genres = Genre.query.all()
-  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 151, in render_template
-    return _render(app, template, context)
-  File "D:\_projects\church\lib\site-packages\flask\templating.py", line 132, in _render
-    rv = template.render(context)
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 1301, in render
-    self.environment.handle_exception()
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 936, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "D:\_projects\church\app\templates\genre.html", line 1, in top-level template code
-    {% extends "base.html" %}
-  File "D:\_projects\church\app\templates\base.html", line 55, in top-level template code
-    {% block content %}
-  File "D:\_projects\church\app\templates\base.html", line 66, in block 'content'
-    {% block app_content %}{% endblock %}
-  File "D:\_projects\church\app\templates\genre.html", line 9, in block 'app_content'
-    {{ form.tag(size=32) }}
-  File "D:\_projects\church\lib\site-packages\jinja2\environment.py", line 485, in getattr
-    return getattr(obj, attribute)
-jinja2.exceptions.UndefinedError: 'form' is undefined
-2023-05-18 15:42:21,113 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-18 15:44:20,111 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-18 15:44:30,289 ERROR: Exception on /genre [POST] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+  File "D:\_projects\church\app\routes.py", line 274, in view_song
+    tags_form.tag.data = tags.tag
+AttributeError: 'list' object has no attribute 'tag'
+2023-05-19 11:45:08,640 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 11:57:25,658 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 12:03:25,182 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 12:03:33,330 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -41,37 +24,16 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 203, in genre
-    return render_template('genre.html', title='Genres', genres=genres, form=form)
-UnboundLocalError: local variable 'genres' referenced before assignment
-2023-05-18 15:45:22,078 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-18 15:48:27,054 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-18 15:54:35,629 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-18 15:59:50,481 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-18 16:11:13,469 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-18 16:19:16,723 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-18 16:21:49,027 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-18 16:26:05,037 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-18 16:26:24,945 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-18 16:27:09,332 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-18 16:38:54,030 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-18 16:39:01,973 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-18 16:39:18,808 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-18 16:40:26,236 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-18 16:40:46,317 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-19 07:01:07,276 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-19 07:08:22,959 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-19 07:35:27,780 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
-2023-05-19 07:35:32,960 ERROR: Exception on /songbook [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
-Traceback (most recent call last):
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
-    self.dialect.do_execute(
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\default.py", line 920, in do_execute
-    cursor.execute(statement, parameters)
-sqlite3.OperationalError: no such column: song.info
-
-The above exception was the direct cause of the following exception:
-
+  File "D:\_projects\church\app\routes.py", line 245, in view_song
+    tags_form = TagsForm()
+  File "D:\_projects\church\lib\site-packages\wtforms\form.py", line 208, in __call__
+    return type.__call__(cls, *args, **kwargs)
+  File "D:\_projects\church\app\forms.py", line 146, in __init__
+    self.tags.choices = [(tag.id, tag.tags) for tag in Tags.query.all()]
+  File "D:\_projects\church\app\forms.py", line 146, in <listcomp>
+    self.tags.choices = [(tag.id, tag.tags) for tag in Tags.query.all()]
+AttributeError: 'Tags' object has no attribute 'tags'
+2023-05-19 12:03:34,897 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
 Traceback (most recent call last):
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
     response = self.full_dispatch_request()
@@ -81,43 +43,100 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "D:\_projects\church\app\routes.py", line 55, in songbook
-    songs = Song.query.order_by(Song.title.desc()).paginate(
-  File "D:\_projects\church\lib\site-packages\flask_sqlalchemy\query.py", line 99, in paginate
-    return QueryPagination(
-  File "D:\_projects\church\lib\site-packages\flask_sqlalchemy\pagination.py", line 69, in __init__
-    items = self._query_items()
-  File "D:\_projects\church\lib\site-packages\flask_sqlalchemy\pagination.py", line 354, in _query_items
-    out = query.limit(self.per_page).offset(self._query_offset).all()
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\query.py", line 2688, in all
-    return self._iter().all()  # type: ignore
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\query.py", line 2842, in _iter
-    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\session.py", line 2231, in execute
-    return self._execute_internal(
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\session.py", line 2126, in _execute_internal
-    result: Result[Any] = compile_state_cls.orm_execute_statement(
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\orm\context.py", line 292, in orm_execute_statement
-    result = conn.execute(
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\base.py", line 1413, in execute
-    return meth(
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\sql\elements.py", line 483, in _execute_on_connection
-    return connection._execute_clauseelement(
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\base.py", line 1637, in _execute_clauseelement
-    ret = self._execute_context(
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\base.py", line 1841, in _execute_context
-    return self._exec_single_context(
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\base.py", line 1982, in _exec_single_context
-    self._handle_dbapi_exception(
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
-    self.dialect.do_execute(
-  File "D:\_projects\church\lib\site-packages\sqlalchemy\engine\default.py", line 920, in do_execute
-    cursor.execute(statement, parameters)
-sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: song.info
-[SQL: SELECT song.id AS song_id, song.title AS song_title, song.singer AS song_singer, song.info AS song_info, song."key" AS song_key, song.lyrics AS song_lyrics, song.language AS song_language, song.timestamp AS song_timestamp, song.user_id AS song_user_id 
-FROM song ORDER BY song.title DESC
- LIMIT ? OFFSET ?]
-[parameters: (50, 0)]
-(Background on this error at: https://sqlalche.me/e/20/e3q8)
+  File "D:\_projects\church\app\routes.py", line 245, in view_song
+    tags_form = TagsForm()
+  File "D:\_projects\church\lib\site-packages\wtforms\form.py", line 208, in __call__
+    return type.__call__(cls, *args, **kwargs)
+  File "D:\_projects\church\app\forms.py", line 146, in __init__
+    self.tags.choices = [(tag.id, tag.tags) for tag in Tags.query.all()]
+  File "D:\_projects\church\app\forms.py", line 146, in <listcomp>
+    self.tags.choices = [(tag.id, tag.tags) for tag in Tags.query.all()]
+AttributeError: 'Tags' object has no attribute 'tags'
+2023-05-19 12:06:36,964 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 12:06:39,856 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 245, in view_song
+    tags_form = TagsForm()
+  File "D:\_projects\church\lib\site-packages\wtforms\form.py", line 208, in __call__
+    return type.__call__(cls, *args, **kwargs)
+  File "D:\_projects\church\app\forms.py", line 146, in __init__
+    self.tags.choices = [(tag.id, tag.tags) for tag in Tags.query.all()]
+  File "D:\_projects\church\app\forms.py", line 146, in <listcomp>
+    self.tags.choices = [(tag.id, tag.tags) for tag in Tags.query.all()]
+AttributeError: 'Tags' object has no attribute 'tags'
+2023-05-19 12:06:41,528 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 245, in view_song
+    tags_form = TagsForm()
+  File "D:\_projects\church\lib\site-packages\wtforms\form.py", line 208, in __call__
+    return type.__call__(cls, *args, **kwargs)
+  File "D:\_projects\church\app\forms.py", line 146, in __init__
+    self.tags.choices = [(tag.id, tag.tags) for tag in Tags.query.all()]
+  File "D:\_projects\church\app\forms.py", line 146, in <listcomp>
+    self.tags.choices = [(tag.id, tag.tags) for tag in Tags.query.all()]
+AttributeError: 'Tags' object has no attribute 'tags'
+2023-05-19 12:06:48,061 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 245, in view_song
+    tags_form = TagsForm()
+  File "D:\_projects\church\lib\site-packages\wtforms\form.py", line 208, in __call__
+    return type.__call__(cls, *args, **kwargs)
+  File "D:\_projects\church\app\forms.py", line 146, in __init__
+    self.tags.choices = [(tag.id, tag.tags) for tag in Tags.query.all()]
+  File "D:\_projects\church\app\forms.py", line 146, in <listcomp>
+    self.tags.choices = [(tag.id, tag.tags) for tag in Tags.query.all()]
+AttributeError: 'Tags' object has no attribute 'tags'
+2023-05-19 12:07:16,231 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 12:25:38,997 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 12:35:51,869 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 15:25:06,267 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 15:25:17,349 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 15:32:30,403 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 15:34:44,966 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 15:52:41,971 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 15:56:37,262 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-19 15:56:43,373 ERROR: Exception on /view_song [GET] [in D:\_projects\church\lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\app\routes.py", line 276, in view_song
+    tags_form.tag.data = tags.tag
+AttributeError: 'list' object has no attribute 'tag'
+2023-05-19 15:59:52,946 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-22 08:38:40,397 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-22 08:42:50,688 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-22 08:52:48,485 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-22 09:13:40,411 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-22 09:17:44,396 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-22 09:17:52,634 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
+2023-05-22 09:25:09,760 INFO: Church startup [in D:\_projects\church\app\__init__.py:54]
