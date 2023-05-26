@@ -264,7 +264,9 @@ def remove_tag():
         return redirect(url_for('tag_list'))
     else:
         return redirect(url_for('tag_list'))
-    
+
+
+# !!!! - remove all song to song links before deleting song    
 @app.route('/delete_song', methods=['POST'])
 @login_required
 def delete_song():
