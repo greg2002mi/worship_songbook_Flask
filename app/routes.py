@@ -8,7 +8,7 @@ from app.models import User, Song, Post, Tag
 from datetime import datetime
 from app.email import send_password_reset_email
 from app.core import Chordpro_html
-import logging
+#import logging
 
 lang = ('None', 'Eng', 'Kor', 'Rus')
 
@@ -280,7 +280,11 @@ def delete_song():
         if song.tags is not None:
             songtags = song.tags.all()
             for s_tags in songtags:
-                s_tags.songs.delete(song)
+                s_tags.songs.remove(song)
+        if song.translated is not None:
+            transl = song.translated.all()
+            for ts in transl:
+                ts.translated.remove(song)
         db.session.delete(song)
         db.session.commit()
         flash('Song {} is deleted.'.format(song.title))
@@ -392,7 +396,12 @@ def view_song():
     tr_list = [(s.id, s.title) for s in other_songs]
     transl_form.tr_song_id.choices = tr_list
     # list of translated songs
-    t_songlist = song.translated.order_by(Song.title)
+    t1_songlist = song.translated.order_by(Song.title).all()
+    t2_songlist = song.translation.order_by(Song.title).all()
+    t_songlist = list(t1_songlist)
+    for song_obj in t2_songlist:
+        if song_obj not in t_songlist:
+            t_songlist.append(song_obj)
     delete_form = EmptyForm()
     tags_form = TagsForm(obj=song)
     # populate choices for tags_form from db
@@ -419,18 +428,18 @@ def view_song():
             # Handle the submit of transpose chord action
             key = form.key.data
             return redirect(url_for('.view_song', id=song.id, key=key))
-        elif request.method == "POST" and tags_form.validate_on_submit():
-            # Handle addition of tags to a song
-            logging.basicConfig(filename='debug.log', level=logging.DEBUG)
-            selected_tags = request.form['name']
-            logging.debug(selected_tags)
-            for tag_id in selected_tags:
-                t = Tag.query.get(tag_id)
-                if t is not None and t not in song.tags:
-                    song.tags.append(t)
-            db.session.add(song)
-            db.session.commit()
-            return redirect(url_for('.view_song', id=song.id, key=key))
+        # elif request.method == "POST" and tags_form.validate_on_submit():
+        #     # Handle addition of tags to a song
+        #     logging.basicConfig(filename='debug.log', level=logging.DEBUG)
+        #     selected_tags = request.form['name']
+        #     logging.debug(selected_tags)
+        #     for tag_id in selected_tags:
+        #         t = Tag.query.get(tag_id)
+        #         if t is not None and t not in song.tags:
+        #             song.tags.append(t)
+        #     db.session.add(song)
+        #     db.session.commit()
+        #     return redirect(url_for('.view_song', id=song.id, key=key))
         elif request.method == 'GET':
             form.key.data = song.key
             for tag in tags:
@@ -440,26 +449,46 @@ def view_song():
                                tag_states=tag_states, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, 
                                ori_key=ori_key, t_songlist=t_songlist, lang=lang)
 
-# @app.route('/tagging', methods=['POST'])
-# @login_required
-# def tagging():
-#     songid = request.args.get('id', type=int)
-#     tags_form = TagsForm(obj=song)
-#     if request.method == "POST" and tags_form.submit():
-#         # tag = Tag.query.filter_by(id=tagid).first_or_404()
-#         # song = Song.query.filter_by(id=songid).first_or_404()
-#         # if tag is None:
-#         #     flash('Tag {} not found.'.format(tag.name))
-#         #     return redirect(url_for('tag_list'))
-#         # if song is None:
-#         #     flash('Song {} not found.'.format(song.title))
-#         #     return redirect(url_for('tag_songlist', tagid=tagid))
-#         # song.tags.remove(tag)#issue. does not remove tag from song.
-#         # db.session.commit()
-#         # flash('Song has been removed from tag {}.'.format(tag.name))
-#         return redirect(url_for('tag_songlist', tagid=tagid))
-#     else:
-#         return redirect(url_for('tag_list'))
+@app.route('/tagging', methods=['POST'])
+@login_required
+def tagging():
+    songid = request.args.get('id', type=int)
+    song = Song.query.filter_by(id=songid).first_or_404()
+    tags_form = TagsForm(obj=song)
+    if request.method == "POST" and tags_form.submit():
+        tagged_list = ([tagged for tagged in song.tags])
+        # selected_tags = request.form['name']
+        selected_tags = request.form.getlist('name')  # Use getlist() to retrieve multiple checkbox values
+        selected_tags = list(map(int, selected_tags))
+        #first remove untagged tags
+        for tg in tagged_list:
+            if tg not in selected_tags:
+                song.tags.remove(tg)
+        
+        #add new tagged tags
+        for tag_id in selected_tags:
+            t = Tag.query.get(tag_id)
+            if t is not None and t not in tagged_list:
+                song.tags.append(t)
+        db.session.add(song)
+        db.session.commit()
+        flash("Tags have been updated.")
+    else:
+        flash('Issues: Validation not passed.')
+    return redirect(url_for('.view_song', id=song.id, key=song.key))
+        
+    # tag = Tag.query.filter_by(id=tagid).first_or_404()
+        # 
+        # if tag is None:
+        #     flash('Tag {} not found.'.format(tag.name))
+        #     return redirect(url_for('tag_list'))
+        # if song is None:
+        #     flash('Song {} not found.'.format(song.title))
+        #     return redirect(url_for('tag_songlist', tagid=tagid))
+        # song.tags.remove(tag)#issue. does not remove tag from song.
+        # db.session.commit()
+        # flash('Song has been removed from tag {}.'.format(tag.name))
+
 
 
 
