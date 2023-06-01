@@ -52,6 +52,11 @@ followers = db.Table('followers',
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )
 
+list_user = db.Table('list_user',
+                     db.Column('lists_id', db.Integer, db.ForeignKey('lists.id')), 
+                     db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
+)
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
@@ -60,6 +65,7 @@ class User(UserMixin, db.Model):
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     # role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    mlinks = db.relationship('Lists', backref='creator', lazy='dynamic')
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     songs = db.relationship('Song', backref='publisher', lazy='dynamic')
     # lists = db.relationship('Worshiplist', backref='leader', lazy='dynamic')
@@ -136,14 +142,15 @@ songtags = db.Table('songtags',
 translation = db.Table('translation',
     db.Column('song_id', db.Integer, db.ForeignKey('song.id')),
     db.Column('translated_id', db.Integer, db.ForeignKey('song.id')))
+
+medialinks = db.Table('medialinks', 
+                    db.Column('song_id', db.Integer, db.ForeignKey('song.id')), 
+                    db.Column('mlink_id', db.Integer, db.ForeignKey('mlinks.id')))
   # many to many relationship sermon and songs  
 # songlist = db.Table('songlist', 
 #                     db.Column('sermon_id', db.Integer, db.ForeignKey('sermon.id')), 
 #                     db.Column('song_id', db.Integer, db.ForeignKey('song.id')))
 
-list_user = db.Table('list_user',
-                     db.Column('lists_id', db.Integer, db.ForeignKey('lists.id')), 
-                     db.Column('user_id', db.Integer, db.ForeignKey('user.id')))
     
 class Song(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -163,6 +170,8 @@ class Song(db.Model):
         primaryjoin=(translation.c.song_id == id),
         secondaryjoin=(translation.c.translated_id == id),
         backref=db.backref('translation', lazy='dynamic'), lazy='dynamic')
+    media = db.relationship('Mlinks', secondary=medialinks, 
+                           backref=db.backref('songs', lazy='dynamic'), lazy='dynamic')
     # inlist = db.relationship(
     #     'Sermon', secondary=songlist, backref='song')
     
@@ -200,6 +209,13 @@ class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     
+class Mlinks(db.Model): # this table will have M-M relationship with Song Table
+    id  = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(255), index=True)
+    mtype = db.Column(db.Integer)
+    murl = db.Column(db.String)
+    
+    # mtype will distinguish youtube, mp3, or pictures
     
     # def __repr__(self):
     #     return '<Tag {}>'.format(self.name)
@@ -216,9 +232,13 @@ class Lists(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     date_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    # ability to add youtube clips for lists of songs
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    mlink = db.Column(db.String)
+    status = db.Column(db.Integer, default=0) # 0 - in progress, 1 = Ready, 2 - in the past 
     list_title = db.Column(db.String, default='Sunday service')
     # many-to-many relationship with user. so we can assign specific people to this list
-    assigned = db.relationship('User', secondary=list_user, backref='lists')
+    assigned = db.relationship('User', secondary=list_user, backref='assignedto')
     
     
     def __repr__(self):

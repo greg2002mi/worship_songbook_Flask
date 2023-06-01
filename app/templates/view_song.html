@@ -1,9 +1,16 @@
 {% extends "base.html" %}
 <!--{% import 'bootstrap/wtf.html' as wtf %}-->
 
+{% block head_js %}
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+{% endblock %}
+
 {% block app_content %}
     <h1>Title: {{ song.title }}</h1>
 	<h2>Artist: {{ song.singer }}</h2>
+	<h6>Prepared by: {{ song.publisher.username }}</h6>
 	
 	<ul class="nav nav-tabs" id="myTab" role="tablist">
 	  <li class="nav-item" role="presentation">
@@ -16,7 +23,7 @@
 		<button class="nav-link" id="links-tab" data-bs-toggle="tab" data-bs-target="#links-tab-pane" type="button" role="tab" aria-controls="links-tab-pane" aria-selected="false">Links</button>
 	  </li>
 	  <li class="nav-item" role="presentation">
-		<button class="nav-link" id="translation-tab" data-bs-toggle="tab" data-bs-target="#translation-tab-pane" type="button" role="tab" aria-controls="translation-tab-pane" aria-selected="false">Translatins</button>
+		<button class="nav-link" id="translation-tab" data-bs-toggle="tab" data-bs-target="#translation-tab-pane" type="button" role="tab" aria-controls="translation-tab-pane" aria-selected="false">Translations</button>
 	  </li>
 	</ul>
 	<div class="tab-content" id="myTabContent">

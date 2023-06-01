@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<div class="container">
+  <div class="row">
+    <div class="col-4">Add Audio<br>
+	
+	</div>
+    <div class="col-6">Add Video<br>
+		<form class="form-floating needs-validation" method="post" novalidate>
+			{{ video_form.hidden_tag() }}
+			<div class="row mb-3">
+				{{ video_form.name.label(class_='col-sm-2 col-form-label') }}
+				<div class="col-3">
+				{{ video_form.name(class='form-control', style='min-width: 100%') }}<br>
+				{% for error in video_form.name.errors %}
+				<span style="color: red;">[{{ error }}]</span>
+				{% endfor %}
+				</div>
+			</div>
+			<div class="row mb-3">
+				{{ video_form.mtype.label(class_='col-sm-2 col-form-label') }}
+				<div class="col-3">
+				{{ video_form.mtype(class='form-control') }}<br>
+				{% for error in video_form.mtype.errors %}
+				<span style="color: red;">[{{ error }}]</span>
+				{% endfor %}
+				</div>
+			</div>
+			<div class="row mb-3">
+				{{ video_form.murl.label(class_='col-sm-2 col-form-label') }}
+				<div class="col-10">
+				{{ video_form.murl(class='form-control', style='min-width: 100%', style='height: 100px') }}
+				{% for error in video_form.murl.errors %}
+				<span style="color: red;">[{{ error }}]</span>
+				{% endfor %}
+				</div>      
+			</div>
+			<div class="d-grid gap-2 col-2 mx-auto">
+			{{ video_form.submit(class="btn btn-success") }}
+			</div>
+		</form>
+	
+	
+	
+	
+	
+	</div>
+    <div class="col-10">Media list <br>
+	<table class="table table-hover">
+			<thead>
+			  <tr>
+				 <th>No.</th>
+				 <th>Title</th>
+				 <th>type</th>
+				 <th>Actions</th>
+			  </tr>
+			</thead>
+			<tbody>
+			{% for m in media %}
+				<tr valign="top">
+					<td>{{ m.id }}</td>
+					<td>{{ m.filename }}</td>
+					<td>{{ types[m.mtype] }}</td>
+					<td><form action="{{ url_for('.delete_file', id=song.id, mlinkid=m.id) }}" method="post">
+						{{ delete_form.hidden_tag() }}
+						{{ delete_form.submit(class_='btn btn-primary', value='Delete') }}
+					</form></td>
+				</tr>
+			{% endfor %}
+			</tbody>
+			</table>
+    <hr>
+   </div>
+   </div>
+</div>
+	
+	
+{% endblock %}

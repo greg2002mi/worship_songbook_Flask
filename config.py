@@ -13,6 +13,9 @@ class Config(object):
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = ['ilovecheesecake85@gmail.com']
+    AVATAR_PATH = os.path.join(basedir, 'app/static/avatars')
+    UPLOAD_PATH = os.path.join(basedir, 'app/uploads/images')
+    
     
     POSTS_PER_PAGE = 25
     SONGS_PER_PAGE = 50

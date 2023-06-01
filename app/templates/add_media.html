@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+
+{% block app_content %}
+Products:
+        <form action="/" method="post">
+            <div id="products"></div>
+            <button id="add_files" type="button">Add files</button>
+            <input type="submit" value="Submit">
+        </form>
+
+{% endblock %}
+
+{% block javascript %}
+<script
+                src="https://code.jquery.com/jquery-1.12.4.min.js"
+                integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+                crossorigin="anonymous"></script>
+<script>
+            $(document).ready(function(){
+                var count_item = 0;
+                $("#add_files").on("click", function(){
+                    count_item += 1;
+                    $("<input/>").attr({ type: "text", placeholder: "Enter product name",
+                        name: "item_"+count_item}).appendTo("#products").wrap($("<div/>"));
+                });
+            })
+        </script>
+<script type="text/javascript">
+    var fieldCount = 1;
+    
+    function selectMediaType(mediaType) {
+        var murlInput = document.getElementById('murl');
+        
+        if (mediaType === 'youtube') {
+            murlInput.setAttribute('placeholder', 'Enter Youtube link');
+        } else if (mediaType === 'mp3') {
+            murlInput.setAttribute('placeholder', 'Enter MP3 link');
+        } else if (mediaType === 'picture') {
+            murlInput.setAttribute('placeholder', 'Enter picture link');
+        }
+    }
+    
+    function addNewField() {
+        var dynamicFieldsContainer = document.getElementById('dynamic-fields-container');
+        
+        var fieldSet = document.createElement('div');
+        fieldSet.className = 'input-group mb-3';
+        
+        var dropdownButton = document.createElement('button');
+        dropdownButton.className = 'btn btn-outline-secondary dropdown-toggle';
+        dropdownButton.type = 'button';
+        dropdownButton.setAttribute('data-bs-toggle', 'dropdown');
+        dropdownButton.setAttribute('aria-expanded', 'false');
+        dropdownButton.textContent = 'Dropdown';
+        
+        var dropdownMenu = document.createElement('ul');
+        dropdownMenu.className = 'dropdown-menu';
+        
+        var youtubeItem = document.createElement('li');
+        var youtubeLink = document.createElement('a');
+        youtubeLink.className = 'dropdown-item';
+        youtubeLink.href = '#';
+        youtubeLink.textContent = 'Youtube';
+        youtubeItem.appendChild(youtubeLink);
+        
+        var mp3Item = document.createElement('li');
+        var mp3Link = document.createElement('a');
+        mp3Link.className = 'dropdown-item';
+        mp3Link.href = '#';
+        mp3Link.textContent = 'MP3';
+        mp3Item.appendChild(mp3Link);
+        
+        var pictureItem = document.createElement('li');
+        var pictureLink = document.createElement('a');
+        pictureLink.className = 'dropdown-item';
+        pictureLink.href = '#';
+        pictureLink.textContent = 'Picture';
+        pictureItem.appendChild(pictureLink);
+        
+        dropdownMenu.appendChild(youtubeItem);
+        dropdownMenu.appendChild(mp3Item);
+        dropdownMenu.appendChild(pictureItem);
+        
+        var fieldInput = document.createElement('input');
+        fieldInput.type = 'text';
+        fieldInput.className = 'form-control';
+        fieldInput.setAttribute('aria-label', 'Text input with dropdown button');
+        
+        fieldSet.appendChild(dropdownButton);
+        fieldSet.appendChild(dropdownMenu);
+        fieldSet.appendChild(fieldInput);
+        
+        dynamicFieldsContainer.appendChild(fieldSet);
+        
+        fieldCount++;
+    }
+    </script>
+	
+{% endblock %}	
+	

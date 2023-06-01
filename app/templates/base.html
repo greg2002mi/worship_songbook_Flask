@@ -11,6 +11,7 @@
 	{% endif %}
 	</title>
   	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+	{% block head_js %}{% endblock %}
 </head>
 
 <body>
@@ -67,6 +68,7 @@
 	
 {% block scripts %}
 	<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/howler.js') }}"></script>
     
 {% endblock %}
 

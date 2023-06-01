@@ -1,10 +1,13 @@
 from flask_wtf import FlaskForm
 from wtforms import SelectMultipleField, StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField, DateField, DateTimeField, widgets
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
-# from wtforms.widgets import ListWidget, CheckboxInput
+from flask_wtf.file import FileField, FileRequired, FileAllowed
+from wtforms.widgets import ListWidget, CheckboxInput
 from app.models import User, Song, Tag
 from sqlalchemy import and_
 from markupsafe import Markup
+# from app import images, audio
+
 
 chordnote=[
     (0, 'Empty'),
@@ -188,3 +191,21 @@ class AddTag(FlaskForm):
         name = Tag.query.filter_by(name=name.data).first()
         if name is not None:
             raise ValidationError('This tag is already in Database.')
+
+# this for saving urls from youtube            
+class AddMedia(FlaskForm):
+    name = StringField('Title')
+    mtype = SelectField('Type of Media', coerce=int, choices=[(1, 'Youtube'), (2, 'mp3'), (3, 'Pictures'), (4, 'Other')])
+    murl = StringField('Links or path to media')
+    submit = SubmitField('Add media')
+
+# this for uploading images    
+# class ImageUpload(FlaskForm):
+#     name = StringField('Name', [DataRequired()])
+#     image = FileField(validators=[FileAllowed(images, 'Image only!'), FileRequired('Unable to upload empty file!')])
+#     submit = SubmitField('Upload')
+
+# class AudioUpload(FlaskForm):
+#     name = StringField('Name', [DataRequired()])
+#     audio = FileField(validators=[FileAllowed(audio, 'Audio files only!'), FileRequired('Unable to upload empty file!')])
+#     submit = SubmitField('Upload')

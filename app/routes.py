@@ -1,16 +1,35 @@
-from flask import render_template, flash, redirect, url_for, request, abort
-from app import app, db
+from flask import render_template, flash, redirect, url_for, request, abort, send_from_directory
+from app import app, db, validate_image
 from werkzeug.urls import url_parse
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddSong, EditSong, EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm, Transpose
-from app.forms import AddTag, TagsForm, SongsForm
+from app.forms import AddTag, TagsForm, SongsForm, AddMedia
 from flask_login import current_user, login_user, login_required, logout_user
-from app.models import User, Song, Post, Tag
+from app.models import User, Song, Post, Tag, Mlinks
 from datetime import datetime
 from app.email import send_password_reset_email
 from app.core import Chordpro_html
+from werkzeug.utils import secure_filename
+from functools import wraps
+import os
 #import logging
 
 lang = ('None', 'Eng', 'Kor', 'Rus')
+
+def limit_content_length(max_length):
+    def decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            cl = request.content_length
+            if cl is not None and cl > max_length:
+                abort(413)
+            return f(*args, **kwargs)
+        return wrapper
+    return decorator
+
+
+@app.errorhandler(413)
+def too_large(e):
+    return "File is too large", 413
 
 @app.before_request
 def before_request():
@@ -134,6 +153,27 @@ def edit_profile():
         form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', title='Edit Profile', form=form)    
 
+@app.route('/upload_avatar', methods=['GET', 'POST'])
+@limit_content_length(1024 * 1024)
+def upload_avatar():
+    files = os.listdir(app.config['AVATAR_PATH'])
+    username = current_user.username
+    if request.method == 'POST':
+        uploaded_file = request.files['file']
+        filename = secure_filename(uploaded_file.filename)
+        if filename != '':
+            file_ext = os.path.splitext(filename)[1]
+            if file_ext not in app.config['IMAGE_EXTENSIONS'] or \
+                    file_ext != validate_image(uploaded_file.stream, file_ext):
+                return "Invalid image", 400
+            uploaded_file.save(os.path.join(app.config['AVATAR_PATH'], filename))
+        return redirect(url_for('edit_profile'))
+    return render_template('upload_avatar.html', username=username, files = files)
+
+@app.route('/uploads/<filename>')
+def upload(filename):
+    return send_from_directory(app.config['AVATAR_PATH'], filename)
+
 @app.route('/add_song', methods=['GET', 'POST'])
 @login_required
 def add_song():
@@ -205,6 +245,80 @@ def tag_list():
         return redirect(url_for('tag_list'))      
     return render_template('tag_list.html', title='Tag list', tags=tags, form=form, untag_form=untag_form)
 
+# @app.route('/img_upload', methods=['GET', 'POST'])
+# @login_required
+# def img_upload():
+#     songid = request.args.get('songid', type=int)
+#     song = Song.query.filter_by(id=songid).first_or_404()
+#     mtype = request.args.get('mtype', type=int)
+#     # imgform = ImageUpload()
+#     # how many links does song media have
+#     if song.media is None:
+#         num = 1
+#     else:
+#         media = song.media.all()
+#         num = len(media) + 1
+#     if mtype is None:
+#         flash('type variable is None.')
+#         return redirect(url_for('.img_upload', songid=song.id)) 
+#     if request.method == 'POST':
+#         uploaded_file = request.files['file']
+#         for uploaded_file in request.files.getlist('file'):
+#             filename = secure_filename(uploaded_file.filename)
+#             if filename != '' and mtype == 3:
+#                 file_ext = os.path.splitext(filename)[1]
+#                 if file_ext not in app.config['UPLOAD_EXTENSIONS'] or file_ext != validate_image(uploaded_file.stream):
+#                     abort(400)
+#                 # filename = images.save(imgform.image.data, name="{}_image_{}.jpg".format(song.id, str(num)))
+#                 uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
+#                # file_url = images.url(filename)
+#             return redirect(url_for('.img_upload', songid=song.id))
+#         # elif request.method == 'GET':
+#     #    return render_template('img_upload.html', title='Media upload', imgform=imgform)
+
+#     return render_template('img_upload.html', title='Media upload')
+       # filename = images.save(imgform.image.data, name=f"{}.jpg".format(song.title))
+# @app.route('/add_media', methods=['GET', 'POST'])
+# def add_media():
+#     sid = request.args.get('sid', type=int)
+#     song = Song.query.get(sid)
+#     form = AddMedia()
+#     if form.submit():
+#         option = form.mtype.data
+#         if option == 1:
+#             #youtube link
+#             media = Mlinks(murl = form.murl.data, mtype = form.mtype.data)
+#             db.session.add(media)
+#         elif option in (2, 3):
+#             files = flask.request.files.getlist("file")
+#             for file in files:
+#     #             file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+#     #             media = Mlinks(murl = "PATH TO FILE", mtype = form.mtype.data)
+#     # # need to save files to folder and save its path to murl
+
+#     # after session.commit() link to Song.media.append(media)            
+                
+                
+    
+#         db.session.commit()
+            
+    # if request.method == "POST":
+    #     return jsonify(request.form)
+        # mlinks_count = int(request.form.get('mlinks_count'))
+        # for mlink_index in range(1, mlinks_count + 1):
+        #     mtype_field = f'mtype_{mlink_index}'
+        #     murl_field = f'murl_{mlink_index}'
+        #     mtype = int(request.form.get(mtype_field))
+        #     murl = request.form.get(murl_field)
+        #     media = Mlinks(mtype=mtype, murl=murl)            
+        #     song.media.append(media)
+        #     db.session.add(song)
+        #     db.session.commit()
+        # flash('New link(s) added to library.')
+    #     return redirect(url_for('.view_song', sid=song.id, key=song.key))
+    # else:     
+    #     return render_template('add_media.html', title='Media Library', form=form)
+
 @app.route('/tag_songlist')
 def tag_songlist():
     tagid = request.args.get('tagid', type=int)
@@ -239,8 +353,22 @@ def untag():
         db.session.commit()
         flash('Song has been removed from tag {}.'.format(tag.name))
         return redirect(url_for('tag_songlist', tagid=tagid))
-    else:
-        return redirect(url_for('tag_list'))
+    return redirect(url_for('tag_list'))
+
+@app.route('/untagall', methods=['POST'])
+@login_required
+def untagall():
+    id = request.args.get('id', type=int)
+    untagall_form = EmptyForm()
+    if untagall_form.submit():
+        song = Song.query.filter_by(id=id).first_or_404()
+        if song is None:
+            flash('Song {} not found.'.format(song.title))
+            return redirect(url_for('.view_song', id=id))
+        song.tags=[]
+        db.session.commit()
+        flash('All tags for {} have been untagged.'.format(song.title))
+    return redirect(url_for('.view_song', id=id))
 
 @app.route('/remove_tag', methods=['POST'])
 @login_required
@@ -380,6 +508,7 @@ def view_song():
     key = request.args.get('key', type=int)
     song = Song.query.get_or_404(id)
     tags = Tag.query.all()
+    media = song.media.all()
     tag_states = {}
     tagged_list = ([tagged.name for tagged in song.tags])
     ori_key_int = song.key
@@ -387,6 +516,7 @@ def view_song():
     form = Transpose()
     transl_form = SongsForm()
     remove_transl_form = EmptyForm()
+    untagall_form = EmptyForm()
     #to get a list of songs with condition, other language, and not already linked ones
     other_songs = Song.query.filter(Song.language!=song.language).all()
     if song.translated is not None:
@@ -428,18 +558,6 @@ def view_song():
             # Handle the submit of transpose chord action
             key = form.key.data
             return redirect(url_for('.view_song', id=song.id, key=key))
-        # elif request.method == "POST" and tags_form.validate_on_submit():
-        #     # Handle addition of tags to a song
-        #     logging.basicConfig(filename='debug.log', level=logging.DEBUG)
-        #     selected_tags = request.form['name']
-        #     logging.debug(selected_tags)
-        #     for tag_id in selected_tags:
-        #         t = Tag.query.get(tag_id)
-        #         if t is not None and t not in song.tags:
-        #             song.tags.append(t)
-        #     db.session.add(song)
-        #     db.session.commit()
-        #     return redirect(url_for('.view_song', id=song.id, key=key))
         elif request.method == 'GET':
             form.key.data = song.key
             for tag in tags:
@@ -447,7 +565,89 @@ def view_song():
         return render_template('view_song.html', title='View Song', html=html, transl_form=transl_form, 
                                remove_transl_form=remove_transl_form, delete_form=delete_form, tagged_list=tagged_list, 
                                tag_states=tag_states, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, 
-                               ori_key=ori_key, t_songlist=t_songlist, lang=lang)
+                               ori_key=ori_key, t_songlist=t_songlist, lang=lang, untagall_form=untagall_form, media=media)
+
+@app.route('/upload_images', methods=['POST'])
+@limit_content_length(10 * 1024 * 1024)
+def upload_images():
+    id = request.args.get('id', type=int)
+    song = Song.query.get_or_404(id)
+    mtype = request.args.get('mtype', type=int)
+    uploaded_file = request.files['file']
+    filename = secure_filename(uploaded_file.filename)
+    if song.media is None:
+        num = 1
+    else:
+        media = song.media.all()
+        num = len(media) + 1
+    if mtype is None:
+        flash('type variable is None.')
+        return redirect(url_for('.img_upload', songid=song.id)) 
+    if filename != '':
+        file_ext = os.path.splitext(filename)[1]
+        if file_ext not in app.config['IMAGE_EXTENSIONS'] or \
+                file_ext != validate_image(uploaded_file.stream, file_ext):
+            return "Invalid image", 400
+        newname = "{}.image_{}.jpg".format(song.id, str(num))
+        uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], newname))
+        mlink = Mlinks(filename=filename, mtype=mtype, murl=newname)
+        db.session.add(mlink)
+        song.media.append(mlink)
+        db.session.add(song)
+        db.session.commit()
+    return '', 204
+    
+
+@app.route('/uploads_i/<filename>')
+def upload_i(filename):
+    return send_from_directory(app.config['UPLOAD_PATH'], filename)
+
+@app.route('/delete_file', methods=['POST'])
+def delete_file():
+    delete_form = EmptyForm()
+    if delete_form.submit:
+        id = request.args.get('id', type=int)
+        song = Song.query.get_or_404(id)
+        mlinkid = request.args.get('mlinkid', type=int)
+        mlink = Mlinks.query.get(mlinkid)
+        # mtype = request.args.get('mtype', type=int)
+        song.media.remove(mlink)
+        if mlink.mtype > 1:
+            if os.path.isfile(app.config['UPLOAD_PATH'] + mlink.murl):
+                os.remove(os.path.join(app.config['UPLOAD_PATH'], mlink.murl))       
+        db.session.delete(mlink)
+        db.session.add(song)
+        db.session.commit()
+        return redirect(url_for('manage_media', id=id))                 
+    else:
+        flash("There is no link")
+        return '', 204
+    
+    
+
+@app.route('/manage_media', methods=['GET', 'POST'])
+def manage_media():
+    id = request.args.get('id', type=int)
+    song = Song.query.get_or_404(id)
+    media = song.media.all()
+    video_form = AddMedia()
+    delete_form = EmptyForm()
+    types = ['', 'Youtube', 'Audio', 'Images', 'Other']
+    if request.method == 'POST' and video_form.submit():
+        ml = Mlinks(filename = video_form.name.data, mtype = 1, murl = video_form.murl.data)
+        db.session.add(ml)
+        db.session.commit()
+        song.media.append(ml)
+        db.session.add(song)
+        db.session.commit()
+        flash("A new link {} has been added".format(ml.filename))
+        return redirect(url_for('manage_media', id=id))  
+    # if form.submit():
+    #     mlinkid = request.args.get('mlinkid', type=int)
+    #     mlink = Mlinks.query.get_or_404(mlinkid)
+    #     delete_link(mlink, song)
+    #     return redirect(url_for('manage_media', id=id))
+    return render_template('manage_media.html', video_form=video_form, delete_form=delete_form, song=song, media=media, types=types)
 
 @app.route('/tagging', methods=['POST'])
 @login_required
@@ -476,20 +676,6 @@ def tagging():
     else:
         flash('Issues: Validation not passed.')
     return redirect(url_for('.view_song', id=song.id, key=song.key))
-        
-    # tag = Tag.query.filter_by(id=tagid).first_or_404()
-        # 
-        # if tag is None:
-        #     flash('Tag {} not found.'.format(tag.name))
-        #     return redirect(url_for('tag_list'))
-        # if song is None:
-        #     flash('Song {} not found.'.format(song.title))
-        #     return redirect(url_for('tag_songlist', tagid=tagid))
-        # song.tags.remove(tag)#issue. does not remove tag from song.
-        # db.session.commit()
-        # flash('Song has been removed from tag {}.'.format(tag.name))
-
-
 
 
 @app.route('/follow/<username>', methods=['POST'])

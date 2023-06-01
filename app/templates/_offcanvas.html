@@ -13,6 +13,6 @@
 		</div>
 	{% endfor %}
 
-	{{ tags_form.submit(class="btn btn-success") }}
-</form>
+	{{ tags_form.submit(class="btn btn-success") }} 
+</form> <form class="form-floating needs-validation" action="{{ url_for('.untagall', id=song.id) }}" method="POST">{{ untagall_form.submit(class="btn btn-secondary", value="Untag all") }}</form>
 
