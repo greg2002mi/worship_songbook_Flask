@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block head_js %}
+  <script src="{{ url_for('static', filename='/js/popper.min.js') }}" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+  // Initialize the date and time picker for the date_time and date_end fields
+  flatpickr('.datetimepicker', {
+            enableTime: true,
+            dateFormat: 'Y-m-d H:i'
+        });
+</script>
+{% endblock %}
+
+
+{% block app_content %}
+    <h1>Add Event (Create list for worship service)</h1>
+    <form class="form-floating needs-validation" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="row mb-3">
+            {{ form.list_title.label(class_='col-sm-2 col-form-label') }}
+			<div class="col-10">
+            {{ form.list_title(class='form-control', style='min-width: 100%') }}<br>
+            {% for error in form.list_title.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+			</div>
+        </div>
+		<div class="row mb-3">
+			{{ form.date_time.label(class_='col-sm-2 col-form-label') }}
+			<div class="col-10">
+            {{ form.date_time(class='datetimepicker', style='min-width: 100%') }}<br>
+            {% for error in form.date_time.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+			</div>
+        </div>
+        <div class="row mb-3">
+			{{ form.date_end.label(class_='col-sm-2 col-form-label') }}
+			<div class="col-10">
+            {{ form.date_end(class='datetimepicker', style='min-width: 100%') }}
+            {% for error in form.date_end.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+			</div>      
+		</div>
+		<div class="row mb-3">
+            {{ form.mlink.label(class_='col-sm-2 col-form-label') }}
+			<div class="col-10">
+            {{ form.mlink(class="form-control") }}
+            {% for error in form.mlink.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+			</div>      
+		</div>
+		<div class="d-grid gap-2 col-2 mx-auto">
+		{{ form.submit(class="btn btn-success") }}
+		</div>
+    </form>
+{% endblock %}

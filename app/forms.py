@@ -2,10 +2,11 @@ from flask_wtf import FlaskForm
 from wtforms import SelectMultipleField, StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField, DateField, DateTimeField, widgets
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
 from flask_wtf.file import FileField, FileRequired, FileAllowed
-from wtforms.widgets import ListWidget, CheckboxInput
+from wtforms.widgets import ListWidget, CheckboxInput, Input
 from app.models import User, Song, Tag
 from sqlalchemy import and_
 from markupsafe import Markup
+from wtforms.fields import DateTimeLocalField
 # from app import images, audio
 
 
@@ -24,6 +25,17 @@ chordnote=[
     (11, 'A#'),
     (12, 'B')
     ]
+
+class DateTimePickerWidget(Input):
+    def __init__(self, input_type='datetime-local', **kwargs):
+        super().__init__(**kwargs)
+        self.input_type = input_type
+
+    def __call__(self, field, **kwargs):
+        kwargs.setdefault('class_', 'form-control datetimepicker')
+        kwargs.setdefault('autocomplete', 'off')
+        kwargs.setdefault('type', self.input_type)
+        return super().__call__(field, **kwargs)
 
 class BootstrapListWidget(widgets.ListWidget):
  
@@ -198,6 +210,15 @@ class AddMedia(FlaskForm):
     mtype = SelectField('Type of Media', coerce=int, choices=[(1, 'Youtube'), (2, 'mp3'), (3, 'Pictures'), (4, 'Other')])
     murl = StringField('Links or path to media')
     submit = SubmitField('Add media')
+
+class AddEvent(FlaskForm):
+    list_title = StringField('Title')
+    # date_time = DateTimeField('Set date', format='%Y-%m-%d %H:%M')
+    date_time = DateTimeLocalField('Set date', format='%Y-%m-%dT%H:%M', validators=[DataRequired()], widget=DateTimePickerWidget())
+    # date_end = DateTimeField('End date', format='%Y-%m-%d %H:%M')
+    date_end = DateTimeLocalField('End date', format='%Y-%m-%dT%H:%M', validators=[DataRequired()], widget=DateTimePickerWidget())
+    mlink = StringField('Links or path to media')
+    submit = SubmitField('Set event')
 
 # this for uploading images    
 # class ImageUpload(FlaskForm):

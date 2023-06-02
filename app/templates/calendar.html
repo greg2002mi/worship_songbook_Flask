@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block head_js %}
+  <script src="{{ url_for('static', filename='/dist/index.global.js') }}"></script>
+<script>
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      editable: true,
+      selectable: true,
+      dayMaxEvents: true, // allow "more" link when too many events
+      events: '/events',
+	  themeSystem: 'bootstrap5',
+	  eventClick: function(info) {
+        alert('Event: ' + info.event.title);
+    }
+    });
+
+    calendar.render();
+  });
+
+</script>
+<style>
+
+
+
+  #calendar {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+</style>
+{% endblock %}
+
+{% block app_content %}
+<div class="container">
+  <div class="row">
+    <div class="col-7">Church service</div>
+    <div class="col-4">
+		<nav class="nav nav-pills justify-content-end">
+			<a class="nav-link btn-outline-primary" aria-current="page" href="{{ url_for('make_list') }}">Add event</a>
+			<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+		</nav>
+    
+  </div>
+  <div class="col-11">
+  <div id="calendar"></div>
+</div></div>
+
+
+	
+	
+{% endblock %}
+
+
+
+
+
+
+    

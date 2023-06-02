@@ -1,10 +1,10 @@
-from flask import render_template, flash, redirect, url_for, request, abort, send_from_directory
+from flask import render_template, flash, redirect, url_for, request, abort, send_from_directory, jsonify
 from app import app, db, validate_image
 from werkzeug.urls import url_parse
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddSong, EditSong, EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm, Transpose
-from app.forms import AddTag, TagsForm, SongsForm, AddMedia
+from app.forms import AddTag, TagsForm, SongsForm, AddMedia, AddEvent
 from flask_login import current_user, login_user, login_required, logout_user
-from app.models import User, Song, Post, Tag, Mlinks
+from app.models import User, Song, Post, Tag, Mlinks, Lists
 from datetime import datetime
 from app.email import send_password_reset_email
 from app.core import Chordpro_html
@@ -648,6 +648,61 @@ def manage_media():
     #     delete_link(mlink, song)
     #     return redirect(url_for('manage_media', id=id))
     return render_template('manage_media.html', video_form=video_form, delete_form=delete_form, song=song, media=media, types=types)
+
+@app.route('/calendar', methods=['GET', 'POST'])
+def calendar():
+    form = EmptyForm() # to delete events
+    events = Lists.query.all()
+    for e in events:
+        date = datetime.now()
+        if e.date_end < date:
+            e.status = 2
+            db.session.add(e)
+            db.session.commit()
+    active_events = Lists.query.filter(Lists.status!=2).all()
+    # check if date is passed
+    if request.method == 'POST':
+        cl = Lists(request.form['date'], request.form['title'])
+        db.session.add(cl)
+        db.session.commit()
+    return render_template('calendar.html', form=form, active_events=active_events)  
+
+@app.route('/make_list', methods=['GET', 'POST'])
+def make_list():
+    form = AddEvent()
+    if form.validate_on_submit():
+        event = Lists(list_title=form.list_title.data, 
+                      date_time=form.date_time.data, 
+                      date_end=form.date_end.data,
+                      mlink=form.mlink.data)
+        db.session.add(event)
+        db.session.commit()
+        return redirect(url_for('.calendar'))
+    return render_template('make_list.html', form=form)  
+    
+@app.route('/events')    
+def events():    
+    # callist = list()
+    # cl = Calendar.query.all()
+    # # print cl
+    # for row in cl:
+    #     callist.append({'start': row.date, 'title': row.title})
+    # #print(cl)
+    # return Response(json.dumps(callist),  mimetype='application/json')
+    events = []
+    lists = Lists.query.all()
+    for list_item in lists:
+        event = {
+            'id': list_item.id,
+            'title': list_item.list_title,
+            'start': list_item.date_time.isoformat(),
+            'end': list_item.date_end.isoformat(),
+            'url': f'/lists/{list_item.id}',  # Link to the detail page
+            'editable': True  # Set to False if you want to disable event editing
+        }
+        print(event)
+        events.append(event)
+    return jsonify(events)
 
 @app.route('/tagging', methods=['POST'])
 @login_required

@@ -163,6 +163,7 @@ class Song(db.Model):
     # later need to find a way to bind same songs in other languages (maybe same code as with following)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    inlist = db.relationship('ListItems', backref='song', lazy='dynamic')
     tags = db.relationship('Tag', secondary=songtags, 
                            backref=db.backref('songs', lazy='dynamic'), lazy='dynamic')
     translated = db.relationship(
@@ -231,18 +232,19 @@ class Mlinks(db.Model): # this table will have M-M relationship with Song Table
 class Lists(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    date_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    date_time = db.Column(db.DateTime, index=True)
+    date_end = db.Column(db.DateTime)
     # ability to add youtube clips for lists of songs
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     mlink = db.Column(db.String)
-    status = db.Column(db.Integer, default=0) # 0 - in progress, 1 = Ready, 2 - in the past 
+    status = db.Column(db.Integer, default=0) # 0 - in progress, 1 = Ready, 2 - past 
     list_title = db.Column(db.String, default='Sunday service')
     # many-to-many relationship with user. so we can assign specific people to this list
-    assigned = db.relationship('User', secondary=list_user, backref='assignedto')
-    
+    assigned = db.relationship('User', secondary=list_user, backref=db.backref('minister', lazy='dynamic'), lazy='dynamic')
+    items = db.relationship('ListItems', backref='list', lazy='dynamic')
     
     def __repr__(self):
-        return '<Lists {}>'.format(self.list_title)
+        return '<date {}>'.format(self.date_time)
     
 class ListItems(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -251,18 +253,8 @@ class ListItems(db.Model):
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     desired_key = db.Column(db.Integer)
     song_id = db.Column(db.Integer, db.ForeignKey('song.id'))
-
+    listorder = db.Column(db.Integer)
+    notes = db.Column(db.Text)
+    
     def __repr__(self):
         return '<ListItems {}>'.format(self.title)        
-    
-# class Sermon(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     sermon_title = db.Column(db.String, default='Sunday service')
-#     date_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-#     leader_name = db.Column(db.String, index=True)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    
-#     def __repr__(self):
-#         return '<Sermon {}>'.format(self.date_time)
-
-    
