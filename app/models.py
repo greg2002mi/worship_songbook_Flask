@@ -57,6 +57,11 @@ list_user = db.Table('list_user',
                      db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
 )
 
+songcart = db.Table('Songcart',
+                    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+                    db.Column('listitem_id', db.Integer, db.ForeignKey('listitem.id')),
+                    )
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
@@ -64,11 +69,13 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    role = db.Column(db.Integer, db.ForeignKey('listitem.id'))
     # role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     mlinks = db.relationship('Lists', backref='creator', lazy='dynamic')
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     songs = db.relationship('Song', backref='publisher', lazy='dynamic')
     # lists = db.relationship('Worshiplist', backref='leader', lazy='dynamic')
+    cart = db.relationship('ListItem', secondary=songcart, backref=db.backref('owner', lazy='dynamic'), lazy='dynamic')
     followed = db.relationship(
         'User', secondary=followers,
         primaryjoin=(followers.c.follower_id == id),
@@ -163,7 +170,7 @@ class Song(db.Model):
     # later need to find a way to bind same songs in other languages (maybe same code as with following)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    inlist = db.relationship('ListItems', backref='song', lazy='dynamic')
+    listitem_id = db.Column(db.Integer, db.ForeignKey('listitem.id'))
     tags = db.relationship('Tag', secondary=songtags, 
                            backref=db.backref('songs', lazy='dynamic'), lazy='dynamic')
     translated = db.relationship(
@@ -241,20 +248,22 @@ class Lists(db.Model):
     list_title = db.Column(db.String, default='Sunday service')
     # many-to-many relationship with user. so we can assign specific people to this list
     assigned = db.relationship('User', secondary=list_user, backref=db.backref('minister', lazy='dynamic'), lazy='dynamic')
-    items = db.relationship('ListItems', backref='list', lazy='dynamic')
+    items = db.relationship('ListItem', backref='list', lazy='dynamic')
     
     def __repr__(self):
         return '<date {}>'.format(self.date_time)
     
-class ListItems(db.Model):
+class ListItem(db.Model):
+    __tablename__ = 'listitem'
     id = db.Column(db.Integer, primary_key=True)
     list_id = db.Column(db.Integer, db.ForeignKey('lists.id'))
     title = db.Column(db.String(140))
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    song = db.relationship('Song', backref='inlist', lazy='dynamic')
     desired_key = db.Column(db.Integer)
-    song_id = db.Column(db.Integer, db.ForeignKey('song.id'))
     listorder = db.Column(db.Integer)
     notes = db.Column(db.Text)
+    role = db.relationship('User', backref='assigned', lazy='dynamic')
     
     def __repr__(self):
         return '<ListItems {}>'.format(self.title)        

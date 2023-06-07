@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class, AUDIO
+# from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class, AUDIO
 from config import Config
 from flask_login import LoginManager
 from flask_mail import Mail

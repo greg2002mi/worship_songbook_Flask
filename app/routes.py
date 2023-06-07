@@ -4,7 +4,7 @@ from werkzeug.urls import url_parse
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddSong, EditSong, EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm, Transpose
 from app.forms import AddTag, TagsForm, SongsForm, AddMedia, AddEvent
 from flask_login import current_user, login_user, login_required, logout_user
-from app.models import User, Song, Post, Tag, Mlinks, Lists
+from app.models import User, Song, Post, Tag, Mlinks, Lists, ListItem
 from datetime import datetime
 from app.email import send_password_reset_email
 from app.core import Chordpro_html
@@ -674,21 +674,27 @@ def make_list():
         event = Lists(list_title=form.list_title.data, 
                       date_time=form.date_time.data, 
                       date_end=form.date_end.data,
-                      mlink=form.mlink.data)
+                      mlink=form.mlink.data, creator=current_user)
         db.session.add(event)
         db.session.commit()
         return redirect(url_for('.calendar'))
     return render_template('make_list.html', form=form)  
+
+@app.route('/add_to_cart', methods=['POST'])
+def add_to_cart():
+    songid = request.args.get('songid', type=int)
+    song = Song.query.get_or_404(songid)
+    cartitem = ListItem(title=song.title, desired_key=song.key)
+    cartitem.song.append(song)
+    current_user.cart.append(cartitem)
+    db.session.add(cartitem)
+    db.session.add(current_user)
+    db.session.commit()
+    # need to finish
+
     
 @app.route('/events')    
 def events():    
-    # callist = list()
-    # cl = Calendar.query.all()
-    # # print cl
-    # for row in cl:
-    #     callist.append({'start': row.date, 'title': row.title})
-    # #print(cl)
-    # return Response(json.dumps(callist),  mimetype='application/json')
     events = []
     lists = Lists.query.all()
     for list_item in lists:
