@@ -1,0 +1,87 @@
+D:\_projects\church\app\routes.py:853: SAWarning: Object of type <Lists> not in session, add operation along 'User.mlinks' will not proceed (This warning originated from the Session 'autoflush' process, which was invoked automatically in response to a user-initiated operation.)
+  ilist = [it for it in user.cart]
+127.0.0.1 - - [08/Jun/2023 21:46:39] "POST /assign2event HTTP/1.1" 302 -
+[2023-06-08 21:46:39,473] ERROR in app: Exception on /calendar [GET]
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+  File "D:\_projects\church\app\routes.py", line 663, in calendar
+    if e.date_end < date:
+TypeError: '<' not supported between instances of 'NoneType' and 'datetime.datetime'
+--- Logging error ---
+Traceback (most recent call last):
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "D:\_projects\church\lib\site-packages\flask_login\utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+  File "D:\_projects\church\app\routes.py", line 663, in calendar
+    if e.date_end < date:
+TypeError: '<' not supported between instances of 'NoneType' and 'datetime.datetime'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ethan\AppData\Local\Programs\Python\Python310\lib\smtplib.py", line 398, in getreply
+    line = self.file.readline(_MAXLINE + 1)
+  File "C:\Users\Ethan\AppData\Local\Programs\Python\Python310\lib\socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ethan\AppData\Local\Programs\Python\Python310\lib\logging\handlers.py", line 1061, in emit
+    smtp = smtplib.SMTP(self.mailhost, port, timeout=self.timeout)
+  File "C:\Users\Ethan\AppData\Local\Programs\Python\Python310\lib\smtplib.py", line 255, in __init__
+    (code, msg) = self.connect(host, port)
+  File "C:\Users\Ethan\AppData\Local\Programs\Python\Python310\lib\smtplib.py", line 343, in connect
+    (code, msg) = self.getreply()
+  File "C:\Users\Ethan\AppData\Local\Programs\Python\Python310\lib\smtplib.py", line 401, in getreply
+    raise SMTPServerDisconnected("Connection unexpectedly closed: "
+smtplib.SMTPServerDisconnected: Connection unexpectedly closed: timed out
+Call stack:
+  File "C:\Users\Ethan\AppData\Local\Programs\Python\Python310\lib\threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\Ethan\AppData\Local\Programs\Python\Python310\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "C:\Users\Ethan\AppData\Local\Programs\Python\Python310\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Ethan\AppData\Local\Programs\Python\Python310\lib\socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Ethan\AppData\Local\Programs\Python\Python310\lib\socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Ethan\AppData\Local\Programs\Python\Python310\lib\socketserver.py", line 747, in __init__
+    self.handle()
+  File "D:\_projects\church\lib\site-packages\werkzeug\serving.py", line 392, in handle
+    super().handle()
+  File "C:\Users\Ethan\AppData\Local\Programs\Python\Python310\lib\http\server.py", line 433, in handle
+    self.handle_one_request()
+  File "C:\Users\Ethan\AppData\Local\Programs\Python\Python310\lib\http\server.py", line 421, in handle_one_request
+    method()
+  File "D:\_projects\church\lib\site-packages\werkzeug\serving.py", line 364, in run_wsgi
+    execute(self.server.app)
+  File "D:\_projects\church\lib\site-packages\werkzeug\serving.py", line 325, in execute
+    application_iter = app(environ, start_response)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2213, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 2193, in wsgi_app
+    response = self.handle_exception(e)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1393, in handle_exception
+    self.log_exception(exc_info)
+  File "D:\_projects\church\lib\site-packages\flask\app.py", line 1414, in log_exception
+    self.logger.error(
+Message: 'Exception on /calendar [GET]'
