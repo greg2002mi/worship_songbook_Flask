@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, abort, sen
 from app import app, db, validate_image
 from werkzeug.urls import url_parse
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddSong, EditSong, EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm, Transpose
-from app.forms import AddTag, TagsForm, SongsForm, AddMedia, AddEvent
+from app.forms import AddTag, TagsForm, SongsForm, AddMedia, AddEvent, Assign2Event
 from flask_login import current_user, login_user, login_required, logout_user
 from app.models import User, Song, Post, Tag, Mlinks, Lists, ListItem
 from datetime import datetime
@@ -13,6 +13,7 @@ from functools import wraps
 import os
 #import logging
 
+keyset = ('Empty', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B')
 lang = ('None', 'Eng', 'Kor', 'Rus')
 
 def limit_content_length(max_length):
@@ -73,6 +74,7 @@ def index():
 
 @app.route('/songbook')
 def songbook():
+    form = EmptyForm()
     keyset = ('Empty', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B')
     page = request.args.get('page', 1, type=int)
     songs = Song.query.order_by(Song.title.desc()).paginate(
@@ -82,7 +84,7 @@ def songbook():
     prev_url = url_for('songbook', page=songs.prev_num) \
         if songs.has_prev else None
     return render_template('songbook.html', title='Songbook', songs=songs.items, 
-                           next_url=next_url, prev_url=prev_url, keyset=keyset, lang=lang)
+                           next_url=next_url, prev_url=prev_url, keyset=keyset, lang=lang, form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -538,7 +540,6 @@ def view_song():
     choices = [(t.id, t.name) for t in tags]
     tags_form.name.choices = choices
     # print(choices)
-    keyset = ('Empty', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B')
     if key is None:
         transpose = ori_key_int
     else: 
@@ -599,10 +600,12 @@ def upload_images():
     
 
 @app.route('/uploads_i/<filename>')
+@login_required
 def upload_i(filename):
     return send_from_directory(app.config['UPLOAD_PATH'], filename)
 
 @app.route('/delete_file', methods=['POST'])
+@login_required
 def delete_file():
     delete_form = EmptyForm()
     if delete_form.submit:
@@ -626,6 +629,7 @@ def delete_file():
     
 
 @app.route('/manage_media', methods=['GET', 'POST'])
+@login_required
 def manage_media():
     id = request.args.get('id', type=int)
     song = Song.query.get_or_404(id)
@@ -650,6 +654,7 @@ def manage_media():
     return render_template('manage_media.html', video_form=video_form, delete_form=delete_form, song=song, media=media, types=types)
 
 @app.route('/calendar', methods=['GET', 'POST'])
+@login_required
 def calendar():
     form = EmptyForm() # to delete events
     events = Lists.query.all()
@@ -668,6 +673,7 @@ def calendar():
     return render_template('calendar.html', form=form, active_events=active_events)  
 
 @app.route('/make_list', methods=['GET', 'POST'])
+@login_required
 def make_list():
     form = AddEvent()
     if form.validate_on_submit():
@@ -681,17 +687,163 @@ def make_list():
     return render_template('make_list.html', form=form)  
 
 @app.route('/add_to_cart', methods=['POST'])
+@login_required
 def add_to_cart():
     songid = request.args.get('songid', type=int)
     song = Song.query.get_or_404(songid)
-    cartitem = ListItem(title=song.title, desired_key=song.key)
+    cart = [c for c in current_user.cart]
+    cartitem = ListItem(title=song.title, desired_key=song.key, listorder=len(cart)+1)
     cartitem.song.append(song)
     current_user.cart.append(cartitem)
     db.session.add(cartitem)
     db.session.add(current_user)
     db.session.commit()
     # need to finish
+    return redirect(url_for('songbook'))
 
+@app.route('/cart/<username>', methods=['GET', 'POST'])
+@login_required
+def cart(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    users = User.query.all()
+    form = EmptyForm()
+    e_form = EmptyForm()
+    deleteform = EmptyForm()
+    # songlist = [item for item in user.cart.sort(key=lambda x: x.listorder)]
+    sl = sorted(user.cart, key=lambda x: x.listorder)
+    songlist = [item for item in sl]
+    for l in songlist:
+        if l.listorder is None:
+            l.listorder = l.id
+            db.session.add(l)
+            db.session.commit()
+    
+    return render_template('cart.html', songlist=songlist, form=form, deleteform=deleteform, keyset=keyset, users=users, e_form=e_form) 
+
+@app.route('/empty_cart', methods=['POST'])    
+@login_required
+def empty_cart():
+    user = User.query.filter_by(username=current_user.username).first_or_404()
+    e_form = EmptyForm()
+    if e_form.submit():     
+        for item in user.cart:
+            if item.role is not None:
+                item.role.remove(user)
+            user.cart.remove(item)
+            db.session.delete(item)             
+        db.session.add(user)
+        db.session.commit()
+        
+        return redirect(url_for('cart', username=current_user.username))
+
+@app.route('/delete_item', methods=['POST'])    
+@login_required
+def delete_item():
+    user = User.query.filter_by(username=current_user.username).first_or_404()
+    item = request.args.get('item', type=int)
+    # user = User.query.filter_by(id=current_user.id).first_or_404()
+    deleteform = EmptyForm()
+    if deleteform.submit():
+        listitem = ListItem.query.get(item)
+        order = listitem.listorder
+        song = [s for s in listitem.song]
+        for s in song:
+            listitem.song.remove(s)
+            user.cart.remove(listitem)
+        for item in user.cart:
+            x = item.listorder - order
+            if x > 0:
+                y = item.listorder - 1
+                item.listorder = y
+                db.session.add(item)
+        db.session.add(listitem)                
+        db.session.add(user)
+        db.session.delete(listitem)
+        db.session.commit()
+        return redirect(url_for('cart', username=current_user.username))
+
+#update order of list
+# using j    
+@app.route('/cart_update-list-order', methods=['POST'])
+@login_required
+def cart_update_list_order():
+    order = request.form.getlist('order[]')  
+    for index, item_id in enumerate(order, start=1):
+        listitem = ListItem.query.get(item_id)
+        listitem.listorder = index
+        db.session.add(listitem)
+    db.session.commit()
+    return redirect(url_for('cart', username=current_user.username))
+    #return jsonify({'message': 'List order updated successfully.'})
+
+# update desired key to any key
+@app.route('/cart_update-desired-key', methods=['POST'])
+@login_required
+def cart_update_desired_key():
+    item_id = request.form.get('item_id')
+    desired_key = int(request.form.get('desired_key'))
+    list_item = ListItem.query.get(item_id)
+    list_item.desired_key = desired_key
+    db.session.add(list_item)
+    db.session.commit()
+    return redirect(url_for('cart', username=current_user.username))
+
+@app.route('/cart_update-notes', methods=['POST'])
+@login_required
+def cart_update_notes():
+    item_id = request.form.get('item_id')
+    notes = request.form.get('notes')
+    list_item = ListItem.query.get(item_id)
+    list_item.notes = notes
+    db.session.commit()
+
+    # Return a success response
+    return redirect(url_for('cart', username=current_user.username))
+
+@app.route('/cart_assign-user', methods=['POST'])
+@login_required
+def cart_assign_user():
+    item_id = request.form.get('item_id')
+    user_id = request.form.get('user_id')
+
+    # Retrieve the corresponding list item from the database
+    list_item = ListItem.query.get(item_id)
+
+    # Retrieve the user from the database based on the provided user_id
+    user = User.query.filter_by(id=user_id).first_or_404()
+    list_item.role.append(user)
+    db.session.add(list_item)
+    db.session.commit()
+
+    # Return a success response
+    return redirect(url_for('cart', username=current_user.username))
+
+@app.route('/assign2event', methods=['GET', 'POST'])
+@login_required
+def assign2event():
+    user = User.query.filter_by(username=current_user.username).first_or_404()
+    addform = AddEvent()
+    assignform = Assign2Event()
+    
+    if request.method == 'POST':
+        if addform.submit():
+            event = Lists(list_title=addform.list_title.data, 
+                          date_time=addform.date_time.data, 
+                          date_end=addform.date_end.data,
+                          mlink=addform.mlink.data, creator=current_user)
+        elif assignform.submit():
+           event_id = assignform.event.data
+           event = Lists.query.get_or_404(event_id)
+           # if event.items is not None:
+        ilist = [it for it in user.cart]
+        event.items = ilist
+        for i in ilist:
+            user.cart.remove(i)
+        db.session.add(event)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('calendar'))    # later to redirect to event view
+    return render_template('assign2event.html', addform=addform, assignform=assignform) 
     
 @app.route('/events')    
 def events():    
@@ -706,9 +858,150 @@ def events():
             'url': f'/lists/{list_item.id}',  # Link to the detail page
             'editable': True  # Set to False if you want to disable event editing
         }
-        print(event)
         events.append(event)
     return jsonify(events)
+
+@app.route('/delete_event', methods=['POST'])
+@login_required    
+def delete_event(): 
+    return redirect(url_for('.calendar'))
+                    
+@app.route('/edit_event/<listid>', methods=['GET', 'POST'])
+@login_required
+def edit_event(listid):
+    event = Lists.query.get_or_404(listid)
+    form = AddEvent()
+    # assignform = assign multiple users to this event
+    if form.validate_on_submit():
+        event.list_title=form.list_title.data 
+        event.date_time=form.date_time.data 
+        event.date_end=form.date_end.data
+        event.mlink=form.mlink.data
+        db.session.add(event)
+        db.session.commit()
+        return redirect(url_for('.lists', listid=event.id))
+    elif request.method == 'GET':
+        form.list_title.data = event.list_title
+        form.date_time.data = event.date_time
+        form.date_end.data = event.date_end
+        form.mlink.data = event.mlink
+    return render_template('edit_event.html', form=form)  
+
+#vivew event - need to change later from lists to view_event. on the next db flush
+@app.route('/lists/<listid>')
+@login_required    
+def lists(listid):    
+    event = Lists.query.get_or_404(listid)
+    users = User.query.all()
+    user = User.query.get_or_404(event.user_id)
+    form = EmptyForm()
+    unroleform = EmptyForm()
+    de_form = EmptyForm()
+    deleteform = EmptyForm()
+    sl = sorted(event.items, key=lambda x: x.listorder)
+    songlist = [item for item in sl]
+    
+    return render_template('event_detail.html', event=event, songlist=songlist, form=form, deleteform=deleteform, keyset=keyset, users=users, user=user, de_form=de_form, unroleform=unroleform) 
+
+@app.route('/unsign_from_listitem', methods=['POST'])
+@login_required    
+def unsign_from_listitem():
+    listitemid = request.args.get('itemid', type=int)
+    username = request.args.get('username', type=str)
+    listitem = ListItem.query.get_or_404(listitemid)
+    user = User.query.filter_by(username=username).first_or_404()
+    listid = listitem.list_id
+    listitem.role.remove(user)
+    db.session.add(listitem)
+    db.session.commit()
+    return redirect(url_for('lists', listid=listid))
+
+@app.route('/list_delete_item', methods=['POST'])    
+@login_required
+def list_delete_item():
+    user = User.query.filter_by(username=current_user.username).first_or_404()
+    item = request.args.get('item', type=int)
+    listid = request.args.get('listid', type=int)
+    event = Lists.query.get_or_404(listid)
+    # user = User.query.filter_by(id=current_user.id).first_or_404()
+    deleteform = EmptyForm()
+    if deleteform.submit():
+        listitem = ListItem.query.get(item)
+        order = listitem.listorder
+        song = [s for s in listitem.song]
+        for s in song:
+            listitem.song.remove(s)
+            empty = []
+            listitem.role = empty
+            event.items.remove(listitem)
+        for item in event.items:
+            x = item.listorder - order
+            if x > 0:
+                y = item.listorder - 1
+                item.listorder = y
+                db.session.add(item)
+        db.session.add(listitem)
+        db.session.add(event)                
+        db.session.add(user)
+        db.session.delete(listitem)
+        db.session.commit()
+        return redirect(url_for('lists', listid=listid))
+
+#update order of list
+# using j    
+@app.route('/list_update-list-order', methods=['POST'])
+@login_required
+def list_update_list_order():
+    order = request.form.getlist('order[]')  
+    for index, item_id in enumerate(order, start=1):
+        listitem = ListItem.query.get(item_id)
+        listid = listitem.list_id
+        listitem.listorder = index
+        db.session.add(listitem)
+    db.session.commit()
+    return redirect(url_for('lists', listid=listid))
+    #return jsonify({'message': 'List order updated successfully.'})
+
+# update desired key to any key
+@app.route('/list_update-desired-key', methods=['POST'])
+@login_required
+def list_update_desired_key():
+    item_id = request.form.get('item_id')
+    desired_key = int(request.form.get('desired_key'))
+    listitem = ListItem.query.get(item_id)
+    listid = listitem.list_id
+    listitem.desired_key = desired_key
+    db.session.add(listitem)
+    db.session.commit()
+    return redirect(url_for('lists', listid=listid))
+
+@app.route('/list_update-notes', methods=['POST'])
+@login_required
+def list_update_notes():
+    item_id = request.form.get('item_id')
+    notes = request.form.get('notes')
+    listitem = ListItem.query.get(item_id)
+    listid = listitem.list_id
+    listitem.notes = notes
+    db.session.commit()
+    return redirect(url_for('lists', listid=listid))
+
+@app.route('/list_assign-user', methods=['POST'])
+@login_required
+def list_assign_user():
+    item_id = request.form.get('item_id')
+    user_id = request.form.get('user_id')
+
+    # Retrieve the corresponding list item from the database
+    listitem = ListItem.query.get(item_id)
+    listid = listitem.list_id
+    # Retrieve the user from the database based on the provided user_id
+    user = User.query.filter_by(id=user_id).first_or_404()
+    listitem.role.append(user)
+    db.session.add(listitem)
+    db.session.commit()
+    # Return a success response
+    return redirect(url_for('lists', listid=listid))
 
 @app.route('/tagging', methods=['POST'])
 @login_required

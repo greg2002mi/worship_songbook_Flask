@@ -1,8 +1,8 @@
-"""'reboot'
+"""fixes
 
-Revision ID: a07af4d1ef11
+Revision ID: 4caa276b3e6a
 Revises: 
-Create Date: 2023-06-07 09:15:13.911000
+Create Date: 2023-06-08 11:19:11.006043
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a07af4d1ef11'
+revision = '4caa276b3e6a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -78,6 +78,12 @@ def upgrade():
         batch_op.create_index(batch_op.f('ix_user_email'), ['email'], unique=True)
         batch_op.create_index(batch_op.f('ix_user_username'), ['username'], unique=True)
 
+    op.create_table('RolesTable',
+    sa.Column('listitem_id', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['listitem_id'], ['listitem.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], )
+    )
     op.create_table('Songcart',
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('listitem_id', sa.Integer(), nullable=True),
@@ -166,6 +172,7 @@ def downgrade():
     op.drop_table('list_user')
     op.drop_table('followers')
     op.drop_table('Songcart')
+    op.drop_table('RolesTable')
     with op.batch_alter_table('user', schema=None) as batch_op:
         batch_op.drop_index(batch_op.f('ix_user_username'))
         batch_op.drop_index(batch_op.f('ix_user_email'))

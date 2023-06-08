@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block head_js %}
+<script src="{{ url_for('static', filename='/js/jquery-3.6.0.min.js') }}"></script>
+<script src="{{ url_for('static', filename='/js/jquery-ui.min.js') }}"></script>
+<style>
+	ul {
+	  list-style-type: none;
+	  margin: 0;
+      padding: 0;
+	}
+    #sortable {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+    #sortable li {
+      margin: 3px;
+      padding: 0.4em;
+      padding-left: 0.2em;
+      font-size: 1em;
+      height: 30px;
+      cursor: grab;
+    }
+  </style>
+  <script>
+    $(function() {
+      $("#sortable").sortable({
+        update: function(event, ui) {
+          var order = [];
+          $("#sortable li").each(function(index) {
+            order.push($(this).data("item-id"));
+          });
+          // Send the updated order to the backend using AJAX
+          $.ajax({
+            url: "/list_update-list-order",
+            type: "POST",
+            data: { order: order },
+            success: function(response) {
+              console.log(response);
+            },
+            error: function(xhr, status, error) {
+              console.error(error);
+            }
+          });
+        }
+      });
+      $("#sortable").disableSelection();
+    });
+	
+	function changeDesiredKey(itemId, newDesiredKey) {
+	  // Send the updated desired key to the backend using AJAX
+	  $.ajax({
+		url: "/list_update-desired-key",
+		type: "POST",
+		data: { item_id: itemId, desired_key: newDesiredKey },
+		success: function(response) {
+		  console.log(response);
+		},
+		error: function(xhr, status, error) {
+		  console.error(error);
+		}
+	  });
+	}
+	function updateNotes(itemId, event) {
+	  if (event.key === 'Enter') {
+		var notes = $("#notes_" + itemId).val();
+		// Send the updated notes to the backend using AJAX
+		$.ajax({
+		  url: "/list_update-notes",
+		  type: "POST",
+		  data: { item_id: itemId, notes: notes },
+		  success: function(response) {
+			console.log(response);
+		  },
+		  error: function(xhr, status, error) {
+			console.error(error);
+		  }
+		});
+	  }
+	}
+	function assignUser(itemId) {
+	  var userId = $("#user_" + itemId).val();
+	  // Send the updated assigned user to the backend using AJAX
+	  $.ajax({
+		url: "/list_assign-user",
+		type: "POST",
+		data: { item_id: itemId, user_id: userId },
+		success: function(response) {
+		  console.log(response);
+		},
+		error: function(xhr, status, error) {
+		  console.error(error);
+		}
+	  });
+	}
+  </script>
+{% endblock %}
+
+{% block app_content %}
+    <br>
+
+	<div class="row">
+		<div class="col-8">
+			<h4>Event title: {{ event.list_title }}</h4>
+			<h5>Set date: {{ event.date_time }}</h5>
+			<h5>Created date: {{ event.created }}</h5>
+			<h6>Created by: {{ user.username }}</h6>
+			<h6>Links: {{ event.mlink }}</h6>
+		</div>	
+		<div class="col-3">
+			<nav class="nav nav-pills justify-content-end">
+				<a class="nav-link active" aria-current="page" href="{{ url_for('.edit_event', listid=event.id) }}">Edit</a>&nbsp;&nbsp;
+				<form action="{{ url_for('delete_event') }}" method="post">
+								{{ de_form.hidden_tag() }}
+								{{ de_form.submit(class_='btn btn-secondary', value='Delete') }}
+				</form>
+			</nav>
+		</div>
+	</div>	
+	<br>
+
+	
+	<div class="row">	
+		<div class="col">
+			<ul><li>
+			<div class="row border-bottom border-3 bg-light text-dark">
+						<div class="col-auto"><strong>No.</strong></div>
+						<div class="col-3"><strong>Title</strong></div>
+						<div class="col-auto"><strong>&nbsp;&nbsp;&nbsp;Key&nbsp;&nbsp;&nbsp;</strong></div>
+						<div class="col-auto"><strong>order</strong></div>
+						<div class="col-3"><strong>Comments</strong></div>
+						<div class="col-1"><strong>Assigned</strong></div>
+						<div class="col-1"><strong>Assigned User</strong></div>
+						<div class="col-1"><strong>Actions</strong></div>
+					</div></li></ul>
+			<ul id="sortable">
+			{% for s in songlist %}
+				<li data-item-id="{{ s.id }}">	
+					<div class="row bg-light text-dark">
+						<div class="col-auto">{{ s.id }}</div>
+						<div class="col-3">
+						{% for song in s.song %}
+						<a href="{{ url_for('.view_song', id=song.id) }}">{{ song.title }}</a>
+						{% endfor %}
+						</div>
+						<div class="col-1">
+							<select class="form-select form-select-sm" onchange="changeDesiredKey('{{ s.id }}', this.value)">
+							  {% for key in keyset %}
+							  <option value="{{ loop.index0 }}" {% if s.desired_key == loop.index0 %}selected{% endif %}>{{ key }}</option>
+							  {% endfor %}
+							</select>
+						</div>
+						<div class="col-auto">&nbsp;&nbsp;&nbsp;{{ s.listorder }}&nbsp;&nbsp;&nbsp;</div>
+						<div class="col-3"><input type="text" class="form-control form-control-sm" placeholder="Specific notes" id="notes_{{ s.id }}" value="{{ s.notes }}" onkeypress="updateNotes('{{ s.id }}', event)">
+						</div>
+						<div class="col-1">{% if s.role %}
+						{% for auser in s.role %}
+						<form class="d-inline" action="{{ url_for('.unsign_from_listitem', itemid=s.id, username=auser.username) }}" method="POST">
+							{{ unroleform.csrf_token }}
+							<button type="submit" class="btn btn-link p-0">
+								<span class="badge bg-secondary" style="font-size: 7px;">
+									{{ auser.username }}
+								</span>
+							</button>
+						</form>
+						{% endfor %}
+						{% endif %}</div>
+						<div class="col-1">
+						<select class="form-select form-select-sm" id="user_{{ s.id }}" onchange="assignUser('{{ s.id }}')">
+						  <option value="">None</option>
+						  {% for user in users %}
+							<option value="{{ user.id }}" {% if user.id == s.assigned_user_id %}selected{% endif %}>{{ user.username }}</option>
+						  {% endfor %}
+						</select></div>
+						<div class="col-1">
+							<form class="needs-validation" action="{{ url_for('.list_delete_item', item=s.id, listid=event.id) }}" method="post">
+								{{ deleteform.hidden_tag() }}
+								{{ deleteform.submit(class_='btn btn-primary btn-sm', value='Delete') }}
+							</form>
+						</div>
+					</div>
+				</li>
+			{% endfor %}
+			</ul>
+
+		</div>
+	</div>
+{% endblock %}
+

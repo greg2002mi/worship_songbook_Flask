@@ -4,4 +4,8 @@
             <td>{{ song.singer }}</td>
 			<td>{{ keyset[song.key] }}</td>
 			<td>{{ lang[song.language] }}</td>
+			<td><form class="row needs-validation" action="{{ url_for('.add_to_cart', songid=song.id) }}" method="post">
+						{{ form.hidden_tag() }}
+						{{ form.submit(value='Add to song folder') }}
+					</form></td>
         </tr>

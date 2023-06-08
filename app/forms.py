@@ -3,10 +3,11 @@ from wtforms import SelectMultipleField, StringField, PasswordField, BooleanFiel
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms.widgets import ListWidget, CheckboxInput, Input
-from app.models import User, Song, Tag
+from app.models import User, Song, Tag, Lists
 from sqlalchemy import and_
 from markupsafe import Markup
 from wtforms.fields import DateTimeLocalField
+from datetime import datetime
 # from app import images, audio
 
 
@@ -219,6 +220,16 @@ class AddEvent(FlaskForm):
     date_end = DateTimeLocalField('End date', format='%Y-%m-%dT%H:%M', validators=[DataRequired()], widget=DateTimePickerWidget())
     mlink = StringField('Links or path to media')
     submit = SubmitField('Set event')
+
+class Assign2Event(FlaskForm):
+    event = SelectField('Event', coerce=int)
+    submit = SubmitField('Assign')
+    
+    def __init__(self, *args, **kwargs):
+        super(Assign2Event, self).__init__(*args, **kwargs)
+        self.event.choices = [(event.id, "{}({}) - {}".format(event.date_time.strftime('%Y-%m-%d %H:%M'), 
+                              User.query.get_or_404(event.user_id).username, event.list_title)) 
+                              for event in Lists.query.filter(Lists.date_time > datetime.utcnow()).all()]
 
 # this for uploading images    
 # class ImageUpload(FlaskForm):

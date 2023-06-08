@@ -62,6 +62,11 @@ songcart = db.Table('Songcart',
                     db.Column('listitem_id', db.Integer, db.ForeignKey('listitem.id')),
                     )
 
+rolestable = db.Table('RolesTable',
+                    db.Column('listitem_id', db.Integer, db.ForeignKey('listitem.id')),
+                    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+                    )
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
@@ -75,7 +80,7 @@ class User(UserMixin, db.Model):
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     songs = db.relationship('Song', backref='publisher', lazy='dynamic')
     # lists = db.relationship('Worshiplist', backref='leader', lazy='dynamic')
-    cart = db.relationship('ListItem', secondary=songcart, backref=db.backref('owner', lazy='dynamic'), lazy='dynamic')
+    cart = db.relationship('ListItem', secondary=songcart, backref=db.backref('owner', lazy='dynamic'))
     followed = db.relationship(
         'User', secondary=followers,
         primaryjoin=(followers.c.follower_id == id),
@@ -263,7 +268,7 @@ class ListItem(db.Model):
     desired_key = db.Column(db.Integer)
     listorder = db.Column(db.Integer)
     notes = db.Column(db.Text)
-    role = db.relationship('User', backref='assigned', lazy='dynamic')
+    role = db.relationship('User', secondary=rolestable, backref=db.backref('roles', lazy='dynamic'), lazy='dynamic')
     
     def __repr__(self):
         return '<ListItems {}>'.format(self.title)        
