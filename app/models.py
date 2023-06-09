@@ -76,7 +76,7 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     role = db.Column(db.Integer, db.ForeignKey('listitem.id'))
     # role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    mlinks = db.relationship('Lists', backref='creator', lazy='dynamic')
+    lists = db.relationship('Lists', backref='creator', lazy='dynamic') 
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     songs = db.relationship('Song', backref='publisher', lazy='dynamic')
     # lists = db.relationship('Worshiplist', backref='leader', lazy='dynamic')
@@ -158,6 +158,10 @@ translation = db.Table('translation',
 medialinks = db.Table('medialinks', 
                     db.Column('song_id', db.Integer, db.ForeignKey('song.id')), 
                     db.Column('mlink_id', db.Integer, db.ForeignKey('mlinks.id')))
+
+songlistitem = db.Table('songlistitem',
+                    db.Column('listitem_id', db.Integer, db.ForeignKey('listitem.id')),
+                    db.Column('song_id', db.Integer, db.ForeignKey('song.id')))
   # many to many relationship sermon and songs  
 # songlist = db.Table('songlist', 
 #                     db.Column('sermon_id', db.Integer, db.ForeignKey('sermon.id')), 
@@ -175,7 +179,6 @@ class Song(db.Model):
     # later need to find a way to bind same songs in other languages (maybe same code as with following)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    listitem_id = db.Column(db.Integer, db.ForeignKey('listitem.id'))
     tags = db.relationship('Tag', secondary=songtags, 
                            backref=db.backref('songs', lazy='dynamic'), lazy='dynamic')
     translated = db.relationship(
@@ -241,6 +244,11 @@ class Mlinks(db.Model): # this table will have M-M relationship with Song Table
 #     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 #     worship_lists = db.relationship('Song', backref='songs', lazy='dynamic')
 
+eventitems = db.Table('Eventitems',
+                    db.Column('lists_id', db.Integer, db.ForeignKey('lists.id')),
+                    db.Column('listitem_id', db.Integer, db.ForeignKey('listitem.id')),
+                    )
+
 class Lists(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -253,7 +261,7 @@ class Lists(db.Model):
     list_title = db.Column(db.String, default='Sunday service')
     # many-to-many relationship with user. so we can assign specific people to this list
     assigned = db.relationship('User', secondary=list_user, backref=db.backref('minister', lazy='dynamic'), lazy='dynamic')
-    items = db.relationship('ListItem', backref='list', lazy='dynamic')
+    items = db.relationship('ListItem', secondary=eventitems, backref=db.backref('list', lazy='dynamic'), lazy='dynamic')
     
     def __repr__(self):
         return '<date {}>'.format(self.date_time)
@@ -261,14 +269,12 @@ class Lists(db.Model):
 class ListItem(db.Model):
     __tablename__ = 'listitem'
     id = db.Column(db.Integer, primary_key=True)
-    list_id = db.Column(db.Integer, db.ForeignKey('lists.id'))
     title = db.Column(db.String(140))
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    song = db.relationship('Song', backref='inlist', lazy='dynamic')
     desired_key = db.Column(db.Integer)
     listorder = db.Column(db.Integer)
     notes = db.Column(db.Text)
     role = db.relationship('User', secondary=rolestable, backref=db.backref('roles', lazy='dynamic'), lazy='dynamic')
-    
+    song = db.relationship('Song', secondary=songlistitem, backref=db.backref('inlist', lazy='dynamic'), lazy='dynamic')
     def __repr__(self):
         return '<ListItems {}>'.format(self.title)        

@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request, abort, send_from_directory, jsonify
-from app import app, db, validate_image
+from app import app, db, validate_image, validate_audio
 from werkzeug.urls import url_parse
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddSong, EditSong, EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm, Transpose
 from app.forms import AddTag, TagsForm, SongsForm, AddMedia, AddEvent, Assign2Event
@@ -16,6 +16,8 @@ import os
 keyset = ('Empty', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B')
 lang = ('None', 'Eng', 'Kor', 'Rus')
 
+
+
 def limit_content_length(max_length):
     def decorator(f):
         @wraps(f)
@@ -27,6 +29,10 @@ def limit_content_length(max_length):
         return wrapper
     return decorator
 
+
+@app.route('/uploads/audio/<filename>')
+def uploads_folder(filename):
+    return send_from_directory(app.config['AUPLOAD_PATH'], filename)
 
 @app.errorhandler(413)
 def too_large(e):
@@ -515,6 +521,7 @@ def view_song():
     tagged_list = ([tagged.name for tagged in song.tags])
     ori_key_int = song.key
     lyrics = song.lyrics
+    files = os.listdir(app.config['UPLOAD_PATH'])
     form = Transpose()
     transl_form = SongsForm()
     remove_transl_form = EmptyForm()
@@ -566,7 +573,7 @@ def view_song():
         return render_template('view_song.html', title='View Song', html=html, transl_form=transl_form, 
                                remove_transl_form=remove_transl_form, delete_form=delete_form, tagged_list=tagged_list, 
                                tag_states=tag_states, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, 
-                               ori_key=ori_key, t_songlist=t_songlist, lang=lang, untagall_form=untagall_form, media=media)
+                               ori_key=ori_key, t_songlist=t_songlist, lang=lang, untagall_form=untagall_form, media=media, files=files)
 
 @app.route('/upload_images', methods=['POST'])
 @limit_content_length(10 * 1024 * 1024)
@@ -583,7 +590,7 @@ def upload_images():
         num = len(media) + 1
     if mtype is None:
         flash('type variable is None.')
-        return redirect(url_for('.img_upload', songid=song.id)) 
+        return redirect(url_for('.view_song', songid=song.id)) 
     if filename != '':
         file_ext = os.path.splitext(filename)[1]
         if file_ext not in app.config['IMAGE_EXTENSIONS'] or \
@@ -592,6 +599,36 @@ def upload_images():
         newname = "{}.image_{}.jpg".format(song.id, str(num))
         uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], newname))
         mlink = Mlinks(filename=filename, mtype=mtype, murl=newname)
+        db.session.add(mlink)
+        song.media.append(mlink)
+        db.session.add(song)
+        db.session.commit()
+    return '', 204
+
+@app.route('/upload_audio', methods=['POST'])
+@limit_content_length(50 * 1024 * 1024)
+def upload_audio():
+    id = request.args.get('id', type=int)
+    song = Song.query.get_or_404(id)
+    mtype = request.args.get('mtype', type=int)
+    uploaded_file = request.files['file']
+    filename = secure_filename(uploaded_file.filename)
+    if song.media is None:
+        num = 1
+    else:
+        media = song.media.all()
+        num = len(media) + 1
+    if mtype is None:
+        flash('type variable is None.')
+        return redirect(url_for('.view_song', songid=song.id)) 
+    if filename != '':
+        file_ext = os.path.splitext(filename)[1]
+        # if file_ext not in app.config['AUDIO_EXTENSIONS'] or file_ext != validate_audio(uploaded_file.stream, file_ext):
+        if file_ext not in app.config['AUDIO_EXTENSIONS']:
+            return "Invalid audio", 400
+        newname = "{}.audio_{}{}".format(song.id, str(num), file_ext)
+        uploaded_file.save(os.path.join(app.config['AUPLOAD_PATH'], newname))
+        mlink = Mlinks(filename=filename, mtype=mtype, murl=url_for('uploads_folder', filename=newname))
         db.session.add(mlink)
         song.media.append(mlink)
         db.session.add(song)
@@ -660,7 +697,7 @@ def calendar():
     events = Lists.query.all()
     for e in events:
         date = datetime.now()
-        if e.date_end < date:
+        if e.date_end and e.date_end < date:  # ISSUE: Nonetype and datetime are not comparable
             e.status = 2
             db.session.add(e)
             db.session.commit()
@@ -690,13 +727,14 @@ def make_list():
 @login_required
 def add_to_cart():
     songid = request.args.get('songid', type=int)
+    user = User.query.filter_by(username=current_user.username).first_or_404()
     song = Song.query.get_or_404(songid)
     cart = [c for c in current_user.cart]
     cartitem = ListItem(title=song.title, desired_key=song.key, listorder=len(cart)+1)
     cartitem.song.append(song)
-    current_user.cart.append(cartitem)
+    user.cart.append(cartitem)
     db.session.add(cartitem)
-    db.session.add(current_user)
+    db.session.add(user)
     db.session.commit()
     # need to finish
     return redirect(url_for('songbook'))
@@ -708,6 +746,7 @@ def cart(username):
     users = User.query.all()
     form = EmptyForm()
     e_form = EmptyForm()
+    unroleform = EmptyForm()
     deleteform = EmptyForm()
     # songlist = [item for item in user.cart.sort(key=lambda x: x.listorder)]
     sl = sorted(user.cart, key=lambda x: x.listorder)
@@ -715,25 +754,26 @@ def cart(username):
     for l in songlist:
         if l.listorder is None:
             l.listorder = l.id
-            db.session.add(l)
-            db.session.commit()
-    
-    return render_template('cart.html', songlist=songlist, form=form, deleteform=deleteform, keyset=keyset, users=users, e_form=e_form) 
+            # db.session.add(l)
+        db.session.commit()
+        print(l)
+    return render_template('cart.html', songlist=songlist, form=form, deleteform=deleteform, keyset=keyset, users=users, e_form=e_form, unroleform=unroleform) 
 
 @app.route('/empty_cart', methods=['POST'])    
 @login_required
 def empty_cart():
     user = User.query.filter_by(username=current_user.username).first_or_404()
+    cart = [c for c in user.cart]
     e_form = EmptyForm()
     if e_form.submit():     
-        for item in user.cart:
+        for item in cart:
             if item.role is not None:
-                item.role.remove(user)
+                empty = []
+                item.role = empty
             user.cart.remove(item)
-            db.session.delete(item)             
-        db.session.add(user)
-        db.session.commit()
-        
+            db.session.add(user)
+            db.session.delete(item)
+            db.session.commit()
         return redirect(url_for('cart', username=current_user.username))
 
 @app.route('/delete_item', methods=['POST'])    
@@ -761,6 +801,18 @@ def delete_item():
         db.session.delete(listitem)
         db.session.commit()
         return redirect(url_for('cart', username=current_user.username))
+
+@app.route('/unsign_from_cartitem', methods=['POST'])
+@login_required    
+def unsign_from_cartitem():
+    listitemid = request.args.get('itemid', type=int)
+    username = request.args.get('username', type=str)
+    listitem = ListItem.query.get_or_404(listitemid)
+    user = User.query.filter_by(username=username).first_or_404()
+    listitem.role.remove(user)
+    db.session.add(listitem)
+    db.session.commit()
+    return redirect(url_for('cart', username=current_user.username))
 
 #update order of list
 # using j    
@@ -807,14 +859,16 @@ def cart_assign_user():
     user_id = request.form.get('user_id')
 
     # Retrieve the corresponding list item from the database
-    list_item = ListItem.query.get(item_id)
+    listitem = ListItem.query.get(item_id)
 
     # Retrieve the user from the database based on the provided user_id
     user = User.query.filter_by(id=user_id).first_or_404()
-    list_item.role.append(user)
-    db.session.add(list_item)
-    db.session.commit()
-
+    if user not in listitem.role:
+        listitem.role.append(user)
+        db.session.add(listitem)
+        db.session.commit()
+    else:
+        flash("{} is already assigned.".format(user.username))
     # Return a success response
     return redirect(url_for('cart', username=current_user.username))
 
@@ -827,18 +881,21 @@ def assign2event():
     
     if request.method == 'POST':
         if addform.submit():
-            event = Lists(list_title=addform.list_title.data, 
+           event = Lists(list_title=addform.list_title.data, 
                           date_time=addform.date_time.data, 
                           date_end=addform.date_end.data,
-                          mlink=addform.mlink.data, creator=current_user)
-        elif assignform.submit():
+                          mlink=addform.mlink.data, creator=current_user.id)
+           # ilist = [it for it in user.cart] # issue if assigning to existing lists. needs fixing
+           # event.items = ilist
+        if assignform.submit():
            event_id = assignform.event.data
            event = Lists.query.get_or_404(event_id)
+           
            # if event.items is not None:
-        ilist = [it for it in user.cart]
-        event.items = ilist
-        for i in ilist:
-            user.cart.remove(i)
+        for item in user.cart:
+            event.items.append(item)
+        empty=[]
+        user.cart = empty
         db.session.add(event)
         db.session.add(user)
         db.session.commit()
@@ -853,9 +910,9 @@ def events():
         event = {
             'id': list_item.id,
             'title': list_item.list_title,
-            'start': list_item.date_time.isoformat(),
-            'end': list_item.date_end.isoformat(),
-            'url': f'/lists/{list_item.id}',  # Link to the detail page
+            'start': list_item.date_time.isoformat() if list_item.date_time else None,
+            'end': list_item.date_end.isoformat() if list_item.date_end else None,
+            'url': '/lists/{}'.format(list_item.id),  # Link to the detail page
             'editable': True  # Set to False if you want to disable event editing
         }
         events.append(event)
@@ -997,9 +1054,12 @@ def list_assign_user():
     listid = listitem.list_id
     # Retrieve the user from the database based on the provided user_id
     user = User.query.filter_by(id=user_id).first_or_404()
-    listitem.role.append(user)
-    db.session.add(listitem)
-    db.session.commit()
+    if user not in listitem:
+        listitem.role.append(user)
+        db.session.add(listitem)
+        db.session.commit()
+    else:
+        flash("{} is already assigned.".format(user.username))
     # Return a success response
     return redirect(url_for('lists', listid=listid))
 

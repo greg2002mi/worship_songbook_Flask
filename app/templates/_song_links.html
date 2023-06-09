@@ -5,8 +5,8 @@
     </form>
     <hr>
 	</div>
-	<div class="col-10">Images<br>
-	<h1>File Upload</h1>
+	<div class="col-10"><h4><strong>Images</strong></h4><br>
+	<h5>File Upload</h5>
     <form action="{{ url_for('upload_images', id=song.id, mtype=3) }}" class="dropzone">
     </form>
     <hr>
@@ -15,17 +15,124 @@
 	  <img src="{{ url_for('upload_i', filename=image.murl) }}" style="width: 64px;cursor:zoom-in" onclick="document.getElementById('modal{{ image.id }}').style.display='block'">
 	{% endif %}
 	{% endfor %}</div>
-    <div class="col-4">Audio<br>
-	
+    <div class="col-4"><h4><strong>Audio</strong></h4><br>
+	{% for a in media %}
+      {% if a.mtype == 2 %}
+	  <div>
+        <h5>{{ a.filename }}</h5>
+        <audio id="audioPlayer{{ a.id }}" src="{{ a.murl }}"></audio>
+        <input type="range" id="volumeSlider{{ a.id }}" min="0" max="1" step="0.1" value="1" onchange="changeVolume({{ a.id }}, this.value)">
+        <button onclick="playSong({{ a.id }})">Play</button>
+        <button onclick="stopSong({{ a.id }})">Stop</button>
+        <div>
+          <span id="currentTime{{ a.id }}">0:00</span> / <span id="duration{{ a.id }}">0:00</span>
+        </div>
+        <input type="range" id="tracker{{ a.id }}" min="0" max="100" step="0.1" value="0" oninput="seekSong({{ a.id }}, this.value)" onchange="seekSong({{ a.id }}, this.value)">
+      </div>
+	{% endif %}
+	{% endfor %}
 	</div>
-    <div class="col-6">Video<br>
-	<div class="embed-responsive embed-responsive-16by9">
-		<iframe width="560" height="315" src="https://www.youtube.com/embed/DXDGE_lRI0E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-	  
-		<iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PLsyvDWwjkTqtOmqAiTzzfHspTAztB-udL" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+<script>
+  var sounds = {};
+  var currentSongId;
 
-		<iframe width="560" height="315" src="https://www.youtube.com/embed/DXDGE_lRI0E" frameborder="0" gesture="media" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-</div>
+  function playSong(songId) {
+    if (currentSongId !== songId) {
+      stopCurrentSong();
+      currentSongId = songId;
+      var audioPlayer = document.getElementById('audioPlayer' + songId);
+      var volumeSlider = document.getElementById('volumeSlider' + songId);
+      var tracker = document.getElementById('tracker' + songId);
+      var currentTime = document.getElementById('currentTime' + songId);
+      var duration = document.getElementById('duration' + songId);
+
+      sounds[songId] = new Howl({
+        src: [audioPlayer.src],
+        html5: true,
+        volume: volumeSlider.value,
+        onplay: function() {
+          requestAnimationFrame(updateTracker.bind(null, songId, tracker, currentTime, duration));
+        },
+        onend: function() {
+          currentSongId = null;
+        }
+      });
+
+      sounds[songId].play();
+    } else if (sounds[songId] && !sounds[songId].playing()) {
+      sounds[songId].play();
+    }
+  }
+
+  function stopCurrentSong() {
+    if (currentSongId) {
+      if (sounds[currentSongId] && sounds[currentSongId].playing()) {
+        sounds[currentSongId].stop();
+      }
+      currentSongId = null;
+    }
+  }
+
+  function stopSong(songId) {
+    if (currentSongId === songId) {
+      stopCurrentSong();
+    } else if (sounds[songId] && sounds[songId].playing()) {
+      sounds[songId].stop();
+    }
+  }
+
+  function changeVolume(songId, value) {
+    if (sounds[songId]) {
+      sounds[songId].volume(value);
+    }
+  }
+
+  function seekSong(songId, value) {
+    if (sounds[songId]) {
+      var duration = sounds[songId].duration();
+      sounds[songId].seek(value / 100 * duration);
+      updateCurrentTime(songId, value);
+    }
+  }
+
+  function updateTracker(songId, tracker, currentTime, duration) {
+    if (sounds[songId]) {
+      var seek = sounds[songId].seek();
+      var totalDuration = sounds[songId].duration();
+      tracker.value = (seek / totalDuration) * 100;
+
+      currentTime.textContent = formatTime(seek);
+      duration.textContent = formatTime(totalDuration);
+
+      if (sounds[songId].playing()) {
+        requestAnimationFrame(updateTracker.bind(null, songId, tracker, currentTime, duration));
+      }
+    }
+  }
+
+  function updateCurrentTime(songId, value) {
+    var currentTime = document.getElementById('currentTime' + songId);
+    var duration = sounds[songId].duration();
+    var seekTime = (value / 100) * duration;
+    currentTime.textContent = formatTime(seekTime);
+  }
+
+  function formatTime(time) {
+    var minutes = Math.floor(time / 60);
+    var seconds = Math.floor(time % 60);
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+    return minutes + ':' + seconds;
+  }
+</script>
+    <div class="col-6"><h4><strong>Video</strong></h4><br>
+	<div class="embed-responsive embed-responsive-16by9">
+		{% for l in media %}
+		  {% if l.mtype == 1 %}
+		  <iframe width="560" height="315" src="{{ l.murl }}" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+		{% endif %}
+		{% endfor %}
+		
+	</div>
 	</div>
   </div>
 </div>
@@ -40,3 +147,6 @@
 	</div>
 	{% endif %}
 	{% endfor %}
+	
+	
+	

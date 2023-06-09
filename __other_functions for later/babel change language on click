@@ -1,0 +1,35 @@
+4
+
+At first You need to store the address at the main app file:
+
+@app.route('/language=<language>')
+def set_language(language=None):
+    session['language'] = language
+    return redirect(url_for('home'))
+Than You need to change to the same addess to get_locale function in main app file:
+
+@babel.localeselector
+def get_locale():
+    if request.args.get('language'):
+        session['language'] = request.args.get('language')
+    return session.get('language', 'en')
+To access current language from template:
+
+app.config['LANGUAGES'] =  {
+    'en': 'English',
+    'ge': 'German',
+}
+app.secret_key = "super secret key"
+
+    @app.context_processor
+    def inject_conf_var():
+        return dict(AVAILABLE_LANGUAGES=app.config['LANGUAGES'], CURRENT_LANGUAGE=session.get('language', request.accept_languages.best_match(app.config['LANGUAGES'].keys())))
+Here the template file:
+
+{% for language in AVAILABLE_LANGUAGES.items() %}
+    {% if CURRENT_LANGUAGE == language[0] %}
+        {{ language[1] }}
+    {% else %}
+        <a href="{{ url_for('set_language', language=language[0]) }}" >{{ language[1] }}</a>
+    {%  endif %}
+{% endfor %}

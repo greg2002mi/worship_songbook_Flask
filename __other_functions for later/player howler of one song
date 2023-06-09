@@ -1,0 +1,42 @@
+		{% for a in media %}
+      {% if a.mtype == 2 %}
+	  <audio id="audioPlayer" controls>
+        <source src="{{ a.murl }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+	  <script>
+        var sound = new Howl({
+          src: ["{{ a.murl }}"],
+          format: ['mp3'],
+          html5: true,
+          volume: 0.5  // Adjust the default volume as needed
+        });
+
+        var audioPlayer = document.getElementById('audioPlayer');
+        var playButton = document.createElement('button');
+        playButton.innerText = 'Play';
+        playButton.addEventListener('click', function() {
+          sound.play();
+        });
+        audioPlayer.parentNode.insertBefore(playButton, audioPlayer);
+
+        var pauseButton = document.createElement('button');
+        pauseButton.innerText = 'Pause';
+        pauseButton.addEventListener('click', function() {
+          sound.pause();
+        });
+        audioPlayer.parentNode.insertBefore(pauseButton, audioPlayer.nextSibling);
+
+        var volumeInput = document.createElement('input');
+        volumeInput.type = 'range';
+        volumeInput.min = 0;
+        volumeInput.max = 1;
+        volumeInput.step = 0.1;
+        volumeInput.value = sound.volume();
+        volumeInput.addEventListener('input', function() {
+          sound.volume(parseFloat(volumeInput.value));
+        });
+        audioPlayer.parentNode.appendChild(volumeInput);
+      </script>
+	{% endif %}
+	{% endfor %}

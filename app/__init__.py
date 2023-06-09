@@ -5,11 +5,9 @@ from flask_migrate import Migrate
 from config import Config
 from flask_login import LoginManager
 from flask_mail import Mail
-import logging
+import logging, os, imghdr, magic
 from logging.handlers import SMTPHandler, RotatingFileHandler
-import os
 from flask_bootstrap import Bootstrap
-import imghdr
 
 
 
@@ -31,7 +29,9 @@ app.config['AUDIO_EXTENSIONS'] = ['.wav', '.mp3', '.aac', '.ogg', '.oga', '.flac
 # app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
 # app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
 app.config['UPLOAD_PATH']
+app.config['AUPLOAD_PATH']
 app.config['AVATAR_PATH']
+app.config['UPLOAD_FOLDER']
 mail = Mail(app)
 bootstrap = Bootstrap(app)
 
@@ -49,8 +49,15 @@ def validate_image(stream, ori_ext):
         return None
     return '.' + (format if (format != 'jpeg' or ori_ext == 'jpeg') else 'jpg')
 
-
-
+def validate_audio(stream, ori_ext):
+    file_signature = magic.from_buffer(stream.read(2048), mime=True)
+    stream.seek(0)
+    print('File Signature:', file_signature)
+    print('Original Extension:', ori_ext)
+    if file_signature.startswith('audio/'):
+        return ori_ext.lower()
+    return None
+    
 from app import routes, models, error, core, email
 
 if not app.debug:
