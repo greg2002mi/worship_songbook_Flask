@@ -15,6 +15,8 @@ class Config(object):
     ADMINS = ['ilovecheesecake85@gmail.com']
     AVATAR_PATH = os.path.join(basedir, 'app/static/avatars')
     UPLOAD_PATH = os.path.join(basedir, 'app/uploads/images')
+    AUPLOAD_PATH = os.path.join(basedir, 'app/uploads/audio')
+    UPLOAD_FOLDER = 'app/uploads/audio'
     
     
     POSTS_PER_PAGE = 25
