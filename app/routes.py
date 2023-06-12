@@ -756,7 +756,6 @@ def cart(username):
             l.listorder = l.id
             # db.session.add(l)
         db.session.commit()
-        print(l)
     return render_template('cart.html', songlist=songlist, form=form, deleteform=deleteform, keyset=keyset, users=users, e_form=e_form, unroleform=unroleform) 
 
 @app.route('/empty_cart', methods=['POST'])    
@@ -875,32 +874,55 @@ def cart_assign_user():
 @app.route('/assign2event', methods=['GET', 'POST'])
 @login_required
 def assign2event():
-    user = User.query.filter_by(username=current_user.username).first_or_404()
     addform = AddEvent()
-    assignform = Assign2Event()
-    
-    if request.method == 'POST':
-        if addform.submit():
-           event = Lists(list_title=addform.list_title.data, 
-                          date_time=addform.date_time.data, 
-                          date_end=addform.date_end.data,
-                          mlink=addform.mlink.data, creator=current_user.id)
-           # ilist = [it for it in user.cart] # issue if assigning to existing lists. needs fixing
-           # event.items = ilist
-        if assignform.submit():
-           event_id = assignform.event.data
-           event = Lists.query.get_or_404(event_id)
-           
-           # if event.items is not None:
-        for item in user.cart:
-            event.items.append(item)
+    assignform = Assign2Event()       
+    return render_template('assign2event.html', addform=addform, assignform=assignform) 
+
+@app.route('/add2event', methods=['POST'])
+@login_required
+def add2event():
+    addform = AddEvent()
+    user = User.query.filter_by(username=current_user.username).first_or_404()
+    if addform.validate_on_submit():
+        event = Lists(list_title=addform.list_title.data, date_time=addform.date_time.data, date_end=addform.date_end.data, mlink=addform.mlink.data, creator=current_user)
+        for i in user.cart:
+            event.items.append(i)
         empty=[]
         user.cart = empty
         db.session.add(event)
         db.session.add(user)
         db.session.commit()
+        return redirect(url_for('calendar'))    # later to redirect to event view    
+    else:
+        flash("Unable to create event or add to new event.")
+    # Return a success response
+    return redirect(url_for('cart', username=current_user.username)) 
+        
+@app.route('/add2xevent', methods=['POST'])
+@login_required
+def add2xevent():    
+    assignform = Assign2Event()
+    user = User.query.filter_by(username=current_user.username).first_or_404()
+    if assignform.validate_on_submit():
+        event_id = assignform.event.data
+        event = Lists.query.get_or_404(event_id)
+        print(event.list_title)
+        # if event.items is not None:
+        
+        for i in user.cart:
+            event.items.append(i)
+        for test in event.items:
+            print(test.title)
+        db.session.add(event)
+        empty=[]
+        user.cart = empty
+        db.session.add(user)
+        db.session.commit()
         return redirect(url_for('calendar'))    # later to redirect to event view
-    return render_template('assign2event.html', addform=addform, assignform=assignform) 
+    else:
+        flash("Unable to add list to existing event.")
+    # Return a success response
+    return redirect(url_for('cart', username=current_user.username)) 
     
 @app.route('/events')    
 def events():    
