@@ -111,7 +111,7 @@
 		<div class="col-3">
 			<nav class="nav nav-pills justify-content-end">
 				<a class="nav-link active" aria-current="page" href="{{ url_for('.edit_event', listid=event.id) }}">Edit</a>&nbsp;&nbsp;
-				<form action="{{ url_for('delete_event') }}" method="post">
+				<form action="{{ url_for('delete_event', eventid=event.id, jump='calendar') }}" method="post">
 								{{ de_form.hidden_tag() }}
 								{{ de_form.submit(class_='btn btn-secondary', value='Delete') }}
 				</form>

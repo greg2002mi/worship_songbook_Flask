@@ -4,7 +4,7 @@ from werkzeug.urls import url_parse
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddSong, EditSong, EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm, Transpose
 from app.forms import AddTag, TagsForm, SongsForm, AddMedia, AddEvent, Assign2Event
 from flask_login import current_user, login_user, login_required, logout_user
-from app.models import User, Song, Post, Tag, Mlinks, Lists, ListItem
+from app.models import User, Song, Post, Tag, Mlinks, Lists, ListItem, eventitems
 from datetime import datetime
 from app.email import send_password_reset_email
 from app.core import Chordpro_html
@@ -48,14 +48,21 @@ def before_request():
 @login_required
 def explore():
     page = request.args.get('page', 1, type=int)
-    posts = Post.query.order_by(Post.timestamp.desc()).paginate(
-        page=page, per_page=app.config['POSTS_PER_PAGE'], error_out=False)
-    next_url = url_for('explore', page=posts.next_num) \
-        if posts.has_next else None
-    prev_url = url_for('explore', page=posts.prev_num) \
-        if posts.has_prev else None
-    return render_template('index.html', title='Explore', posts=posts.items,
-                          next_url=next_url, prev_url=prev_url)
+    fulllist = Lists.query.all()
+    new_songs = Song.query.order_by(Song.timestamp.desc()).limit(10).all()
+    events = Lists.query.filter(Lists.date_time > datetime.utcnow()).order_by(Lists.date_time.desc()).all()
+    o_events = Lists.query.filter(Lists.date_time < datetime.utcnow()).order_by(Lists.date_time.desc()).all()
+    itemqty = {}
+    for event in fulllist:
+        itemqty[event.id] = len([ll for ll in event.items])
+    # posts = Post.query.order_by(Post.timestamp.desc()).paginate(
+    #     page=page, per_page=app.config['POSTS_PER_PAGE'], error_out=False)
+    # next_url = url_for('explore', page=posts.next_num) \
+    #     if posts.has_next else None
+    # prev_url = url_for('explore', page=posts.prev_num) \
+    #     if posts.has_prev else None
+    return render_template('explore.html', title='Explore', 
+                           events=events, o_events=o_events, itemqty=itemqty, new_songs=new_songs)
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -68,20 +75,28 @@ def index():
         db.session.commit()
         flash('Your post is now live!')
         return redirect(url_for('index'))
+    new_songs=[]
     page = request.args.get('page', 1, type=int)
-    posts = current_user.followed_posts().paginate(
+    fulllist = Lists.query.all()
+    events = Lists.query.filter(Lists.date_time > datetime.utcnow()).order_by(Lists.date_time.desc()).all()
+    o_events = Lists.query.filter(Lists.date_time < datetime.utcnow()).order_by(Lists.date_time.desc()).all()
+    itemqty = {}
+    for event in fulllist:
+        itemqty[event.id] = len([ll for ll in event.items])
+    # posts = current_user.followed_posts().paginate(
+    posts = Post.query.order_by(Post.timestamp.desc()).paginate(
         page=page, per_page=app.config['POSTS_PER_PAGE'], error_out=False)
     next_url = url_for('index', page=posts.next_num) \
         if posts.has_next else None
     prev_url = url_for('index', page=posts.prev_num) \
         if posts.has_prev else None
     return render_template('index.html', title='Home Page', form=form, posts=posts.items, 
-                           next_url=next_url, prev_url=prev_url)
+                           next_url=next_url, prev_url=prev_url, events=events, o_events=o_events, itemqty=itemqty, new_songs=new_songs)
 
 @app.route('/songbook')
 def songbook():
     form = EmptyForm()
-    keyset = ('Empty', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B')
+    tags = Tag.query.all()
     page = request.args.get('page', 1, type=int)
     songs = Song.query.order_by(Song.title.desc()).paginate(
         page=page, per_page=app.config['SONGS_PER_PAGE'], error_out=False)
@@ -90,7 +105,7 @@ def songbook():
     prev_url = url_for('songbook', page=songs.prev_num) \
         if songs.has_prev else None
     return render_template('songbook.html', title='Songbook', songs=songs.items, 
-                           next_url=next_url, prev_url=prev_url, keyset=keyset, lang=lang, form=form)
+                           next_url=next_url, prev_url=prev_url, keyset=keyset, lang=lang, form=form, tags=tags)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -339,8 +354,9 @@ def tag_songlist():
     prev_url = url_for('tag_songlist', tagid=tag.id, page=songs.prev_num) \
         if songs.has_prev else None
     form = EmptyForm()
+    addform = EmptyForm()
     return render_template('tag_songlist.html', tag=tag, songs=songs.items,
-                            next_url=next_url, prev_url=prev_url, form=form)
+                            next_url=next_url, prev_url=prev_url, form=form, addform=addform)
 
 @app.route('/untag', methods=['POST'])
 @login_required
@@ -943,7 +959,20 @@ def events():
 @app.route('/delete_event', methods=['POST'])
 @login_required    
 def delete_event(): 
-    return redirect(url_for('.calendar'))
+    eventid = request.args.get('eventid', type=int)
+    jump = request.args.get('jump', type=str)
+    de_form = EmptyForm()
+    if jump is None:
+        jump = "calendar"
+    if de_form.submit():
+        l = Lists.query.get_or_404(eventid)
+        for item in l.items:
+            l.items.remove(item)
+            db.session.delete(item)
+        db.session.delete(l)
+        db.session.commit()
+        return redirect(url_for('{}'.format(jump)))
+    return redirect(url_for('calendar'))
                     
 @app.route('/edit_event/<listid>', methods=['GET', 'POST'])
 @login_required

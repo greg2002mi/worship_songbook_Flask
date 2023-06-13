@@ -1,9 +1,25 @@
 {% extends "base.html" %}
 
+{% block head_js %}
+<script>
+	function goBack() {
+	  window.history.back();
+	}
+</script>
+{% endblock %}
+
 {% block app_content %}
+<hr class="bg-danger border-2 border-top border-secondary">
 <div class="row">
-	<div class="col-9">{{ tag.name }}</div>
+	<div class="col-auto"><a onclick="goBack()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-left" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+  <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+</svg></a></div>
+	<div class="col-5">
+	<h4>Category: {{ tag.name }}</h4></div>
 </div>
+</div>
+<hr class="bg-danger border-2 border-top border-secondary">
 <div class="row">	
 		<div class="col">
 			<table class="table table-hover">
@@ -18,17 +34,27 @@
 			<tbody>
 			{% for song in songs %}			
 				<tr valign="top">
-					<td>{{ song.id }}</td>
-					<td><a href="{{ url_for('.view_song', id=song.id) }}">{{ song.title }}</a></td>
-					<td>{{ song.singer }}</td>
-					<td>
+					<td style="width: 7.5%">{{ song.id }}</td>
+					<td style="width: 40%"><a href="{{ url_for('.view_song', id=song.id) }}">{{ song.title }}</a></td>
+					<td style="width: 25%">{{ song.singer }}</td>
+					<td style="width: 17.5%">
+					<div class="row">
+					<div class="col-7">
+					<form action="{{ url_for('.add_to_cart', songid=song.id) }}" method="post">
+						{{ addform.hidden_tag() }}
+						{{ addform.submit(class_='btn btn-success btn-sm', value='Add to song folder') }}
+					</form>
+					</div>
 					{% if current_user.is_anonymous %}
 					To remove login required
 					{% else %}
+					<div class="col-5">
 					<form action="{{ url_for('.untag', tagid=tag.id, songid=song.id) }}" method="post">
 						{{ form.hidden_tag() }}
-						{{ form.submit(value='Remove') }}
+						{{ form.submit(class_='btn btn-secondary btn-sm', value='Remove') }}
 					</form>
+					</div>
+					</div>
 					{% endif %}
 					</td>
 				</tr>
