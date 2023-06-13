@@ -1,0 +1,20 @@
+.container {
+  text-align: center;
+  padding: 20px;
+}
+
+.controls {
+  margin-bottom: 20px;
+}
+
+.color-btn {
+  margin-right: 5px;
+}
+
+.font-btn {
+  margin-right: 5px;
+}
+
+.brightness-slider {
+  width: 200px;
+}

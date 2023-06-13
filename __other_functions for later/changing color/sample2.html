@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Color and Font Size</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1 id="myText">Hello, World!</h1>
+    <div class="controls">
+      <h3>Background Color:</h3>
+      <button class="color-btn" onclick="changeColor('red')">Red</button>
+      <button class="color-btn" onclick="changeColor('blue')">Blue</button>
+      <button class="color-btn" onclick="changeColor('green')">Green</button>
+      <button class="color-btn" onclick="changeColor('yellow')">Yellow</button>
+      <button class="color-btn" onclick="changeColor('orange')">Orange</button>
+      <button class="color-btn" onclick="changeColor('purple')">Purple</button>
+    </div>
+    <div class="controls">
+      <h3>Font Size:</h3>
+      <button class="font-btn" onclick="changeFontSize(16)">16px</button>
+      <button class="font-btn" onclick="changeFontSize(20)">20px</button>
+      <button class="font-btn" onclick="changeFontSize(24)">24px</button>
+      <button class="font-btn" onclick="changeFontSize(28)">28px</button>
+      <button class="font-btn" onclick="changeFontSize(32)">32px</button>
+    </div>
+    <div class="controls">
+      <h3>Brightness:</h3>
+      <input type="range" min="0" max="100" value="100" class="brightness-slider" onchange="adjustBrightness(this.value)">
+    </div>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
