@@ -1,0 +1,39 @@
+{% for song in songlist %}
+<div class="tab-pane fade" id="nav-{{song.listorder}}p" role="tabpanel" aria-labelledby="nav-{{song.listorder}}p-tab">
+    <div id="lyrics-{{song.listorder}}">
+        {{ song.lyrics }}
+    </div>
+    <button onclick="processLyrics({{song.listorder}})">Process Lyrics</button>
+</div>
+{% endfor %}
+
+<script>
+    function processLyrics(listOrder) {
+        var lyrics = document.getElementById('lyrics-' + listOrder).innerHTML;
+        var showChords = 1;  // Set to 1 if you want to show chords, 0 otherwise
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/process-lyrics', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                var result = xhr.responseText;
+                document.getElementById('lyrics-' + listOrder).innerHTML = result;
+            }
+        };
+        xhr.send('lyrics=' + encodeURIComponent(lyrics) + '&showchords=' + showChords);
+    }
+</script>
+
+@app.route('/process-lyrics', methods=['POST'])
+def process_lyrics():
+    lyrics = request.form.get('lyrics')
+    showchords = int(request.form.get('showchords'))
+    ori_key_int = int(request.form.get('ori_key_int'))
+    transpose = int(request.form.get('transpose'))
+    
+    # Call Chordpro_html function with the provided data
+    html = Chordpro_html(lyrics, showchords, ori_key_int, transpose)
+
+    # Return the processed result
+    return html

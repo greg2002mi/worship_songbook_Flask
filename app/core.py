@@ -1,4 +1,5 @@
 import re
+# from bs4 import BeautifulSoup
    
     # &nbsp;
 
@@ -26,6 +27,35 @@ import re
 #     </div> #closes second segment
 
 # </div>        
+def n_occurrence(match, n):
+    global count
+    count += 1
+    if count == n:
+        return '</div><div class="col-6">'
+    else:
+        return match.group(0)
+
+def Html_columns(html, n):
+    # soup = BeautifulSoup(html, 'html5lib')
+    # row_divs = soup.find_all('div', class_='row g-0')
+    # print(row_divs)
+    # num_rows = len(row_divs)
+    # half_rows = num_rows // 2
+
+    # column1_divs = row_divs[:half_rows]
+    # column2_divs = row_divs[half_rows:]
+
+    # column1_html = ''.join(str(div) for div in column1_divs)
+    # column2_html = ''.join(str(div) for div in column2_divs)
+
+    # final_html = '<div class="row"><div class="col-6">{}</div><div class="col-6">{}</div></div>'.format(column1_html, column2_html)
+    # return final_html
+    count = 0
+    modified_html = re.sub(r'<div class="col-6">', lambda match: n_occurrence(match, n), html, count=n)
+
+    final_html = '<div class="row"><div class="col-6">{}</div></div>'.format(modified_html)
+    return final_html
+    # this code breaks the integrity of html code. need to find issue
    
 def Transpose(thischord, condition, ori_key, transpose):
     
@@ -175,6 +205,7 @@ def Chordpro_html(chordpro_text, condition, key, transpose):
                     html_segments = []
                     # only first in loop must be checked for chord or lyrics                    
                     for index, segment in enumerate(segments):
+                        # if line is empty go to next line. 
                         if len(segment) == 0:
                             continue
                         # whether line starts with chord
@@ -190,12 +221,13 @@ def Chordpro_html(chordpro_text, condition, key, transpose):
                                     html_segments.append('<div class="lyric">{}</div></div>'.format(segment))
                             
                         else:    
-                            # Check if the segment is a chord
-                            if re.match(r'\[[^\]]+\]', segment):
-                                
-                                
+                            # Check if the segment is a chord and is the last in line
+                            if re.match(r'\[[^\]]+\]', segment) and index == len(segments) - 1:
                                 chord = Process_chord(segment, condition, key, transpose)
-                                
+                                html_segments.append('<div class="col-auto"><div class="chordpro_segment"><span class="ChordContainer"><span class="Chord">{}</span><span class="suffix"></span></span></div><div class="lyric">&nbsp;</div></div>'.format(chord))
+                            # Check if the segment is a chord
+                            elif re.match(r'\[[^\]]+\]', segment) and index < len(segments) - 1:
+                                chord = Process_chord(segment, condition, key, transpose)
                                 html_segments.append('<div class="col-auto"><div class="chordpro_segment"><span class="ChordContainer"><span class="Chord">{}</span><span class="suffix"></span></span></div>'.format(chord))
                             # eliminate sticking of words                             
                             else:

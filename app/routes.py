@@ -7,7 +7,7 @@ from flask_login import current_user, login_user, login_required, logout_user
 from app.models import User, Song, Post, Tag, Mlinks, Lists, ListItem, eventitems
 from datetime import datetime
 from app.email import send_password_reset_email
-from app.core import Chordpro_html
+from app.core import Chordpro_html, Html_columns
 from werkzeug.utils import secure_filename
 from functools import wraps
 import os
@@ -47,7 +47,7 @@ def before_request():
 @app.route('/explore')
 @login_required
 def explore():
-    page = request.args.get('page', 1, type=int)
+    # page = request.args.get('page', 1, type=int)
     fulllist = Lists.query.all()
     new_songs = Song.query.order_by(Song.timestamp.desc()).limit(10).all()
     events = Lists.query.filter(Lists.date_time > datetime.utcnow()).order_by(Lists.date_time.desc()).all()
@@ -63,6 +63,30 @@ def explore():
     #     if posts.has_prev else None
     return render_template('explore.html', title='Explore', 
                            events=events, o_events=o_events, itemqty=itemqty, new_songs=new_songs)
+
+@app.route('/process-lyrics', methods=['POST'])
+def process_lyrics():
+    lyrics = request.form.get('lyrics')
+    showchords = int(request.form.get('showchords'))
+    ori_key_int = int(request.form.get('ori_key_int'))
+    transpose = int(request.form.get('transpose'))
+    # Call Chordpro_html function with the provided data
+    html = Chordpro_html(lyrics, showchords, ori_key_int, transpose)
+    columns = Html_columns(html, 20)
+    # Return the processed result
+    return columns
+
+
+@app.route('/onstage')
+def onstage():
+    eventid = request.args.get('eventid', 1, type=int)
+    event = Lists.query.get_or_404(eventid)
+    # songs = event.items.all()
+    unsorted = sorted(event.items, key=lambda x: x.listorder)
+    songlist = [item for item in unsorted]
+    
+    
+    return render_template('stage.html', songlist=songlist, event=event)
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -1077,7 +1101,8 @@ def list_update_desired_key():
     item_id = request.form.get('item_id')
     desired_key = int(request.form.get('desired_key'))
     listitem = ListItem.query.get(item_id)
-    listid = listitem.list_id
+    event = listitem.list.first()
+    listid = event.id
     listitem.desired_key = desired_key
     db.session.add(listitem)
     db.session.commit()

@@ -116,6 +116,9 @@
 								{{ de_form.submit(class_='btn btn-secondary', value='Delete') }}
 				</form>
 			</nav>
+			<nav class="nav nav-pills justify-content-end">
+			<a class="nav-link active" aria-current="page" href="{{ url_for('.onstage', eventid=event.id) }}" target="_blank">Stage mode</a>
+			</nav>
 		</div>
 	</div>	
 	<br>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+	{% if event %}
+	On Stage: {{ event.list_title }} - {{ event.date_time }}
+	{% else %}
+	On Stage mode
+	{% endif %}
+	</title>
+  	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/stage.css') }}">
+
+	<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+	<script>
+	#text-size {
+	  width: 200px;
+	}
+
+	#text-color {
+	  width: 200px;
+	}
+
+	.controls {
+	  margin-bottom: 10px;
+	}
+
+	.chord {
+	  color: white; /* Default chord color */
+	}
+
+	.lyric {
+	  color: white; /* Default text color */
+	}
+
+	</script>
+	<script>
+
+	function changeFontSize(size) {
+	  const elements = document.getElementsByClassName("lyric");
+	  for (let i = 0; i < elements.length; i++) {
+		elements[i].style.fontSize = size + "px";
+	  }
+	}
+	// Handle text color change
+	function bgBrightness(value) {
+	  var brightnessValue = (value - 50) / 50;
+	  var invertedValue = 1 - Math.abs(brightnessValue);
+	  var brightnessPercentage = invertedValue * 100;
+	  document.body.style.background = "hsl(0, 0%, " + brightnessPercentage + "%)";
+	};
+	</script>
+</head>
+
+<body class="dark-bg">
+<div class="container">
+<div class="collapse" id="navbarToggleExternalContent">
+  <div class="bg-dark p-4">
+    <h5 class="text-white h4">Collapsed content</h5>
+    <span class="text-muted">Toggleable via the navbar brand.</span>
+	<div class="controls">
+	  <label for="text-color">Background brightness:</label>
+      <input type="range" min="0" max="100" value="100" class="brightness-slider" onchange="bgBrightness(this.value)">
+	  <button class="btn btn-secondary btn-sm" onclick="changeFontSize(16)">16px</button>
+	  <button class="btn btn-secondary btn-sm" onclick="changeFontSize(20)">20px</button>
+	  <button class="btn btn-secondary btn-sm" onclick="changeFontSize(24)">24px</button>
+</div>
+  </div>
+</div>
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+	{{ event.list_title }} - {{ event.date_time }}
+  </div>
+</nav>
+
+<div class="row">
+<nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+	<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Start</button>
+    {% for song in songlist %}
+	<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-{{song.listorder}}p" type="button" role="tab" aria-controls="nav-{{song.listorder}}p" aria-selected="false">Song-{{song.listorder}}</button>
+    {% endfor %}
+  </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">Let's prepare our hearts for this special time...<br> Leaving our pride, ego, doubt and evil behind...<br></div>
+  {% for song in songlist %}
+  <div class="tab-pane fade" id="nav-{{song.listorder}}p" role="tabpanel" aria-labelledby="nav-{{song.listorder}}p-tab">
+  {% for s in song.song %}
+  <div class="processedLyrics" id="processedLyrics-{{ song.listorder }}-{{ loop.index }}">
+  {{ s.lyrics|safe}}
+  </div>
+  <script>
+    // Function to process the lyrics through the backend
+    function processLyrics(listOrder, index) {
+      var lyrics = document.getElementById('processedLyrics-' + listOrder + '-' + index).innerHTML;
+      var showChords = 1;  // Set to 1 if you want to show chords, 0 otherwise
+      var oriKeyInt = '{{ s.key }}';
+      var transpose = '{{ song.desired_key }}';
+
+      // Send an AJAX request to the backend endpoint
+      $.ajax({
+        url: '/process-lyrics',  // Replace with your actual backend endpoint URL
+        method: 'POST',
+        data: {
+          lyrics: lyrics,
+          showchords: showChords,
+          ori_key_int: oriKeyInt,
+          transpose: transpose
+        },  // Pass the lyrics data and additional values as the payload
+        success: function(response) {
+          // Update the frontend with the processed lyrics
+          $('#processedLyrics-' + listOrder + '-' + index).html(response);
+        },
+        error: function() {
+          // Handle any errors that occur during the AJAX request
+          console.error('Error processing lyrics');
+        }
+      });
+    }
+
+    // Call the function to process lyrics for the current song
+    processLyrics('{{ song.listorder }}', '{{ loop.index }}');
+  </script>
+  {% endfor %}
+  </div>
+
+  {% endfor %}
+</div>
+
+</div>
+</div>
+
+{% block scripts %}
+	
+	<script src="{{ url_for('static', filename='js/howler.js') }}"></script>
+    
+{% endblock %}
+
+</body>
+</html>
