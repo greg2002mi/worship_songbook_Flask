@@ -1,12 +1,12 @@
 <div class="container">
   <div class="row">
     <div class="col-10">
-    <a class="btn btn-primary btn-sm" href="{{ url_for('manage_media', id=song.id) }}" role="button">Manage Media library</a>
+    <a class="btn btn-primary btn-sm" href="{{ url_for('manage_media', id=song.id) }}" role="button">{{ _('Manage Media library') }}</a>
     </form>
     <hr>
 	</div>
-	<div class="col-10"><h4><strong>Images</strong></h4><br>
-	<h5>File Upload</h5>
+	<div class="col-10"><h4><strong>{{ _('Images') }}</strong></h4><br>
+	<h5>{{ _('File Upload') }}</h5>
     <form action="{{ url_for('upload_images', id=song.id, mtype=3) }}" class="dropzone">
     </form>
     <hr>
@@ -15,7 +15,7 @@
 	  <img src="{{ url_for('upload_i', filename=image.murl) }}" style="width: 64px;cursor:zoom-in" onclick="document.getElementById('modal{{ image.id }}').style.display='block'">
 	{% endif %}
 	{% endfor %}</div>
-    <div class="col-4"><h4><strong>Audio</strong></h4><br>
+    <div class="col-4"><h4><strong>{{ _('Audio') }}</strong></h4><br>
 	{% for a in media %}
       {% if a.mtype == 2 %}
 	  <div>

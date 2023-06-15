@@ -6,6 +6,6 @@
 			<td>{{ lang[song.language] }}</td>
 			<td><form action="{{ url_for('.add_to_cart', songid=song.id) }}" method="post">
 						{{ form.hidden_tag() }}
-						{{ form.submit(class_='btn btn-success btn-sm', value='Add to song folder') }}
+						{{ form.submit(class_='btn btn-success btn-sm', value=_('Add to song folder')) }}
 					</form></td>
         </tr>

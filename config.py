@@ -17,6 +17,7 @@ class Config(object):
     UPLOAD_PATH = os.path.join(basedir, 'app/uploads/images')
     AUPLOAD_PATH = os.path.join(basedir, 'app/uploads/audio')
     UPLOAD_FOLDER = 'app/uploads/audio'
+    LANGUAGES = ['en', 'ko', 'ru']
     
     
     POSTS_PER_PAGE = 25

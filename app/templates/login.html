@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <h1>Sign In</h1>
+    <h1>{{ _('Sign In') }}</h1>
     <form class="row g-3 needs-validation" method="post" novalidate>
         {{ form.hidden_tag() }}
         <div class="row mb-3">
@@ -25,9 +25,9 @@
 					{{ form.remember_me.label(class_='form-check-label') }}</small>
 			</div>
 			<div>
-				<small>Forgot Your Password? <a href="{{ url_for('reset_password_request') }}"> Click to Reset It</a></small>
+				<small>{{ _('Forgot Your Password?') }} <a href="{{ url_for('reset_password_request') }}"> {{ _('Click to Reset It') }}</a></small>
 			</div>
-			<div><small>New User? <a href="{{ url_for('register') }}">Click to Register!</a></small></div>
+			<div><small>{{_('New User?') }} <a href="{{ url_for('register') }}">{{ _('Click to Register!') }}</a></small></div>
 			</div>
 			</div>
         

@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="formwrapper">
-  <h2 class="title">Image</h2>
+  <h2 class="title">{{ _('Image') }}</h2>
   <form method="POST" action="/" enctype="multipart/form-data">
       <div class="form-field">{{ imgform.name.label }} {{ imgform.name(size=20) }}
       {% if imgform.name.errors %}

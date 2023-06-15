@@ -15,7 +15,7 @@
 
 
 {% block app_content %}
-    <h1>Edit Event</h1>
+    <h1>{{ _('Edit Event') }}</h1>
     <form class="form-floating needs-validation" method="post" novalidate>
         {{ form.hidden_tag() }}
         <div class="row mb-3">
@@ -55,7 +55,7 @@
 			</div>      
 		</div>
 		<div class="d-grid gap-2 col-2 mx-auto">
-		{{ form.submit(class="btn btn-success", value='Save changes') }}
+		{{ form.submit(class="btn btn-success", value=_('Save changes')) }}
 		</div>
     </form>
 {% endblock %}

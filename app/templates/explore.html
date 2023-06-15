@@ -3,7 +3,7 @@
 {% block app_content %}
     <div class="row">
 	<div class="col-8">
-	<h3>Recently added songs</h3>
+	<h3>{{ _('Recently added songs') }}</h3>
 	<ul class="list-group">
 	{% if new_songs %}
 	{% for ns in new_songs %}
@@ -15,7 +15,7 @@
 	<div class="card">
   <div class="card-body">
     
-	<h3>Schedule</h3>
+	<h3>{{ _('Schedule') }}</h3>
 	<div class="list-group">
 	{% for e in events %}
 		<a href="{{ url_for('.lists', listid=e.id) }}" class="list-group-item list-group-item-action">{{ e.list_title}} - {{e.date_time}}&nbsp;&nbsp;<span class="badge bg-primary rounded-pill">{%if itemqty[e.id] %}{{ itemqty[e.id] }}{% else %} 0 {% endif %}</span></a>

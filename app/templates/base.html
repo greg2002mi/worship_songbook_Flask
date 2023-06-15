@@ -7,11 +7,12 @@
 	{% if title %}
 	{{ title }} - Global Victory Church
 	{% else %}
-	Welcome to GBL's Portal
+	{{ _("Welcome to GBL's Portal") }}
 	{% endif %}
 	</title>
   	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 	{% block head_js %}{% endblock %}
+		{{ moment.include_moment() }}
 </head>
 
 <body>
@@ -25,18 +26,18 @@
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">Home</a>
+							<a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">{{ _('Home') }}</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ url_for('explore') }}">Explore</a></li>
-						<li class="nav-item"><a class="nav-link" href="{{ url_for('songbook') }}">Songbook</a></li>
-						<li class="nav-item"><a class="nav-link" href="{{ url_for('tag_list') }}">Genre&Tags</a></li>
-						<li class="nav-item"><a class="nav-link" href="{{ url_for('calendar') }}">Calendar</a></li>
+							<a class="nav-link" href="{{ url_for('explore') }}">{{ _('Explore') }}</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{ url_for('songbook') }}">{{ _('Songbook') }}</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{ url_for('tag_list') }}">{{ _('Genre&Tags') }}</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{ url_for('calendar') }}">{{ _('Calendar') }}</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						{% if current_user.is_anonymous %}
-						<li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
-						<li class="nav-item"><a class="nav-link disabled">Profile</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">{{ _('Login') }}</a></li>
+						<li class="nav-item"><a class="nav-link disabled">{{ _('Profile') }}</a></li>
 						{% else %}
 						<li class="nav-item position-relative">
 						<a class="nav-link" href="{{url_for('cart', username=current_user.username)}}">  
@@ -46,16 +47,16 @@
 						  {% if current_user.cart %}
 						  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
 							{{current_user.cart|length}}
-							<span class="visually-hidden">Selected songs</span>
+							<span class="visually-hidden">{{ _('Selected songs') }}</span>
 						  </span>{% endif %}<a/>
 						</li>
-						<li class="nav-item"><a class="nav-link" href="{{ url_for('user', username=current_user.username) }}">Profile</a></li>
-						<li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{ url_for('user', username=current_user.username) }}">{{ _('Profile') }}</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">{{ _('Logout') }}</a></li>
 						{% endif %}
 					</ul>
 					<form class="d-flex">
 						<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-						<button class="btn btn-outline-success" type="submit">Search</button>
+						<button class="btn btn-outline-success" type="submit">{{ _('Search') }}</button>
 					</form>
 				</div>
 			</div>

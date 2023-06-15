@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 # from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class, AUDIO
@@ -8,6 +8,8 @@ from flask_mail import Mail
 import logging, os, imghdr, magic
 from logging.handlers import SMTPHandler, RotatingFileHandler
 from flask_bootstrap import Bootstrap
+from flask_moment import Moment
+from flask_babel import Babel
 
 
 
@@ -34,12 +36,18 @@ app.config['AVATAR_PATH']
 app.config['UPLOAD_FOLDER']
 mail = Mail(app)
 bootstrap = Bootstrap(app)
+moment = Moment(app)
+babel = Babel(app)
 
 # images = UploadSet('images', IMAGES)
 # audio = UploadSet('audio', AUDIO)
 # configure_uploads(app, images)
 # configure_uploads(app, audio)
 # patch_request_class(app)
+
+@babel.localeselector
+def get_locale():
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 def validate_image(stream, ori_ext):
     header = stream.read(512)

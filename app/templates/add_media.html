@@ -2,18 +2,17 @@
 
 
 {% block app_content %}
-Products:
+{{ _('Products:') }}
         <form action="/" method="post">
             <div id="products"></div>
-            <button id="add_files" type="button">Add files</button>
+            <button id="add_files" type="button">{{ _('Add files') }}</button>
             <input type="submit" value="Submit">
         </form>
 
 {% endblock %}
 
 {% block javascript %}
-<script
-                src="https://code.jquery.com/jquery-1.12.4.min.js"
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"
                 integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
                 crossorigin="anonymous"></script>
 <script>

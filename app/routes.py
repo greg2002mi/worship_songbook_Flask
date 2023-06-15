@@ -11,12 +11,48 @@ from app.core import Chordpro_html, Html_columns
 from werkzeug.utils import secure_filename
 from functools import wraps
 import os
+from flask_babel import _
 #import logging
 
 keyset = ('Empty', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B')
 lang = ('None', 'Eng', 'Kor', 'Rus')
 
+def split_text(text):
+    lines = text.split('\n')
+    first_part = []
+    second_part = []
+    count = 0
+    
+    for line in lines:
+        if count < 20:
+            first_part.append(line)
+        else:
+            if line.strip() == '':
+                second_part.append(line)
+                second_part.extend(lines[count+1:])
+                break
+            else:
+                first_part.append(line)
+        count += 1
+    
+    return '\n'.join(first_part), '\n'.join(second_part)
 
+    # lines = text.split('\n')
+    # first_part = '\n'.join(lines[:20])
+    # second_part = '\n'.join(lines[20:])
+    # return first_part, second_part
+
+
+    # lines = text.split('\n')
+    # if len(lines) <= 20:
+    #     return text, ''
+    # else:
+    #     first_part = '\n'.join(lines[:20])
+    #     for i in range(20, len(lines)):
+    #         if lines[i].strip() == '':
+    #             second_part = '\n'.join(lines[i+1:])
+    #             return first_part, second_part
+    #     return first_part, ''
 
 def limit_content_length(max_length):
     def decorator(f):
@@ -61,7 +97,7 @@ def explore():
     #     if posts.has_next else None
     # prev_url = url_for('explore', page=posts.prev_num) \
     #     if posts.has_prev else None
-    return render_template('explore.html', title='Explore', 
+    return render_template('explore.html', title=_('Explore'), 
                            events=events, o_events=o_events, itemqty=itemqty, new_songs=new_songs)
 
 @app.route('/process-lyrics', methods=['POST'])
@@ -72,9 +108,8 @@ def process_lyrics():
     transpose = int(request.form.get('transpose'))
     # Call Chordpro_html function with the provided data
     html = Chordpro_html(lyrics, showchords, ori_key_int, transpose)
-    columns = Html_columns(html, 20)
     # Return the processed result
-    return columns
+    return html
 
 
 @app.route('/onstage')
@@ -84,9 +119,25 @@ def onstage():
     # songs = event.items.all()
     unsorted = sorted(event.items, key=lambda x: x.listorder)
     songlist = [item for item in unsorted]
-    
-    
-    return render_template('stage.html', songlist=songlist, event=event)
+    transpose = 0
+    lyrics = []
+    for i in unsorted:
+        transpose = i.desired_key
+        for s in i.song:
+            ori_key_int = s.key
+            if transpose == 0 or transpose is None:
+                transpose = ori_key_int
+            first, second = split_text(s.lyrics)
+            html1 = Chordpro_html(first, 1, ori_key_int, transpose)
+            html2 = Chordpro_html(second, 1, ori_key_int, transpose)
+            lyrics.append('<div class="row"><div class="col-6">{}</div><div class="col-6"><br><br><br><br><br>{}</div></div>'.format(html1, html2))
+    # html = Chordpro_html(lyrics, showchords, ori_key_int, transpose)
+    # only_lyrics = Chordpro_html(lyrics, False, 0, 0)
+    # if form.validate_on_submit():
+    #     # Handle the submit of transpose chord action
+    #     key = form.key.data
+    #     return redirect(url_for('.view_song', id=song.id, key=key))
+    return render_template('stage.html', songlist=songlist, event=event, lyrics=lyrics)
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -97,7 +148,7 @@ def index():
         post = Post(body=form.post.data, author=current_user)
         db.session.add(post)
         db.session.commit()
-        flash('Your post is now live!')
+        flash(_('Your post is now live!'))
         return redirect(url_for('index'))
     new_songs=[]
     page = request.args.get('page', 1, type=int)
@@ -114,7 +165,7 @@ def index():
         if posts.has_next else None
     prev_url = url_for('index', page=posts.prev_num) \
         if posts.has_prev else None
-    return render_template('index.html', title='Home Page', form=form, posts=posts.items, 
+    return render_template('index.html', title=_('Home Page'), form=form, posts=posts.items, 
                            next_url=next_url, prev_url=prev_url, events=events, o_events=o_events, itemqty=itemqty, new_songs=new_songs)
 
 @app.route('/songbook')
@@ -128,7 +179,7 @@ def songbook():
         if songs.has_next else None
     prev_url = url_for('songbook', page=songs.prev_num) \
         if songs.has_prev else None
-    return render_template('songbook.html', title='Songbook', songs=songs.items, 
+    return render_template('songbook.html', title=_('Songbook'), songs=songs.items, 
                            next_url=next_url, prev_url=prev_url, keyset=keyset, lang=lang, form=form, tags=tags)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -139,14 +190,14 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
+            flash(_('Invalid username or password'))
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
         return redirect(next_page)
-    return render_template('login.html', title='Sign In', form=form)
+    return render_template('login.html', title=_('Sign In'), form=form)
 
 @app.route('/logout')
 def logout():
@@ -163,9 +214,9 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Congratulations, you are now a registered user!')
+        flash(_('Congratulations, you are now a registered user!'))
         return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('register.html', title=_('Register'), form=form)
 
 @app.route('/user/<username>')
 @login_required
@@ -193,12 +244,12 @@ def edit_profile():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
         db.session.commit()
-        flash('Your changes have been saved.')
+        flash(_('Your changes have been saved.'))
         return redirect(url_for('edit_profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
-    return render_template('edit_profile.html', title='Edit Profile', form=form)    
+    return render_template('edit_profile.html', title=_('Edit Profile'), form=form)    
 
 @app.route('/upload_avatar', methods=['GET', 'POST'])
 @limit_content_length(1024 * 1024)
@@ -229,55 +280,9 @@ def add_song():
         song = Song(title=form.title.data, info=form.info.data, singer=form.singer.data, key=form.key.data, language=form.language.data, lyrics=form.lyrics.data, publisher=current_user)
         db.session.add(song)
         db.session.commit()
-        flash('a new song has been added and saved')
+        flash(_('a new song has been added and saved'))
         return redirect(url_for('songbook'))
-    return render_template('add_song.html', title='Add a song', form=form)
-
-# @app.route('/add_sermon', methods=['GET', 'POST'])
-# @login_required
-# def add_sermon():
-#     form = AddSermon()
-#     if form.validate_on_submit():
-#         sermon = Sermon(date_time=form.date_time.data, sermon_title=form.sermon_title.data, leader_name=form.leader_name.data, publisher=current_user)
-#         db.session.add(sermon)
-#         db.session.commit()
-#         flash('Sermon is set')
-#         return redirect(url_for('sermons'))
-#     return render_template('add_sermon.html', title='Set new sermon', form=form)
-
-# @app.route('/edit_sermon/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def edit_sermon(id):
-#     sermon = Sermon.query.get_or_404(id)
-#     # if current_user != song.publisher and not current_user.can(Permission.ADMIN):
-#     # if current_user != song.publisher:
-#     #     abort(403)
-#     form = EditSermon()
-#     if form.validate_on_submit():
-#         sermon.date_time = form.date_time.data
-#         sermon.sermon_title = form.sermon_title.data
-#         sermon.leader_name = form.leader_name.data
-#         db.session.add(sermon)
-#         db.session.commit()
-#         flash('Changes to the sermon have been saved.')
-#         return redirect(url_for('sermons')) #later change it to view song mode
-#     elif request.method == 'GET':
-#         form.date_time.data = sermon.date_time
-#         form.sermon_title.data = sermon.sermon_title
-#         form.leader_name.data = sermon.leader_name
-#     return render_template('edit_sermon.html', title='Edit Sermon', form=form) 
-
-# @app.route('/sermons')
-# def sermons():
-#     page = request.args.get('page', 1, type=int)
-#     sermons = Sermon.query.order_by(Sermon.date_time.desc()).paginate(
-#         page=page, per_page=app.config['ITEMS_PER_PAGE'], error_out=False)
-#     next_url = url_for('sermons', page=sermons.next_num) \
-#         if sermons.has_next else None
-#     prev_url = url_for('sermons', page=sermons.prev_num) \
-#         if sermons.has_prev else None
-#     return render_template('sermons.html', title='Sermons', sermons=sermons.items, 
-#                            next_url=next_url, prev_url=prev_url)
+    return render_template('add_song.html', title=_('Add a song'), form=form)
 
 @app.route('/tag_list', methods=['GET', 'POST'])
 def tag_list():
@@ -288,83 +293,9 @@ def tag_list():
         t = Tag(name=form.name.data) 
         db.session.add(t)
         db.session.commit()
-        flash('A new tag has been saved.')
+        flash(_('A new tag has been saved.'))
         return redirect(url_for('tag_list'))      
-    return render_template('tag_list.html', title='Tag list', tags=tags, form=form, untag_form=untag_form)
-
-# @app.route('/img_upload', methods=['GET', 'POST'])
-# @login_required
-# def img_upload():
-#     songid = request.args.get('songid', type=int)
-#     song = Song.query.filter_by(id=songid).first_or_404()
-#     mtype = request.args.get('mtype', type=int)
-#     # imgform = ImageUpload()
-#     # how many links does song media have
-#     if song.media is None:
-#         num = 1
-#     else:
-#         media = song.media.all()
-#         num = len(media) + 1
-#     if mtype is None:
-#         flash('type variable is None.')
-#         return redirect(url_for('.img_upload', songid=song.id)) 
-#     if request.method == 'POST':
-#         uploaded_file = request.files['file']
-#         for uploaded_file in request.files.getlist('file'):
-#             filename = secure_filename(uploaded_file.filename)
-#             if filename != '' and mtype == 3:
-#                 file_ext = os.path.splitext(filename)[1]
-#                 if file_ext not in app.config['UPLOAD_EXTENSIONS'] or file_ext != validate_image(uploaded_file.stream):
-#                     abort(400)
-#                 # filename = images.save(imgform.image.data, name="{}_image_{}.jpg".format(song.id, str(num)))
-#                 uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-#                # file_url = images.url(filename)
-#             return redirect(url_for('.img_upload', songid=song.id))
-#         # elif request.method == 'GET':
-#     #    return render_template('img_upload.html', title='Media upload', imgform=imgform)
-
-#     return render_template('img_upload.html', title='Media upload')
-       # filename = images.save(imgform.image.data, name=f"{}.jpg".format(song.title))
-# @app.route('/add_media', methods=['GET', 'POST'])
-# def add_media():
-#     sid = request.args.get('sid', type=int)
-#     song = Song.query.get(sid)
-#     form = AddMedia()
-#     if form.submit():
-#         option = form.mtype.data
-#         if option == 1:
-#             #youtube link
-#             media = Mlinks(murl = form.murl.data, mtype = form.mtype.data)
-#             db.session.add(media)
-#         elif option in (2, 3):
-#             files = flask.request.files.getlist("file")
-#             for file in files:
-#     #             file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
-#     #             media = Mlinks(murl = "PATH TO FILE", mtype = form.mtype.data)
-#     # # need to save files to folder and save its path to murl
-
-#     # after session.commit() link to Song.media.append(media)            
-                
-                
-    
-#         db.session.commit()
-            
-    # if request.method == "POST":
-    #     return jsonify(request.form)
-        # mlinks_count = int(request.form.get('mlinks_count'))
-        # for mlink_index in range(1, mlinks_count + 1):
-        #     mtype_field = f'mtype_{mlink_index}'
-        #     murl_field = f'murl_{mlink_index}'
-        #     mtype = int(request.form.get(mtype_field))
-        #     murl = request.form.get(murl_field)
-        #     media = Mlinks(mtype=mtype, murl=murl)            
-        #     song.media.append(media)
-        #     db.session.add(song)
-        #     db.session.commit()
-        # flash('New link(s) added to library.')
-    #     return redirect(url_for('.view_song', sid=song.id, key=song.key))
-    # else:     
-    #     return render_template('add_media.html', title='Media Library', form=form)
+    return render_template('tag_list.html', title=_('Tag list'), tags=tags, form=form, untag_form=untag_form)
 
 @app.route('/tag_songlist')
 def tag_songlist():
@@ -399,7 +330,7 @@ def untag():
             return redirect(url_for('tag_songlist', tagid=tagid))
         song.tags.remove(tag)#issue. does not remove tag from song.
         db.session.commit()
-        flash('Song has been removed from tag {}.'.format(tag.name))
+        flash(_('Song has been removed from tag {}.'.format(tag.name)))
         return redirect(url_for('tag_songlist', tagid=tagid))
     return redirect(url_for('tag_list'))
 
@@ -411,11 +342,11 @@ def untagall():
     if untagall_form.submit():
         song = Song.query.filter_by(id=id).first_or_404()
         if song is None:
-            flash('Song {} not found.'.format(song.title))
+            flash(_('Song {} not found.'.format(song.title)))
             return redirect(url_for('.view_song', id=id))
         song.tags=[]
         db.session.commit()
-        flash('All tags for {} have been untagged.'.format(song.title))
+        flash(_('All tags for {} have been untagged.'.format(song.title)))
     return redirect(url_for('.view_song', id=id))
 
 @app.route('/remove_tag', methods=['POST'])
@@ -428,7 +359,7 @@ def remove_tag():
     untag_form = EmptyForm()
     if untag_form.validate_on_submit():
         if tag is None:
-            flash('Tag {} does not exist.'.format(tag.name))
+            flash(_('Tag {} does not exist.'.format(tag.name)))
             return redirect(url_for('tag_list'))
         if tag.songs is not None:
             t_songs = tag.songs.all()
@@ -436,7 +367,7 @@ def remove_tag():
                 ts.tags.remove(tag)   
         db.session.delete(tag)
         db.session.commit()
-        flash('Tag has been unlinked from all songs and removed from Database')
+        flash(_('Tag has been unlinked from all songs and removed from Database'))
         return redirect(url_for('tag_list'))
     else:
         return redirect(url_for('tag_list'))
@@ -451,7 +382,7 @@ def delete_song():
     if delete_form.validate_on_submit():
         song = Song.query.filter_by(id=songid).first_or_404() 
         if song is None:
-            flash('Song {} not found.'.format(song.title))
+            flash(_('Song {} not found.'.format(song.title)))
             return redirect(url_for('songbook'))
         if song.tags is not None:
             songtags = song.tags.all()
@@ -463,7 +394,7 @@ def delete_song():
                 ts.translated.remove(song)
         db.session.delete(song)
         db.session.commit()
-        flash('Song {} is deleted.'.format(song.title))
+        flash(_('Song {} is deleted.'.format(song.title)))
         return redirect(url_for('songbook'))
     else:
         return redirect(url_for('songbook'))     
@@ -489,7 +420,7 @@ def edit_song(id):
         song.lyrics = form.lyrics.data
         db.session.add(song)
         db.session.commit()
-        flash('Changes to the song have been saved.')
+        flash(_('Changes to the song have been saved.'))
         return redirect(url_for('.view_song', id=song.id, key=key)) #later change it to view song mode
     elif request.method == 'GET':
         form.title.data = song.title
@@ -498,7 +429,7 @@ def edit_song(id):
         form.key.data = song.key
         form.language.data = song.language
         form.lyrics.data = song.lyrics
-    return render_template('edit_song.html', title='Edit Song', form=form) 
+    return render_template('edit_song.html', title=_('Edit Song'), form=form) 
 
 @app.route('/add_transl/<int:id>', methods=['POST'])
 @login_required
@@ -510,19 +441,19 @@ def add_transl(id):
         tr_song_id = transl_form.tr_song_id.data
         tr_song = Song.query.filter_by(id=int(tr_song_id)).first_or_404() 
         if cur_song is None or tr_song is None:
-            flash('Song {} or {} not found.'.format(cur_song.title, tr_song.title))
+            flash(_('Song {} or {} not found.'.format(cur_song.title, tr_song.title)))
             return redirect(url_for('songbook'))
         if cur_song.language == tr_song.language:
-            flash('You cannot link songs of same language!')
+            flash(_('You cannot link songs of same language!'))
             return redirect(url_for('.view_song', id=cur_song.id))
         # cur_song.add_transl(tr_song)
         cur_song.translated.append(tr_song)
         db.session.add(cur_song)
         db.session.commit()
-        flash('The song {} now has a translated song {}.'.format(cur_song.title, tr_song.title))
+        flash(_('The song {} now has a translated song {}.'.format(cur_song.title, tr_song.title)))
         return redirect(url_for('.view_song', id=id))
     else:
-        flash('Issues: Validation not passed.')
+        flash(_('Issues: Validation not passed.'))
         return redirect(url_for('.view_song', id=id))
     
 @app.route('/remove_transl', methods=['POST'])
@@ -535,19 +466,19 @@ def remove_transl():
         cursong = Song.query.filter_by(id=cursong_id).first_or_404() 
         selsong = Song.query.filter_by(id=selsong_id).first_or_404() 
         if cursong is None or selsong is None:
-            flash('Song {} or {} not found.'.format(cursong.title, selsong.title))
+            flash(_('Song {} or {} not found.'.format(cursong.title, selsong.title)))
             return redirect(url_for('.view_song', id=cursong.id))
         if selsong not in cursong.translated:
-            flash('Current song does not have a link with selected song!')
+            flash(_('Current song does not have a link with selected song!'))
             return redirect(url_for('.view_song', id=cursong.id))
         # cur_song.add_transl(tr_song)
         cursong.translated.remove(selsong)
         db.session.add(cursong)
         db.session.commit()
-        flash('The song {} and  song {} are now not linked.'.format(cursong.title, selsong.title))
+        flash(_('The song {} and  song {} are now not linked.'.format(cursong.title, selsong.title)))
         return redirect(url_for('.view_song', id=cursong.id))
     else:
-        flash('Issues: Validation not passed.')
+        flash(_('Issues: Validation not passed.'))
         return redirect(url_for('.view_song', id=cursong_id))
 
 @app.route('/view_song', methods=['GET', 'POST'])
@@ -594,12 +525,12 @@ def view_song():
     # to send original key as string
     ori_key = keyset[ori_key_int]
     if transpose != ori_key_int:
-        ori_key = ori_key + " | transposed to " + keyset[transpose]
+        ori_key = ori_key + _(" | transposed to ") + keyset[transpose]
     showchords = True
     html = Chordpro_html(lyrics, showchords, ori_key_int, transpose)
     only_lyrics = Chordpro_html(lyrics, False, 0, 0)
     if song is None:
-        flash('Current song does not have lyrics')
+        flash(_('Current song does not have lyrics'))
         return redirect(url_for('songbook'))
     else:
         if form.validate_on_submit():
@@ -610,7 +541,7 @@ def view_song():
             form.key.data = song.key
             for tag in tags:
                 tag_states[tag.id] = tag in song.tags
-        return render_template('view_song.html', title='View Song', html=html, transl_form=transl_form, 
+        return render_template('view_song.html', title=_('View Song'), html=html, transl_form=transl_form, 
                                remove_transl_form=remove_transl_form, delete_form=delete_form, tagged_list=tagged_list, 
                                tag_states=tag_states, tags_form=tags_form, only_lyrics=only_lyrics, song=song, form=form, 
                                ori_key=ori_key, t_songlist=t_songlist, lang=lang, untagall_form=untagall_form, media=media, files=files)
@@ -629,7 +560,7 @@ def upload_images():
         media = song.media.all()
         num = len(media) + 1
     if mtype is None:
-        flash('type variable is None.')
+        flash(_('type variable is None.'))
         return redirect(url_for('.view_song', songid=song.id)) 
     if filename != '':
         file_ext = os.path.splitext(filename)[1]
@@ -659,7 +590,7 @@ def upload_audio():
         media = song.media.all()
         num = len(media) + 1
     if mtype is None:
-        flash('type variable is None.')
+        flash(_('type variable is None.'))
         return redirect(url_for('.view_song', songid=song.id)) 
     if filename != '':
         file_ext = os.path.splitext(filename)[1]
@@ -721,13 +652,8 @@ def manage_media():
         song.media.append(ml)
         db.session.add(song)
         db.session.commit()
-        flash("A new link {} has been added".format(ml.filename))
+        flash(_("A new link {} has been added".format(ml.filename)))
         return redirect(url_for('manage_media', id=id))  
-    # if form.submit():
-    #     mlinkid = request.args.get('mlinkid', type=int)
-    #     mlink = Mlinks.query.get_or_404(mlinkid)
-    #     delete_link(mlink, song)
-    #     return redirect(url_for('manage_media', id=id))
     return render_template('manage_media.html', video_form=video_form, delete_form=delete_form, song=song, media=media, types=types)
 
 @app.route('/calendar', methods=['GET', 'POST'])
@@ -907,7 +833,7 @@ def cart_assign_user():
         db.session.add(listitem)
         db.session.commit()
     else:
-        flash("{} is already assigned.".format(user.username))
+        flash(_("{} is already assigned.".format(user.username)))
     # Return a success response
     return redirect(url_for('cart', username=current_user.username))
 
@@ -934,7 +860,7 @@ def add2event():
         db.session.commit()
         return redirect(url_for('calendar'))    # later to redirect to event view    
     else:
-        flash("Unable to create event or add to new event.")
+        flash(_("Unable to create event or add to new event."))
     # Return a success response
     return redirect(url_for('cart', username=current_user.username)) 
         
@@ -960,7 +886,7 @@ def add2xevent():
         db.session.commit()
         return redirect(url_for('calendar'))    # later to redirect to event view
     else:
-        flash("Unable to add list to existing event.")
+        flash(_("Unable to add list to existing event."))
     # Return a success response
     return redirect(url_for('cart', username=current_user.username)) 
     
@@ -1135,7 +1061,7 @@ def list_assign_user():
         db.session.add(listitem)
         db.session.commit()
     else:
-        flash("{} is already assigned.".format(user.username))
+        flash(_("{} is already assigned.".format(user.username)))
     # Return a success response
     return redirect(url_for('lists', listid=listid))
 
@@ -1162,9 +1088,9 @@ def tagging():
                 song.tags.append(t)
         db.session.add(song)
         db.session.commit()
-        flash("Tags have been updated.")
+        flash(_("Tags have been updated."))
     else:
-        flash('Issues: Validation not passed.')
+        flash(_('Issues: Validation not passed.'))
     return redirect(url_for('.view_song', id=song.id, key=song.key))
 
 
@@ -1175,14 +1101,14 @@ def follow(username):
     if form.validate_on_submit():
         user = User.query.filter_by(username=username).first()
         if user is None:
-            flash('User {} not found.'.format(username))
+            flash(_('User {} not found.'.format(username)))
             return redirect(url_for('index'))
         if user == current_user:
-            flash('You cannot follow yourself!')
+            flash(_('You cannot follow yourself!'))
             return redirect(url_for('user', username=username))
         current_user.follow(user)
         db.session.commit()
-        flash('You are following {}!'.format(username))
+        flash(_('You are following {}!'.format(username)))
         return redirect(url_for('user', username=username))
     else:
         return redirect(url_for('index'))
@@ -1194,14 +1120,14 @@ def unfollow(username):
     if form.validate_on_submit():
         user = User.query.filter_by(username=username).first()
         if user is None:
-            flash('User {} not found.'.format(username))
+            flash(_('User {} not found.'.format(username)))
             return redirect(url_for('index'))
         if user == current_user:
-            flash('You cannot unfollow yourself!')
+            flash(_('You cannot unfollow yourself!'))
             return redirect(url_for('user', username=username))
         current_user.unfollow(user)
         db.session.commit()
-        flash('You are not following {}.'.format(username))
+        flash(_('You are not following {}.'.format(username)))
         return redirect(url_for('user', username=username))
     else:
         return redirect(url_for('index'))
@@ -1216,10 +1142,10 @@ def reset_password_request():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             send_password_reset_email(user)
-        flash('Check your email for the instructions to reset your password')
+        flash(_('Check your email for the instructions to reset your password'))
         return redirect(url_for('login'))
     return render_template('reset_password_request.html',
-                           title='Reset Password', form=form)
+                           title=_('Reset Password'), form=form)
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
@@ -1232,6 +1158,6 @@ def reset_password(token):
     if form.validate_on_submit():
         user.set_password(form.password.data)
         db.session.commit()
-        flash('Your password has been reset.')
+        flash(_('Your password has been reset.'))
         return redirect(url_for('login'))
     return render_template('reset_password.html', form=form)

@@ -3,7 +3,7 @@
 {% block app_content %}
 <div class="container">
   <div class="row">
-    <div class="col-4"><h4><strong>Add Audio</strong></h4><br>
+    <div class="col-4"><h4><strong>{{ _('Add Audio') }}</strong></h4><br>
 	<form method="post" action="{{ url_for('.upload_audio', id=song.id, mtype=2) }}" enctype="multipart/form-data">
 	  <form method="POST" action="" enctype="multipart/form-data">
       <p><input type="file" name="file"></p>
@@ -41,14 +41,14 @@
 	
 	
 	</div>
-    <div class="col-10"><h4><strong>Media list</strong></h4><br>
+    <div class="col-10"><h4><strong>{{ _('Media list') }}</strong></h4><br>
 	<table class="table table-hover">
 			<thead>
 			  <tr>
-				 <th>No.</th>
-				 <th>Title</th>
-				 <th>type</th>
-				 <th>Actions</th>
+				 <th>{{ _('No.') }}</th>
+				 <th>{{ _('Title') }}</th>
+				 <th>{{ _('type') }}</th>
+				 <th>{{ _('Actions') }}</th>
 			  </tr>
 			</thead>
 			<tbody>
@@ -59,7 +59,7 @@
 					<td>{{ types[m.mtype] }}</td>
 					<td><form action="{{ url_for('.delete_file', id=song.id, mlinkid=m.id) }}" method="post">
 						{{ delete_form.hidden_tag() }}
-						{{ delete_form.submit(class_='btn btn-primary', value='Delete') }}
+						{{ delete_form.submit(class_='btn btn-primary', value=_('Delete')) }}
 					</form></td>
 				</tr>
 			{% endfor %}

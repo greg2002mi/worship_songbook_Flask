@@ -102,22 +102,22 @@
 
 	<div class="row">
 		<div class="col-8">
-			<h4>Event title: {{ event.list_title }}</h4>
-			<h5>Set date: {{ event.date_time }}</h5>
-			<h5>Created date: {{ event.created }}</h5>
-			<h6>Created by: {{ user.username }}</h6>
-			<h6>Links: {{ event.mlink }}</h6>
+			<h4>{{ _('Event title:') }} {{ event.list_title }}</h4>
+			<h5>{{ _('Set date:') }} {{ event.date_time }}</h5>
+			<h5>{{ _('Created date:') }} {{ event.created }}</h5>
+			<h6>{{ _('Created by:') }} {{ user.username }}</h6>
+			<h6>{{ _('Links:') }} {{ event.mlink }}</h6>
 		</div>	
 		<div class="col-3">
 			<nav class="nav nav-pills justify-content-end">
-				<a class="nav-link active" aria-current="page" href="{{ url_for('.edit_event', listid=event.id) }}">Edit</a>&nbsp;&nbsp;
+				<a class="nav-link active" aria-current="page" href="{{ url_for('.edit_event', listid=event.id) }}">{{ _('Edit') }}</a>&nbsp;&nbsp;
 				<form action="{{ url_for('delete_event', eventid=event.id, jump='calendar') }}" method="post">
 								{{ de_form.hidden_tag() }}
-								{{ de_form.submit(class_='btn btn-secondary', value='Delete') }}
+								{{ de_form.submit(class_='btn btn-secondary', value=_('Delete')) }}
 				</form>
 			</nav>
 			<nav class="nav nav-pills justify-content-end">
-			<a class="nav-link active" aria-current="page" href="{{ url_for('.onstage', eventid=event.id) }}" target="_blank">Stage mode</a>
+			<a class="nav-link active" aria-current="page" href="{{ url_for('.onstage', eventid=event.id) }}" target="_blank">{{ _('Stage mode') }}</a>
 			</nav>
 		</div>
 	</div>	
@@ -128,14 +128,14 @@
 		<div class="col">
 			<ul><li>
 			<div class="row border-bottom border-3 bg-light text-dark">
-						<div class="col-auto"><strong>No.</strong></div>
-						<div class="col-3"><strong>Title</strong></div>
-						<div class="col-auto"><strong>&nbsp;&nbsp;&nbsp;Key&nbsp;&nbsp;&nbsp;</strong></div>
-						<div class="col-auto"><strong>order</strong></div>
-						<div class="col-3"><strong>Comments</strong></div>
-						<div class="col-1"><strong>Assigned</strong></div>
-						<div class="col-1"><strong>Assigned User</strong></div>
-						<div class="col-1"><strong>Actions</strong></div>
+						<div class="col-auto"><strong>{{ _('No.') }}</strong></div>
+						<div class="col-3"><strong>{{ _('Title') }}</strong></div>
+						<div class="col-auto"><strong>&nbsp;&nbsp;&nbsp;{{ _('Key' }}&nbsp;&nbsp;&nbsp;</strong></div>
+						<div class="col-auto"><strong>{{ _('order') }}</strong></div>
+						<div class="col-3"><strong>{{ _('Comments') }}</strong></div>
+						<div class="col-1"><strong>{{ _('Assigned') }}</strong></div>
+						<div class="col-1"><strong>{{ _('Assigned User') }}</strong></div>
+						<div class="col-1"><strong>{{ _('Actions') }}</strong></div>
 					</div></li></ul>
 			<ul id="sortable">
 			{% for s in songlist %}
@@ -171,7 +171,7 @@
 						{% endif %}</div>
 						<div class="col-1">
 						<select class="form-select form-select-sm" id="user_{{ s.id }}" onchange="assignUser('{{ s.id }}')">
-						  <option value="">None</option>
+						  <option value="">{{ _('None')}}</option>
 						  {% for user in users %}
 							<option value="{{ user.id }}" {% if user.id == s.assigned_user_id %}selected{% endif %}>{{ user.username }}</option>
 						  {% endfor %}
@@ -179,7 +179,7 @@
 						<div class="col-1">
 							<form class="needs-validation" action="{{ url_for('.list_delete_item', item=s.id, listid=event.id) }}" method="post">
 								{{ deleteform.hidden_tag() }}
-								{{ deleteform.submit(class_='btn btn-primary btn-sm', value='Delete') }}
+								{{ deleteform.submit(class_='btn btn-primary btn-sm', value=_('Delete')) }}
 							</form>
 						</div>
 					</div>

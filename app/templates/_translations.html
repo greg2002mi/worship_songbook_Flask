@@ -1,4 +1,4 @@
-<h3>Add translation to {{ song.title }} from the list of existing song titles</h3>
+<h3>{{ _('Add translation to') }} {{ song.title }} {{ _('from the list of existing song titles') }}</h3>
     <form class="form-floating needs-validation" action="{{ url_for('.add_transl', id=song.id) }}" method="post" novalidate>
 		{{ transl_form.hidden_tag() }}
 		<div class="row mb-3">
@@ -11,7 +11,7 @@
 			</div>      
 		</div>
         <div class="d-grid gap-2 col-2 mx-auto">
-		{{ transl_form.submit(class='btn btn-success', value='Link') }}
+		{{ transl_form.submit(class='btn btn-success', value=_('Link')) }}
 		</div>
     </form>
 
@@ -20,9 +20,9 @@
 			<table class="table table-responsive-sm table-hover">
 			<thead>
 			  <tr>
-				 <th class="th-lg" scope="col">Songs</th>
-				 <th class="th-sm" scope="col">Language</th>
-				 <th class="th-sm" scope="col">Actions</th>
+				 <th class="th-lg" scope="col">{{ _('Songs') }}</th>
+				 <th class="th-sm" scope="col">{{ _('Language') }}</th>
+				 <th class="th-sm" scope="col">{{ _('Actions') }}</th>
 			  </tr>
 			</thead>
 			<tbody>
@@ -32,7 +32,7 @@
 					<td>{{ lang[tr.language] }}</td>
 					<td>
 					{% if current_user.is_anonymous %}
-					To unlink login required
+					{{ _('To unlink login required') }}
 					{% else %}
 					<form action="{{ url_for('.remove_transl', selsong_id=tr.id, cursong_id=song.id) }}" method="post">
 						{{ remove_transl_form.hidden_tag() }}

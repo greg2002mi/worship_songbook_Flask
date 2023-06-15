@@ -5,8 +5,8 @@
 	<div class="row">
 		<div class="col">
 			<nav class="nav nav-pills justify-content-end">
-				<a class="nav-link active" aria-current="page" href="{{ url_for('add_song') }}">Add new song</a>
-				<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+				<a class="nav-link active" aria-current="page" href="{{ url_for('add_song') }}">{{ _('Add new song') }}</a>
+				<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{ _('Disabled') }}</a>
 			</nav>
 		</div>
 	</div>	
@@ -16,12 +16,12 @@
 			<table class="table table-hover">
 			<thead>
 			  <tr>
-				 <th>No.</th>
-				 <th>Title</th>
-				 <th>Artist/singer</th>
-				 <th>Key</th>
-				 <th>Language</th>
-				 <th>Action</th>
+				 <th>{{ _('No.') }}</th>
+				 <th>{{ _('Title') }}</th>
+				 <th>{{ _('Artist/singer') }}</th>
+				 <th>{{ _('Key') }}</th>
+				 <th>{{ _('Language') }}</th>
+				 <th>{{ _('Action') }}</th>
 			  </tr>
 			</thead>
 			<tbody>
@@ -34,12 +34,12 @@
 			<ul class="pager">
 				<li class="previous{% if not prev_url %} disabled{% endif %}">
 					<a href="{{ prev_url or '#' }}">
-						<span aria-hidden="true">&larr;</span> Previous
+						<span aria-hidden="true">&larr;</span> {{ _('Previous') }}
 					</a>
 				</li>
 				<li class="next{% if not next_url %} disabled{% endif %}">
 					<a href="{{ next_url or '#' }}">
-						Next <span aria-hidden="true">&rarr;</span>
+						{{ _('Next') }} <span aria-hidden="true">&rarr;</span>
 					</a>
 				</li>
 			</ul>
@@ -49,7 +49,7 @@
 		<div class="row"><table class="table table-responsive-sm table-hover">
 			<thead>
 			  <tr>
-				 <th class="th-lg" scope="col">Tag list</th>
+				 <th class="th-lg" scope="col">{{ _('Tag list') }}</th>
 			  </tr>
 			</thead>
 			<tbody>

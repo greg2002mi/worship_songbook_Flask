@@ -2,7 +2,7 @@
 
 
 {% block app_content %}
-    <h1>Edit current Song</h1>
+    <h1>{{ _('Edit current Song') }}</h1>
     <form class="form-floating needs-validation" method="post" novalidate>
         {{ form.hidden_tag() }}
         <div class="row mb-3">
@@ -54,7 +54,7 @@
 			<div class="col-2"></div>
 			<div class="col-10">
 				<a class="btn btn-secondary btn-sm" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
-				  Instructions
+				  {{ _('Instructions') }}
 				</a>
 			</div>      
 		</div>
@@ -74,17 +74,17 @@
 	
 <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
   <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasLabel">Instructions on text format</h5>
+    <h5 class="offcanvas-title" id="offcanvasLabel">{{ _('Instructions on text format') }}</h5>
     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body">
 	<div>
-      Here are the key instructions on how to properly input lyrics with chords and headings for each song section.
+      {{ _('Here are the key instructions on how to properly input lyrics with chords and headings for each song section.') }}
 	  <ul>
-        <li>Chords must be incased in square brackets: Eg.: &#091; CHORD &#093;</li>
-		<li>Chords with bass chord inside square brackets are split with slash "&#47;": Eg.: &#091;Cm#&#47;G#&#093;</li>
-        <li>This app identifies only Intro, Chorus, Verse #, Bridge, Instrumental encased in curly brackets.</li>
-        <li>Chords must be located in front of a letter, where chord should be located.</li>
+        <li>{{ _('Chords must be incased in square brackets: Eg.:') }} &#091; CHORD &#093;</li>
+		<li>{{ _('Chords with bass chord inside square brackets are split with slash "&#47;": Eg.:') }} &#091;Cm#&#47;G#&#093;</li>
+        <li>{{ _('This app identifies only Intro, Chorus, Verse #, Bridge, Instrumental encased in curly brackets.') }}</li>
+        <li>{{ _('Chords must be located in front of a letter, where chord should be located.') }}</li>
       </ul>
     </div>
   </div>

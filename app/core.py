@@ -220,7 +220,7 @@ def Chordpro_html(chordpro_text, condition, key, transpose):
                                 else:
                                     html_segments.append('<div class="lyric">{}</div></div>'.format(segment))
                             
-                        else:    
+                        elif index > 0:    
                             # Check if the segment is a chord and is the last in line
                             if re.match(r'\[[^\]]+\]', segment) and index == len(segments) - 1:
                                 chord = Process_chord(segment, condition, key, transpose)

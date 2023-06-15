@@ -16,7 +16,7 @@
   <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
 </svg></a></div>
 	<div class="col-5">
-	<h4>Category: {{ tag.name }}</h4></div>
+	<h4>{{ _('Category:') }} {{ tag.name }}</h4></div>
 </div>
 </div>
 <hr class="bg-danger border-2 border-top border-secondary">
@@ -25,10 +25,10 @@
 			<table class="table table-hover">
 			<thead>
 			  <tr>
-				 <th>No.</th>
-				 <th>Title</th>
-				 <th>Artist/singer</th>
-				 <th>Functions</th>
+				 <th>{{ _('No.') }}</th>
+				 <th>{{ _('Title') }}</th>
+				 <th>{{ _('Artist/singer') }}</th>
+				 <th>{{ _('Functions') }}</th>
 			  </tr>
 			</thead>
 			<tbody>
@@ -42,7 +42,7 @@
 					<div class="col-7">
 					<form action="{{ url_for('.add_to_cart', songid=song.id) }}" method="post">
 						{{ addform.hidden_tag() }}
-						{{ addform.submit(class_='btn btn-success btn-sm', value='Add to song folder') }}
+						{{ addform.submit(class_='btn btn-success btn-sm', value=_('Add to song folder')) }}
 					</form>
 					</div>
 					{% if current_user.is_anonymous %}
@@ -51,7 +51,7 @@
 					<div class="col-5">
 					<form action="{{ url_for('.untag', tagid=tag.id, songid=song.id) }}" method="post">
 						{{ form.hidden_tag() }}
-						{{ form.submit(class_='btn btn-secondary btn-sm', value='Remove') }}
+						{{ form.submit(class_='btn btn-secondary btn-sm', value=_('Remove')) }}
 					</form>
 					</div>
 					</div>
@@ -65,12 +65,12 @@
 			<ul class="pager">
 				<li class="previous{% if not prev_url %} disabled{% endif %}">
 					<a href="{{ prev_url or '#' }}">
-						<span aria-hidden="true">&larr;</span> Previous
+						<span aria-hidden="true">&larr;</span> {{ _('Previous') }}
 					</a>
 				</li>
 				<li class="next{% if not next_url %} disabled{% endif %}">
 					<a href="{{ next_url or '#' }}">
-						Next <span aria-hidden="true">&rarr;</span>
+						{{ _('Next') }} <span aria-hidden="true">&rarr;</span>
 					</a>
 				</li>
 			</ul>
