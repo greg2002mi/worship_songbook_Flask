@@ -112,7 +112,7 @@
   </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
-  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">{{ _('Let's prepare our hearts for this special time...') }}<br> {{ _('Leaving our pride, ego, doubt and evil behind...') }}<br></div>
+  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">{{ _("Let's prepare our hearts for this special time...") }}<br> {{ _('Leaving our pride, ego, doubt and evil behind...') }}<br></div>
   {% for song in songlist %}
   <div class="tab-pane fade" id="nav-{{song.listorder}}p" role="tabpanel" aria-labelledby="nav-{{song.listorder}}p-tab">
   {{lyrics[song.listorder - 1]|safe}}
