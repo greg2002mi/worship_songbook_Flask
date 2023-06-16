@@ -162,13 +162,12 @@ medialinks = db.Table('medialinks',
 songlistitem = db.Table('songlistitem',
                     db.Column('listitem_id', db.Integer, db.ForeignKey('listitem.id')),
                     db.Column('song_id', db.Integer, db.ForeignKey('song.id')))
-  # many to many relationship sermon and songs  
-# songlist = db.Table('songlist', 
-#                     db.Column('sermon_id', db.Integer, db.ForeignKey('sermon.id')), 
-#                     db.Column('song_id', db.Integer, db.ForeignKey('song.id')))
+
 
     
 class Song(db.Model):
+    __searchable__ = ['title', 'singer', 'lyrics']
+    
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), index=True)
     singer = db.Column(db.String(140), index=True)
@@ -188,8 +187,6 @@ class Song(db.Model):
         backref=db.backref('translation', lazy='dynamic'), lazy='dynamic')
     media = db.relationship('Mlinks', secondary=medialinks, 
                            backref=db.backref('songs', lazy='dynamic'), lazy='dynamic')
-    # inlist = db.relationship(
-    #     'Sermon', secondary=songlist, backref='song')
     
     def __repr__(self):
         return '<Song {}>'.format(self.title)
@@ -206,20 +203,6 @@ class Song(db.Model):
         return self.translated.filter(
             translation.c.translated_id == song.id).count() > 0
     
-    # assigning song to tags
-    # def add_tag(self, tag):
-    #     if not self.in_tags(tag):
-    #         self.tags.append(tag)
-
-    # def remove_tag(self, tag):
-    #     if self.in_tags(tag):
-    #         self.tags.remove(tag)
-    
-    # def in_tags(self, tag):
-    #     return self.tags.filter(songtags.c.tag_id == tag.id).count() > 0
-    
-        
-    # many to many relationship genre and songs
    
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -231,18 +214,6 @@ class Mlinks(db.Model): # this table will have M-M relationship with Song Table
     mtype = db.Column(db.Integer)
     murl = db.Column(db.String)
     
-    # mtype will distinguish youtube, mp3, or pictures
-    
-    # def __repr__(self):
-    #     return '<Tag {}>'.format(self.name)
-
- # need to make a list of songs, something like favorites. debating on relationship and structure
-# class Worshiplist(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-#     sermon_date = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-#     worship_lists = db.relationship('Song', backref='songs', lazy='dynamic')
 
 eventitems = db.Table('Eventitems',
                     db.Column('lists_id', db.Integer, db.ForeignKey('lists.id')),

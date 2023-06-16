@@ -17,9 +17,13 @@ class Config(object):
     UPLOAD_PATH = os.path.join(basedir, 'app/uploads/images')
     AUPLOAD_PATH = os.path.join(basedir, 'app/uploads/audio')
     UPLOAD_FOLDER = 'app/uploads/audio'
-    LANGUAGES = ['en', 'ko', 'ru']
+    # LANGUAGES = ['en', 'ko', 'ru']
+    LANGUAGES = {'en': 'English', 'ko': '한국어', 'ru': 'Русский'}
     
     
     POSTS_PER_PAGE = 25
     SONGS_PER_PAGE = 50
     ITEMS_PER_PAGE = 100
+    
+    
+    

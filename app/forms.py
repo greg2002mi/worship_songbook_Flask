@@ -232,6 +232,9 @@ class Assign2Event(FlaskForm):
                               User.query.get_or_404(event.user_id).username, event.list_title)) 
                               for event in Lists.query.filter(Lists.date_time > datetime.utcnow()).all()]
 
+class SearchForm(FlaskForm):
+    search = StringField(_l('Search for songs'), validators=[DataRequired(), Length(max=100)])
+    submit = SubmitField(_l('Search'))
 # this for uploading images    
 # class ImageUpload(FlaskForm):
 #     name = StringField('Name', [DataRequired()])

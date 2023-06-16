@@ -1,8 +1,8 @@
-from flask import render_template, flash, redirect, url_for, request, abort, send_from_directory, jsonify
+from flask import render_template, flash, redirect, url_for, request, abort, send_from_directory, jsonify, session
 from app import app, db, validate_image, validate_audio
 from werkzeug.urls import url_parse
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddSong, EditSong, EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm, Transpose
-from app.forms import AddTag, TagsForm, SongsForm, AddMedia, AddEvent, Assign2Event
+from app.forms import AddTag, TagsForm, SongsForm, AddMedia, AddEvent, Assign2Event, SearchForm
 from flask_login import current_user, login_user, login_required, logout_user
 from app.models import User, Song, Post, Tag, Mlinks, Lists, ListItem, eventitems
 from datetime import datetime
@@ -64,6 +64,29 @@ def limit_content_length(max_length):
             return f(*args, **kwargs)
         return wrapper
     return decorator
+
+@app.route('/language=<language>')
+def set_language(language=None):
+    session['language'] = language
+    return redirect(url_for('index'))
+
+@app.route('/search')
+def search():
+    # for adding into cart
+    keyword = request.args.get('query')
+    results = Song.query.msearch(keyword,fields=['title', 'singer', 'lyrics'])
+    c = 2
+    tags = Tag.query.all()
+    form = EmptyForm()
+    # search form
+    # results = []
+    # searchform = SearchForm()
+    # if searchform.validate_on_submit():
+    #     search = searchform.search.data
+    #     results = Song.query.filter(Song.title.like("%"+search+"%")).all()
+    #     return redirect('search.html', resutls=results)
+    #     # to add chosen song to the cart {{ url_for('.add_to_cart', songid=song.id) }}
+    return render_template('search.html', title=_('Search results'), form=form, results=results, keyword=keyword, keyset=keyset, lang=lang, tags=tags, c=c)
 
 
 @app.route('/uploads/audio/<filename>')
@@ -172,6 +195,7 @@ def index():
 def songbook():
     form = EmptyForm()
     tags = Tag.query.all()
+    c = 1
     page = request.args.get('page', 1, type=int)
     songs = Song.query.order_by(Song.title.desc()).paginate(
         page=page, per_page=app.config['SONGS_PER_PAGE'], error_out=False)
@@ -180,7 +204,7 @@ def songbook():
     prev_url = url_for('songbook', page=songs.prev_num) \
         if songs.has_prev else None
     return render_template('songbook.html', title=_('Songbook'), songs=songs.items, 
-                           next_url=next_url, prev_url=prev_url, keyset=keyset, lang=lang, form=form, tags=tags)
+                           next_url=next_url, prev_url=prev_url, keyset=keyset, lang=lang, form=form, tags=tags, c=c)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -693,6 +717,10 @@ def make_list():
 @login_required
 def add_to_cart():
     songid = request.args.get('songid', type=int)
+    c = request.args.get('c', type=int)
+    keyword = request.args.get('keyword', type=str)
+    if c != 2:
+        keyword = ''
     user = User.query.filter_by(username=current_user.username).first_or_404()
     song = Song.query.get_or_404(songid)
     cart = [c for c in current_user.cart]
@@ -703,7 +731,12 @@ def add_to_cart():
     db.session.add(user)
     db.session.commit()
     # need to finish
-    return redirect(url_for('songbook'))
+    if c == 1:
+        return redirect(url_for('songbook'))
+    if c == 2:
+        return redirect(url_for('search', query=keyword))
+    else:
+        return redirect(url_for('explore'))
 
 @app.route('/cart/<username>', methods=['GET', 'POST'])
 @login_required

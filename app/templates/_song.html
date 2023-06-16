@@ -4,8 +4,15 @@
             <td>{{ song.singer }}</td>
 			<td>{{ keyset[song.key] }}</td>
 			<td>{{ lang[song.language] }}</td>
-			<td><form action="{{ url_for('.add_to_cart', songid=song.id) }}" method="post">
+			<td>
+			{% if keyword %}
+			<form action="{{ url_for('.add_to_cart', songid=song.id, c=c, keyword=keyword ) }}" method="post">
 						{{ form.hidden_tag() }}
 						{{ form.submit(class_='btn btn-success btn-sm', value=_('Add to song folder')) }}
-					</form></td>
+					</form>
+			{% else %}
+			<form action="{{ url_for('.add_to_cart', songid=song.id, c=c ) }}" method="post">
+						{{ form.hidden_tag() }}
+						{{ form.submit(class_='btn btn-success btn-sm', value=_('Add to song folder')) }}
+					</form>{% endif %}</td>
         </tr>

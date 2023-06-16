@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 # from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class, AUDIO
@@ -10,7 +10,7 @@ from logging.handlers import SMTPHandler, RotatingFileHandler
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_babel import Babel
-
+from flask_msearch import Search
 
 
 
@@ -38,6 +38,12 @@ mail = Mail(app)
 bootstrap = Bootstrap(app)
 moment = Moment(app)
 babel = Babel(app)
+search = Search(app)
+search.init_app(app)
+search.create_index(update=True)
+MSEARCH_INDEX_NAME =  os.path.join(app.root_path,'msearch')
+MSEARCH_PRIMARY_KEY = 'id'
+MSEARCH_ENABLE = True
 
 # images = UploadSet('images', IMAGES)
 # audio = UploadSet('audio', AUDIO)
@@ -47,7 +53,14 @@ babel = Babel(app)
 
 @babel.localeselector
 def get_locale():
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
+    if request.args.get('language'):
+        session['language'] = request.args.get('language')
+    return session.get('language', 'en')
+    # return request.accept_languages.best_match(app.config['LANGUAGES'])
+
+@app.context_processor
+def inject_conf_var():
+    return dict(AVAILABLE_LANGUAGES=app.config['LANGUAGES'], CURRENT_LANGUAGE=session.get('language', request.accept_languages.best_match(app.config['LANGUAGES'].keys())))
 
 def validate_image(stream, ori_ext):
     header = stream.read(512)

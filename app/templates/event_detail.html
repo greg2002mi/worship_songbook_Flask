@@ -103,8 +103,8 @@
 	<div class="row">
 		<div class="col-8">
 			<h4>{{ _('Event title:') }} {{ event.list_title }}</h4>
-			<h5>{{ _('Set date:') }} {{ event.date_time }}</h5>
-			<h5>{{ _('Created date:') }} {{ event.created }}</h5>
+			<h5>{{ _('Set date:') }} {{ moment(event.date_time).format('LLL') }}</h5>
+			<h5>{{ _('Created date:') }} {{ moment(event.created).format('LLL') }}</h5>
 			<h6>{{ _('Created by:') }} {{ user.username }}</h6>
 			<h6>{{ _('Links:') }} {{ event.mlink }}</h6>
 		</div>	

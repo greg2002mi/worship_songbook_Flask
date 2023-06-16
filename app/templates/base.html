@@ -10,9 +10,11 @@
 	{{ _("Welcome to GBL's Portal") }}
 	{% endif %}
 	</title>
+  	{% block head_js %}{% endblock %}
   	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-	{% block head_js %}{% endblock %}
-		{{ moment.include_moment() }}
+	{{ moment.include_moment() }}
+	
+		
 </head>
 
 <body>
@@ -35,11 +37,33 @@
 						<li class="nav-item"><a class="nav-link" href="{{ url_for('calendar') }}">{{ _('Calendar') }}</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
+    					<li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                               {{ _('Lang') }}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {% for language in AVAILABLE_LANGUAGES.items() %}
+                                    {% if CURRENT_LANGUAGE == language[0] %}
+                                        <li>
+                                            <a class="dropdown-item" href="#">{{ language[1] }} </a>
+                                        </li>
+                                    {% else %}
+                                        <li>
+                                            <a class="dropdown-item" href="{{ url_for('set_language', language=language[0]) }}">{{ language[1] }} </a>
+                                        </li>
+                                    {%  endif %}
+                                
+                                {% endfor %}
+                                
+                            </ul>
+                        </li>
 						{% if current_user.is_anonymous %}
 						<li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">{{ _('Login') }}</a></li>
 						<li class="nav-item"><a class="nav-link disabled">{{ _('Profile') }}</a></li>
 						{% else %}
 						<li class="nav-item position-relative">
+    						
+    						
 						<a class="nav-link" href="{{url_for('cart', username=current_user.username)}}">  
 						  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-briefcase" viewBox="0 0 16 16">
   <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v8A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1h-3zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5zm1.886 6.914L15 7.151V12.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V7.15l6.614 1.764a1.5 1.5 0 0 0 .772 0zM1.5 4h13a.5.5 0 0 1 .5.5v1.616L8.129 7.948a.5.5 0 0 1-.258 0L1 6.116V4.5a.5.5 0 0 1 .5-.5z"/>
@@ -54,8 +78,8 @@
 						<li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">{{ _('Logout') }}</a></li>
 						{% endif %}
 					</ul>
-					<form class="d-flex">
-						<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+					<form class="d-flex" method="GET" action="/search">
+						<input class="form-control me-2" type="search" name="query" placeholder="Search" aria-label="Search">
 						<button class="btn btn-outline-success" type="submit">{{ _('Search') }}</button>
 					</form>
 				</div>
