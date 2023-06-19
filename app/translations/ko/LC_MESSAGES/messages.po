@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-06-16 07:23+0900\n"
+"POT-Creation-Date: 2023-06-19 10:09+0900\n"
 "PO-Revision-Date: 2023-06-16 07:26+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -30,39 +30,43 @@ msgstr ""
 msgid "Say something"
 msgstr ""
 
-#: app/forms.py:85 app/forms.py:91 app/forms.py:108
+#: app/auth/forms.py:8 app/auth/forms.py:14 app/forms.py:85 app/forms.py:91
+#: app/forms.py:108
 msgid "Username"
 msgstr ""
 
+#: app/auth/forms.py:9 app/auth/forms.py:16 app/auth/forms.py:35
 #: app/forms.py:86 app/forms.py:93 app/forms.py:176
 msgid "Password"
 msgstr ""
 
-#: app/forms.py:87
+#: app/auth/forms.py:10 app/forms.py:87
 msgid "Remember Me"
 msgstr ""
 
-#: app/forms.py:88 app/routes.py:214 app/templates/login.html:4
+#: app/auth/forms.py:11 app/auth/routes.py:28 app/forms.py:88 app/routes.py:239
+#: app/templates/login.html:4
 msgid "Sign In"
 msgstr ""
 
-#: app/forms.py:92 app/forms.py:124
+#: app/auth/forms.py:15 app/auth/forms.py:31 app/forms.py:92 app/forms.py:124
 msgid "Email"
 msgstr ""
 
-#: app/forms.py:94
+#: app/auth/forms.py:17 app/forms.py:94
 msgid "Repeat password"
 msgstr ""
 
-#: app/forms.py:95 app/routes.py:233 app/templates/register.html:4
+#: app/auth/forms.py:18 app/auth/routes.py:47 app/forms.py:95 app/routes.py:258
+#: app/templates/register.html:4
 msgid "Register"
 msgstr ""
 
-#: app/forms.py:100 app/forms.py:121
+#: app/auth/forms.py:23 app/forms.py:100 app/forms.py:121
 msgid "Please use a different username."
 msgstr ""
 
-#: app/forms.py:105
+#: app/auth/forms.py:28 app/forms.py:105
 msgid "Please use a different email address."
 msgstr ""
 
@@ -70,14 +74,15 @@ msgstr ""
 msgid "About me"
 msgstr ""
 
-#: app/forms.py:125 app/forms.py:179
+#: app/auth/forms.py:32 app/auth/forms.py:38 app/forms.py:125 app/forms.py:179
 msgid "Request Password Reset"
 msgstr ""
 
 #: app/forms.py:135 app/forms.py:162 app/forms.py:183 app/forms.py:189
 #: app/forms.py:211 app/forms.py:217 app/templates/cart.html:122
 #: app/templates/event_detail.html:132 app/templates/manage_media.html:49
-#: app/templates/songbook.html:20 app/templates/tag_songlist.html:29
+#: app/templates/search.html:17 app/templates/songbook.html:20
+#: app/templates/tag_songlist.html:29
 msgid "Title"
 msgstr ""
 
@@ -90,12 +95,13 @@ msgid "Information"
 msgstr ""
 
 #: app/forms.py:138 app/forms.py:165 app/templates/cart.html:123
-#: app/templates/event_detail.html:133 app/templates/songbook.html:22
+#: app/templates/event_detail.html:133 app/templates/search.html:19
+#: app/templates/songbook.html:22
 msgid "Key"
 msgstr ""
 
 #: app/forms.py:139 app/forms.py:166 app/templates/_translations.html:24
-#: app/templates/songbook.html:23
+#: app/templates/search.html:20 app/templates/songbook.html:23
 msgid "Language"
 msgstr ""
 
@@ -119,7 +125,7 @@ msgstr ""
 msgid "Transpose"
 msgstr ""
 
-#: app/forms.py:178
+#: app/auth/forms.py:37 app/forms.py:178
 msgid "Repeat Password"
 msgstr ""
 
@@ -195,184 +201,194 @@ msgstr ""
 msgid "Search for songs"
 msgstr ""
 
-#: app/forms.py:237 app/templates/base.html:59
+#: app/forms.py:237 app/templates/base.html:83
 msgid "Search"
 msgstr ""
 
-#: app/routes.py:80
+#: app/routes.py:91
 msgid "Search results"
 msgstr ""
 
-#: app/routes.py:114 app/templates/base.html:32
+#: app/routes.py:126 app/templates/base.html:34
 msgid "Explore"
 msgstr ""
 
-#: app/routes.py:165
+#: app/routes.py:181
 msgid "Your post is now live!"
 msgstr ""
 
-#: app/routes.py:182
+#: app/routes.py:198
 msgid "Home Page"
 msgstr ""
 
-#: app/routes.py:196 app/templates/base.html:33
+#: app/routes.py:221 app/templates/base.html:35
 msgid "Songbook"
 msgstr ""
 
-#: app/routes.py:207
+#: app/auth/routes.py:21 app/routes.py:232
 msgid "Invalid username or password"
 msgstr ""
 
-#: app/routes.py:231
+#: app/auth/routes.py:45 app/routes.py:256
 msgid "Congratulations, you are now a registered user!"
 msgstr ""
 
-#: app/routes.py:261
+#: app/routes.py:286
 msgid "Your changes have been saved."
 msgstr ""
 
-#: app/routes.py:266 app/templates/edit_profile.html:5
+#: app/routes.py:291 app/templates/edit_profile.html:5
 msgid "Edit Profile"
 msgstr ""
 
-#: app/routes.py:297
+#: app/routes.py:322
 msgid "a new song has been added and saved"
 msgstr ""
 
-#: app/routes.py:299
+#: app/routes.py:324
 msgid "Add a song"
 msgstr ""
 
-#: app/routes.py:310
+#: app/routes.py:335
 msgid "A new tag has been saved."
 msgstr ""
 
-#: app/routes.py:312 app/templates/songbook.html:52
+#: app/routes.py:337 app/templates/search.html:49
+#: app/templates/songbook.html:52
 msgid "Tag list"
 msgstr ""
 
-#: app/routes.py:347
+#: app/routes.py:372
 msgid "Song has been removed from tag {}."
 msgstr ""
 
-#: app/routes.py:359 app/routes.py:399
+#: app/routes.py:384 app/routes.py:424
 msgid "Song {} not found."
 msgstr ""
 
-#: app/routes.py:363
+#: app/routes.py:388
 msgid "All tags for {} have been untagged."
 msgstr ""
 
-#: app/routes.py:376
+#: app/routes.py:401
 msgid "Tag {} does not exist."
 msgstr ""
 
-#: app/routes.py:384
+#: app/routes.py:409
 msgid "Tag has been unlinked from all songs and removed from Database"
 msgstr ""
 
-#: app/routes.py:411
+#: app/routes.py:436
 msgid "Song {} is deleted."
 msgstr ""
 
-#: app/routes.py:437
+#: app/routes.py:462
 msgid "Changes to the song have been saved."
 msgstr ""
 
-#: app/routes.py:446
+#: app/routes.py:471
 msgid "Edit Song"
 msgstr ""
 
-#: app/routes.py:458 app/routes.py:483
+#: app/routes.py:483 app/routes.py:508
 msgid "Song {} or {} not found."
 msgstr ""
 
-#: app/routes.py:461
+#: app/routes.py:486
 msgid "You cannot link songs of same language!"
 msgstr ""
 
-#: app/routes.py:467
+#: app/routes.py:492
 msgid "The song {} now has a translated song {}."
 msgstr ""
 
-#: app/routes.py:470 app/routes.py:495 app/routes.py:1107
+#: app/routes.py:495 app/routes.py:520 app/routes.py:1141
 msgid "Issues: Validation not passed."
 msgstr ""
 
-#: app/routes.py:486
+#: app/routes.py:511
 msgid "Current song does not have a link with selected song!"
 msgstr ""
 
-#: app/routes.py:492
+#: app/routes.py:517
 msgid "The song {} and  song {} are now not linked."
 msgstr ""
 
-#: app/routes.py:542
+#: app/routes.py:567
 msgid " | transposed to "
 msgstr ""
 
-#: app/routes.py:547
+#: app/routes.py:572
 msgid "Current song does not have lyrics"
 msgstr ""
 
-#: app/routes.py:558
+#: app/routes.py:583
 msgid "View Song"
 msgstr ""
 
-#: app/routes.py:577 app/routes.py:607
+#: app/routes.py:602 app/routes.py:632
 msgid "type variable is None."
 msgstr ""
 
-#: app/routes.py:669
+#: app/routes.py:694
 msgid "A new link {} has been added"
 msgstr ""
 
-#: app/routes.py:850 app/routes.py:1078
+#: app/routes.py:884 app/routes.py:1112
 msgid "{} is already assigned."
 msgstr ""
 
-#: app/routes.py:877
+#: app/routes.py:911
 msgid "Unable to create event or add to new event."
 msgstr ""
 
-#: app/routes.py:903
+#: app/routes.py:937
 msgid "Unable to add list to existing event."
 msgstr ""
 
-#: app/routes.py:1105
+#: app/routes.py:1139
 msgid "Tags have been updated."
 msgstr ""
 
-#: app/routes.py:1118 app/routes.py:1137
+#: app/routes.py:1152 app/routes.py:1171
 msgid "User {} not found."
 msgstr ""
 
-#: app/routes.py:1121
+#: app/routes.py:1155
 msgid "You cannot follow yourself!"
 msgstr ""
 
-#: app/routes.py:1125
+#: app/routes.py:1159
 msgid "You are following {}!"
 msgstr ""
 
-#: app/routes.py:1140
+#: app/routes.py:1174
 msgid "You cannot unfollow yourself!"
 msgstr ""
 
-#: app/routes.py:1144
+#: app/routes.py:1178
 msgid "You are not following {}."
 msgstr ""
 
-#: app/routes.py:1159
+#: app/auth/routes.py:58 app/routes.py:1193
 msgid "Check your email for the instructions to reset your password"
 msgstr ""
 
-#: app/routes.py:1162 app/templates/reset_password_request.html:5
+#: app/auth/routes.py:61 app/routes.py:1196
+#: app/templates/reset_password_request.html:5
 msgid "Reset Password"
 msgstr ""
 
-#: app/routes.py:1175
+#: app/auth/routes.py:74 app/routes.py:1209
 msgid "Your password has been reset."
+msgstr ""
+
+#: app/translate.py:9
+msgid "Error: the translation service is not configured."
+msgstr ""
+
+#: app/translate.py:18
+msgid "Error: the translation service failed."
 msgstr ""
 
 #: app/templates/404.html:4
@@ -395,7 +411,12 @@ msgstr ""
 msgid "said"
 msgstr ""
 
-#: app/templates/_song.html:9 app/templates/tag_songlist.html:45
+#: app/templates/_post.html:21
+msgid "Translate"
+msgstr ""
+
+#: app/templates/_song.html:11 app/templates/_song.html:16
+#: app/templates/tag_songlist.html:45
 msgid "Add to song folder"
 msgstr ""
 
@@ -460,7 +481,8 @@ msgstr ""
 
 #: app/templates/_tags.html:6 app/templates/cart.html:121
 #: app/templates/event_detail.html:131 app/templates/manage_media.html:48
-#: app/templates/songbook.html:19 app/templates/tag_songlist.html:28
+#: app/templates/search.html:16 app/templates/songbook.html:19
+#: app/templates/tag_songlist.html:28
 msgid "No."
 msgstr ""
 
@@ -513,32 +535,40 @@ msgstr ""
 msgid "Welcome to GBL's Portal"
 msgstr ""
 
-#: app/templates/base.html:29
+#: app/templates/base.html:31
 msgid "Home"
 msgstr ""
 
-#: app/templates/base.html:34
+#: app/templates/base.html:36
 msgid "Genre&Tags"
 msgstr ""
 
-#: app/templates/base.html:35
+#: app/templates/base.html:37
 msgid "Calendar"
 msgstr ""
 
-#: app/templates/base.html:39
+#: app/templates/base.html:42
+msgid "Lang"
+msgstr ""
+
+#: app/templates/base.html:61
 msgid "Login"
 msgstr ""
 
-#: app/templates/base.html:40 app/templates/base.html:53
+#: app/templates/base.html:62 app/templates/base.html:77
 msgid "Profile"
 msgstr ""
 
-#: app/templates/base.html:50
+#: app/templates/base.html:74
 msgid "Selected songs"
 msgstr ""
 
-#: app/templates/base.html:54
+#: app/templates/base.html:78
 msgid "Logout"
+msgstr ""
+
+#: app/templates/base.html:122
+msgid "Error: Could not contact server."
 msgstr ""
 
 #: app/templates/calendar.html:48 app/templates/planner.html:6
@@ -727,24 +757,31 @@ msgstr ""
 msgid "Reset Your Password"
 msgstr ""
 
-#: app/templates/songbook.html:8
-msgid "Add new song"
+#: app/templates/search.html:7
+msgid "Search by keyword: "
 msgstr ""
 
-#: app/templates/songbook.html:21 app/templates/tag_songlist.html:30
+#: app/templates/search.html:18 app/templates/songbook.html:21
+#: app/templates/tag_songlist.html:30
 msgid "Artist/singer"
 msgstr ""
 
-#: app/templates/songbook.html:24
+#: app/templates/search.html:21 app/templates/songbook.html:24
 msgid "Action"
 msgstr ""
 
-#: app/templates/songbook.html:37 app/templates/tag_songlist.html:68
+#: app/templates/search.html:34 app/templates/songbook.html:37
+#: app/templates/tag_songlist.html:68
 msgid "Previous"
 msgstr ""
 
-#: app/templates/songbook.html:42 app/templates/tag_songlist.html:73
+#: app/templates/search.html:39 app/templates/songbook.html:42
+#: app/templates/tag_songlist.html:73
 msgid "Next"
+msgstr ""
+
+#: app/templates/songbook.html:8
+msgid "Add new song"
 msgstr ""
 
 #: app/templates/stage.html:76

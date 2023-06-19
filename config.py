@@ -19,7 +19,7 @@ class Config(object):
     UPLOAD_FOLDER = 'app/uploads/audio'
     # LANGUAGES = ['en', 'ko', 'ru']
     LANGUAGES = {'en': 'English', 'ko': '한국어', 'ru': 'Русский'}
-    
+    MS_TRANSLATOR_KEY = os.environ.get('MS_TRANSLATOR_KEY')
     
     POSTS_PER_PAGE = 25
     SONGS_PER_PAGE = 50

@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-06-16 07:23+0900\n"
-"PO-Revision-Date: 2023-06-16 09:32+0900\n"
+"POT-Creation-Date: 2023-06-19 10:09+0900\n"
+"PO-Revision-Date: 2023-06-19 10:13+0900\n"
 "Last-Translator: \n"
 "Language-Team: ru <LL@li.org>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 "
+"&& (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "Generated-By: Babel 2.12.1\n"
 "X-Generator: Poedit 3.2.2\n"
 
@@ -32,39 +32,43 @@ msgstr "Список хвал"
 msgid "Say something"
 msgstr "Скажи что нибудь"
 
-#: app/forms.py:85 app/forms.py:91 app/forms.py:108
+#: app/auth/forms.py:8 app/auth/forms.py:14 app/forms.py:85 app/forms.py:91
+#: app/forms.py:108
 msgid "Username"
 msgstr "Имя пользователя"
 
-#: app/forms.py:86 app/forms.py:93 app/forms.py:176
+#: app/auth/forms.py:9 app/auth/forms.py:16 app/auth/forms.py:35 app/forms.py:86
+#: app/forms.py:93 app/forms.py:176
 msgid "Password"
 msgstr "Пароль"
 
-#: app/forms.py:87
+#: app/auth/forms.py:10 app/forms.py:87
 msgid "Remember Me"
 msgstr "Запомнить меня"
 
-#: app/forms.py:88 app/routes.py:214 app/templates/login.html:4
+#: app/auth/forms.py:11 app/auth/routes.py:28 app/forms.py:88 app/routes.py:239
+#: app/templates/login.html:4
 msgid "Sign In"
 msgstr "Вход"
 
-#: app/forms.py:92 app/forms.py:124
+#: app/auth/forms.py:15 app/auth/forms.py:31 app/forms.py:92 app/forms.py:124
 msgid "Email"
 msgstr "Эл. почта"
 
-#: app/forms.py:94
+#: app/auth/forms.py:17 app/forms.py:94
 msgid "Repeat password"
 msgstr "Сбросить пароль"
 
-#: app/forms.py:95 app/routes.py:233 app/templates/register.html:4
+#: app/auth/forms.py:18 app/auth/routes.py:47 app/forms.py:95 app/routes.py:258
+#: app/templates/register.html:4
 msgid "Register"
 msgstr "Зарегистрироваться"
 
-#: app/forms.py:100 app/forms.py:121
+#: app/auth/forms.py:23 app/forms.py:100 app/forms.py:121
 msgid "Please use a different username."
 msgstr "Пожалуйста введите другое имя пользователя."
 
-#: app/forms.py:105
+#: app/auth/forms.py:28 app/forms.py:105
 msgid "Please use a different email address."
 msgstr "Пожалуйста введите другой адрес эл. почты."
 
@@ -72,14 +76,15 @@ msgstr "Пожалуйста введите другой адрес эл. поч
 msgid "About me"
 msgstr "Обо мне"
 
-#: app/forms.py:125 app/forms.py:179
+#: app/auth/forms.py:32 app/auth/forms.py:38 app/forms.py:125 app/forms.py:179
 msgid "Request Password Reset"
 msgstr "Запрос сброса пароля"
 
 #: app/forms.py:135 app/forms.py:162 app/forms.py:183 app/forms.py:189
 #: app/forms.py:211 app/forms.py:217 app/templates/cart.html:122
 #: app/templates/event_detail.html:132 app/templates/manage_media.html:49
-#: app/templates/songbook.html:20 app/templates/tag_songlist.html:29
+#: app/templates/search.html:17 app/templates/songbook.html:20
+#: app/templates/tag_songlist.html:29
 msgid "Title"
 msgstr "Название"
 
@@ -92,12 +97,13 @@ msgid "Information"
 msgstr "Информация"
 
 #: app/forms.py:138 app/forms.py:165 app/templates/cart.html:123
-#: app/templates/event_detail.html:133 app/templates/songbook.html:22
+#: app/templates/event_detail.html:133 app/templates/search.html:19
+#: app/templates/songbook.html:22
 msgid "Key"
 msgstr "Тональность"
 
 #: app/forms.py:139 app/forms.py:166 app/templates/_translations.html:24
-#: app/templates/songbook.html:23
+#: app/templates/search.html:20 app/templates/songbook.html:23
 msgid "Language"
 msgstr "Язык"
 
@@ -111,8 +117,7 @@ msgstr "Сохранить"
 
 #: app/forms.py:146 app/forms.py:173
 msgid "Please use a different combination of title and singer."
-msgstr ""
-"Пожалуйста, используйте другую комбинацию названия хвалы и исполнителя."
+msgstr "Пожалуйста, используйте другую комбинацию названия хвалы и исполнителя."
 
 #: app/forms.py:158
 msgid "Chord key:"
@@ -122,7 +127,7 @@ msgstr "Тональность:"
 msgid "Transpose"
 msgstr "Модуляция"
 
-#: app/forms.py:178
+#: app/auth/forms.py:37 app/forms.py:178
 msgid "Repeat Password"
 msgstr "Повторите пароль"
 
@@ -198,187 +203,195 @@ msgstr "Назначить"
 msgid "Search for songs"
 msgstr "Поиск хвал"
 
-#: app/forms.py:237 app/templates/base.html:59
+#: app/forms.py:237 app/templates/base.html:83
 msgid "Search"
 msgstr "Поиск"
 
-#: app/routes.py:80
+#: app/routes.py:91
 msgid "Search results"
 msgstr "Результаты поиска"
 
-#: app/routes.py:114 app/templates/base.html:32
+#: app/routes.py:126 app/templates/base.html:34
 msgid "Explore"
 msgstr "Исследовать"
 
-#: app/routes.py:165
+#: app/routes.py:181
 msgid "Your post is now live!"
 msgstr "Ваш пост опубликован!"
 
-#: app/routes.py:182
+#: app/routes.py:198
 msgid "Home Page"
 msgstr "Главная страничка"
 
-#: app/routes.py:196 app/templates/base.html:33
+#: app/routes.py:221 app/templates/base.html:35
 msgid "Songbook"
 msgstr "Сборник хвал"
 
-#: app/routes.py:207
+#: app/auth/routes.py:21 app/routes.py:232
 msgid "Invalid username or password"
 msgstr "Неверный логин или пароль"
 
-#: app/routes.py:231
+#: app/auth/routes.py:45 app/routes.py:256
 msgid "Congratulations, you are now a registered user!"
 msgstr "Поздравляем, теперь вы зарегистрированный пользователь!"
 
-#: app/routes.py:261
+#: app/routes.py:286
 msgid "Your changes have been saved."
 msgstr "Ваши изменения были сохранены."
 
-#: app/routes.py:266 app/templates/edit_profile.html:5
+#: app/routes.py:291 app/templates/edit_profile.html:5
 msgid "Edit Profile"
 msgstr "Редактировать профиль"
 
-#: app/routes.py:297
+#: app/routes.py:322
 msgid "a new song has been added and saved"
 msgstr "новая хвала была успешно сохранена"
 
-#: app/routes.py:299
+#: app/routes.py:324
 msgid "Add a song"
 msgstr "Добавить хвалу"
 
-#: app/routes.py:310
+#: app/routes.py:335
 msgid "A new tag has been saved."
 msgstr "Новый тег был успешно сохранен."
 
-#: app/routes.py:312 app/templates/songbook.html:52
+#: app/routes.py:337 app/templates/search.html:49 app/templates/songbook.html:52
 msgid "Tag list"
 msgstr "Список тэгов."
 
-#: app/routes.py:347
+#: app/routes.py:372
 msgid "Song has been removed from tag {}."
 msgstr "Хвала была снята с тега {}."
 
-#: app/routes.py:359 app/routes.py:399
+#: app/routes.py:384 app/routes.py:424
 msgid "Song {} not found."
 msgstr "Хвала {} не найдена."
 
-#: app/routes.py:363
+#: app/routes.py:388
 msgid "All tags for {} have been untagged."
 msgstr "Все теги для {} были сняты."
 
-#: app/routes.py:376
+#: app/routes.py:401
 msgid "Tag {} does not exist."
 msgstr "Тег {} не существует."
 
-#: app/routes.py:384
+#: app/routes.py:409
 msgid "Tag has been unlinked from all songs and removed from Database"
 msgstr "Данный тег был снят с каждой хвалы и удален с базы"
 
-#: app/routes.py:411
+#: app/routes.py:436
 msgid "Song {} is deleted."
 msgstr "Хвала {} удалена."
 
-#: app/routes.py:437
+#: app/routes.py:462
 msgid "Changes to the song have been saved."
 msgstr "Изменения данной хвалы успешно сохранены."
 
-#: app/routes.py:446
+#: app/routes.py:471
 msgid "Edit Song"
 msgstr "Редактировать хвалу"
 
-#: app/routes.py:458 app/routes.py:483
+#: app/routes.py:483 app/routes.py:508
 msgid "Song {} or {} not found."
 msgstr "Хвала {} или {} не найдены."
 
-#: app/routes.py:461
+#: app/routes.py:486
 msgid "You cannot link songs of same language!"
 msgstr "Хвалы одного языка не могут быть связаны!"
 
-#: app/routes.py:467
+#: app/routes.py:492
 msgid "The song {} now has a translated song {}."
 msgstr "У данной хвалы {} теперь есть переведенная версия {}."
 
-#: app/routes.py:470 app/routes.py:495 app/routes.py:1107
+#: app/routes.py:495 app/routes.py:520 app/routes.py:1141
 msgid "Issues: Validation not passed."
 msgstr "Проблема: Проверка не пройдена."
 
-#: app/routes.py:486
+#: app/routes.py:511
 msgid "Current song does not have a link with selected song!"
 msgstr "Данная хвала не связана с выбранной хвалой!"
 
-#: app/routes.py:492
+#: app/routes.py:517
 msgid "The song {} and  song {} are now not linked."
 msgstr "Хвалы {} и {} теперь не связаны."
 
-#: app/routes.py:542
+#: app/routes.py:567
 msgid " | transposed to "
 msgstr " | модулирована в тональность "
 
-#: app/routes.py:547
+#: app/routes.py:572
 msgid "Current song does not have lyrics"
 msgstr "У данной хвалы нет слов"
 
-#: app/routes.py:558
+#: app/routes.py:583
 msgid "View Song"
 msgstr "Просмотреть хвалу"
 
-#: app/routes.py:577 app/routes.py:607
+#: app/routes.py:602 app/routes.py:632
 msgid "type variable is None."
 msgstr "отсутствует параметр типа медиа файла."
 
-#: app/routes.py:669
+#: app/routes.py:694
 msgid "A new link {} has been added"
 msgstr "Новая ссылка {} была добавлена"
 
-#: app/routes.py:850 app/routes.py:1078
+#: app/routes.py:884 app/routes.py:1112
 msgid "{} is already assigned."
 msgstr "{} уже был назначен."
 
-#: app/routes.py:877
+#: app/routes.py:911
 msgid "Unable to create event or add to new event."
 msgstr "Невозможно создать мероприятие или добавить новое мероприятие."
 
-#: app/routes.py:903
+#: app/routes.py:937
 msgid "Unable to add list to existing event."
 msgstr "Невозвожно добавить список к существующему мероприятию."
 
-#: app/routes.py:1105
+#: app/routes.py:1139
 msgid "Tags have been updated."
 msgstr "Теги были обновлены."
 
-#: app/routes.py:1118 app/routes.py:1137
+#: app/routes.py:1152 app/routes.py:1171
 msgid "User {} not found."
 msgstr "Пользователь {} не найден."
 
-#: app/routes.py:1121
+#: app/routes.py:1155
 msgid "You cannot follow yourself!"
 msgstr "Вы не можете подписаться на самого себя!"
 
-#: app/routes.py:1125
+#: app/routes.py:1159
 msgid "You are following {}!"
 msgstr "Вы подписаны на {}!"
 
-#: app/routes.py:1140
+#: app/routes.py:1174
 msgid "You cannot unfollow yourself!"
 msgstr "Это действие не возможно!"
 
-#: app/routes.py:1144
+#: app/routes.py:1178
 msgid "You are not following {}."
 msgstr "Вы более не следуете за {}."
 
-#: app/routes.py:1159
+#: app/auth/routes.py:58 app/routes.py:1193
 msgid "Check your email for the instructions to reset your password"
 msgstr ""
-"Проверьте свою электронную почту, чтобы получить инструкции по сбросу "
-"пароля"
+"Проверьте свою электронную почту, чтобы получить инструкции по сбросу пароля"
 
-#: app/routes.py:1162 app/templates/reset_password_request.html:5
+#: app/auth/routes.py:61 app/routes.py:1196
+#: app/templates/reset_password_request.html:5
 msgid "Reset Password"
 msgstr "Сброс пароля"
 
-#: app/routes.py:1175
+#: app/auth/routes.py:74 app/routes.py:1209
 msgid "Your password has been reset."
 msgstr "Ваш пароль был сброшен."
+
+#: app/translate.py:9
+msgid "Error: the translation service is not configured."
+msgstr "Ошибка: Служба перевода слов не настроена."
+
+#: app/translate.py:18
+msgid "Error: the translation service failed."
+msgstr "Ошибка: сбой службы перевода слов."
 
 #: app/templates/404.html:4
 msgid "Not Found"
@@ -394,15 +407,18 @@ msgstr "Произошла непредвиденная ошибка"
 
 #: app/templates/500.html:5
 msgid "The administrator has been notified. Sorry for the inconvenience!"
-msgstr ""
-"Администратор был уведомлен. Приносим извинения за причиненные "
-"неудобства!"
+msgstr "Администратор был уведомлен. Приносим извинения за причиненные неудобства!"
 
 #: app/templates/_post.html:11
 msgid "said"
-msgstr "сказал(а) "
+msgstr "сказал(а)"
 
-#: app/templates/_song.html:9 app/templates/tag_songlist.html:45
+#: app/templates/_post.html:21
+msgid "Translate"
+msgstr "Перевести"
+
+#: app/templates/_song.html:11 app/templates/_song.html:16
+#: app/templates/tag_songlist.html:45
 msgid "Add to song folder"
 msgstr "Добавить в папку хвал"
 
@@ -432,8 +448,8 @@ msgid ""
 "Lyrics with chords - is a current page with main features, which will be "
 "described below."
 msgstr ""
-"Слова хвалы с аккордами - данная страничка с основными функциями, "
-"описание которых вы найдете далее внизу."
+"Слова хвалы с аккордами - данная страничка с основными функциями, описание "
+"которых вы найдете далее внизу."
 
 #: app/templates/_song_chords.html:48
 msgid "Lyrics - page without any chords."
@@ -441,20 +457,18 @@ msgstr "Слова хвалы - страничка слов хвалы без а
 
 #: app/templates/_song_chords.html:49
 msgid ""
-"Media - media section, where there will be links and players. Gives you "
-"a chance to listen, learn and prepare for service."
+"Media - media section, where there will be links and players. Gives you a chance "
+"to listen, learn and prepare for service."
 msgstr ""
-"Медиа - раздел медиа, где можно найти или добавить сопуствующие медиа "
-"файлы к данной хвалы. Дает возможность прослушать, выучить и "
-"подготовиться к служению."
+"Медиа - раздел медиа, где можно найти или добавить сопуствующие медиа файлы к "
+"данной хвалы. Дает возможность прослушать, выучить и подготовиться к служению."
 
 #: app/templates/_song_chords.html:50
 msgid ""
-"Translations - page to bind translation versions of current song to the "
-"database."
+"Translations - page to bind translation versions of current song to the database."
 msgstr ""
-"Переводы - страничка, позволяющая связать переведенные версии хвалы к "
-"текущей хвале."
+"Переводы - страничка, позволяющая связать переведенные версии хвалы к текущей "
+"хвале."
 
 #: app/templates/_song_links.html:4
 msgid "Manage Media library"
@@ -474,7 +488,8 @@ msgstr "Аудио"
 
 #: app/templates/_tags.html:6 app/templates/cart.html:121
 #: app/templates/event_detail.html:131 app/templates/manage_media.html:48
-#: app/templates/songbook.html:19 app/templates/tag_songlist.html:28
+#: app/templates/search.html:16 app/templates/songbook.html:19
+#: app/templates/tag_songlist.html:28
 msgid "No."
 msgstr "№"
 
@@ -527,33 +542,42 @@ msgstr "Создать новое событие"
 msgid "Welcome to GBL's Portal"
 msgstr "Добро пожаловать в Портал Церкви GBL"
 
-#: app/templates/base.html:29
+#: app/templates/base.html:31
 msgid "Home"
 msgstr "Главная"
 
-#: app/templates/base.html:34
+#: app/templates/base.html:36
 msgid "Genre&Tags"
 msgstr "Жанры и теги"
 
-#: app/templates/base.html:35
+#: app/templates/base.html:37
 msgid "Calendar"
 msgstr "Календарь"
 
-#: app/templates/base.html:39
+#: app/templates/base.html:42
+#, fuzzy
+msgid "Lang"
+msgstr "Язык"
+
+#: app/templates/base.html:61
 msgid "Login"
 msgstr "Войти"
 
-#: app/templates/base.html:40 app/templates/base.html:53
+#: app/templates/base.html:62 app/templates/base.html:77
 msgid "Profile"
 msgstr "Профиль"
 
-#: app/templates/base.html:50
+#: app/templates/base.html:74
 msgid "Selected songs"
 msgstr "Выбранные хвалы"
 
-#: app/templates/base.html:54
+#: app/templates/base.html:78
 msgid "Logout"
 msgstr "Выйти"
+
+#: app/templates/base.html:122
+msgid "Error: Could not contact server."
+msgstr "Ошибка: Не удалось связаться с сервером."
 
 #: app/templates/calendar.html:48 app/templates/planner.html:6
 msgid "Church service"
@@ -623,11 +647,11 @@ msgstr "Инструкция по формату текста"
 
 #: app/templates/edit_song.html:82
 msgid ""
-"Here are the key instructions on how to properly input lyrics with "
-"chords and headings for each song section."
+"Here are the key instructions on how to properly input lyrics with chords and "
+"headings for each song section."
 msgstr ""
-"Здесь даны ключевые инструкции, как правильно вводить слова хвал с "
-"аккордами, а так же формат оглавлений каждой части хвалы."
+"Здесь даны ключевые инструкции, как правильно вводить слова хвал с аккордами, а "
+"так же формат оглавлений каждой части хвалы."
 
 #: app/templates/edit_song.html:84
 msgid "Chords must be incased in square brackets: Eg.:"
@@ -635,24 +659,22 @@ msgstr "Аккорды должны быть заключены в квадра�
 
 #: app/templates/edit_song.html:85
 msgid ""
-"Chords with bass chord inside square brackets are split with slash "
-"\"&#47;\": Eg.:"
+"Chords with bass chord inside square brackets are split with slash \"&#47;\": "
+"Eg.:"
 msgstr ""
-"Аккорды с бассовым тоном внутри квадратной скобки должна быть добавлена "
-"с косой чертой \"&#47;\": Например:"
+"Аккорды с бассовым тоном внутри квадратной скобки должна быть добавлена с косой "
+"чертой \"&#47;\": Например:"
 
 #: app/templates/edit_song.html:86
 msgid ""
-"This app identifies only Intro, Chorus, Verse #, Bridge, Instrumental "
-"encased in curly brackets."
+"This app identifies only Intro, Chorus, Verse #, Bridge, Instrumental encased in "
+"curly brackets."
 msgstr ""
-"Данная версия приложения распознает только Intro, Chorus, Verse #, "
-"Bridge, Instrumental, заключенные в фигурные скобки."
+"Данная версия приложения распознает только Intro, Chorus, Verse #, Bridge, "
+"Instrumental, заключенные в фигурные скобки."
 
 #: app/templates/edit_song.html:87
-msgid ""
-"Chords must be located in front of a letter, where chord should be "
-"located."
+msgid "Chords must be located in front of a letter, where chord should be located."
 msgstr ""
 "Аккорды должны быть расположены перед буквой, над которой аккорд должен "
 "находится."
@@ -749,25 +771,32 @@ msgstr "Новый список"
 msgid "Reset Your Password"
 msgstr "Сброс вашего пароля"
 
-#: app/templates/songbook.html:8
-msgid "Add new song"
-msgstr "Добавить новую хвалу"
+#: app/templates/search.html:7
+msgid "Search by keyword: "
+msgstr "Поиск по ключевому слову:"
 
-#: app/templates/songbook.html:21 app/templates/tag_songlist.html:30
+#: app/templates/search.html:18 app/templates/songbook.html:21
+#: app/templates/tag_songlist.html:30
 msgid "Artist/singer"
 msgstr "Исполнитель"
 
-#: app/templates/songbook.html:24
+#: app/templates/search.html:21 app/templates/songbook.html:24
 msgid "Action"
 msgstr "Действие"
 
-#: app/templates/songbook.html:37 app/templates/tag_songlist.html:68
+#: app/templates/search.html:34 app/templates/songbook.html:37
+#: app/templates/tag_songlist.html:68
 msgid "Previous"
 msgstr "Предыдущая"
 
-#: app/templates/songbook.html:42 app/templates/tag_songlist.html:73
+#: app/templates/search.html:39 app/templates/songbook.html:42
+#: app/templates/tag_songlist.html:73
 msgid "Next"
 msgstr "Следующая"
+
+#: app/templates/songbook.html:8
+msgid "Add new song"
+msgstr "Добавить новую хвалу"
 
 #: app/templates/stage.html:76
 msgid "Background brightness:"
@@ -851,11 +880,11 @@ msgstr "Жанр и теги"
 
 #: app/templates/view_song.html:73
 msgid ""
-"Thematical grouping, song types, or groups based on temp are listed in "
-"here. Multiple choice."
+"Thematical grouping, song types, or groups based on temp are listed in here. "
+"Multiple choice."
 msgstr ""
-"Здесь перечислены тематические группы, типы песен, группы по темпу. "
-"Возможность назначить несколько тегов."
+"Здесь перечислены тематические группы, типы песен, группы по темпу. Возможность "
+"назначить несколько тегов."
 
 #: app/templates/view_song.html:88
 msgid "Confirm your action"

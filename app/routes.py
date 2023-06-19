@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request, abort, send_from_directory, jsonify, session
+from flask import render_template, flash, redirect, url_for, request, abort, send_from_directory, jsonify, session, g
 from app import app, db, validate_image, validate_audio
 from werkzeug.urls import url_parse
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddSong, EditSong, EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm, Transpose
@@ -10,8 +10,10 @@ from app.email import send_password_reset_email
 from app.core import Chordpro_html, Html_columns
 from werkzeug.utils import secure_filename
 from functools import wraps
+from langdetect import detect, LangDetectException
+from app.translate import translate
 import os
-from flask_babel import _
+from flask_babel import _, get_locale
 #import logging
 
 keyset = ('Empty', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B')
@@ -102,6 +104,7 @@ def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
+        g.locale = str(get_locale())
 
 @app.route('/explore')
 @login_required
@@ -168,7 +171,11 @@ def onstage():
 def index():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(body=form.post.data, author=current_user)
+        try:
+            language = detect(form.post.data)
+        except LangDetectException:
+            language = ''
+        post = Post(body=form.post.data, author=current_user, language=language)
         db.session.add(post)
         db.session.commit()
         flash(_('Your post is now live!'))
@@ -190,6 +197,14 @@ def index():
         if posts.has_prev else None
     return render_template('index.html', title=_('Home Page'), form=form, posts=posts.items, 
                            next_url=next_url, prev_url=prev_url, events=events, o_events=o_events, itemqty=itemqty, new_songs=new_songs)
+
+@app.route('/translate', methods=['POST'])
+@login_required
+def translate_text():
+    return jsonify({'text': translate(request.form['text'],
+                                      request.form['source_language'],
+                                      request.form['dest_language'])})
+
 
 @app.route('/songbook')
 def songbook():
