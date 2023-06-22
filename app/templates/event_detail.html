@@ -101,14 +101,14 @@
     <br>
 
 	<div class="row">
-		<div class="col-8">
+		<div class="col-md-8 col-xs-12">
 			<h4>{{ _('Event title:') }} {{ event.list_title }}</h4>
 			<h5>{{ _('Set date:') }} {{ moment(event.date_time).format('LLL') }}</h5>
 			<h5>{{ _('Created date:') }} {{ moment(event.created).format('LLL') }}</h5>
 			<h6>{{ _('Created by:') }} {{ user.username }}</h6>
 			<h6>{{ _('Links:') }} {{ event.mlink }}</h6>
 		</div>	
-		<div class="col-3">
+		<div class="col-md-3 col-xs-12">
 			<nav class="nav nav-pills justify-content-end">
 				<a class="nav-link active" aria-current="page" href="{{ url_for('.edit_event', listid=event.id) }}">{{ _('Edit') }}</a>&nbsp;&nbsp;
 				<form action="{{ url_for('delete_event', eventid=event.id, jump='calendar') }}" method="post">
@@ -116,6 +116,7 @@
 								{{ de_form.submit(class_='btn btn-secondary', value=_('Delete')) }}
 				</form>
 			</nav>
+			<br>
 			<nav class="nav nav-pills justify-content-end">
 			<a class="nav-link active" aria-current="page" href="{{ url_for('.onstage', eventid=event.id) }}" target="_blank">{{ _('Stage mode') }}</a>
 			</nav>
@@ -125,10 +126,11 @@
 
 	
 	<div class="row">	
-		<div class="col">
-			<ul><li>
-			<div class="row border-bottom border-3 bg-light text-dark">
-						<div class="col-auto"><strong>{{ _('No.') }}</strong></div>
+		<div class="col table-responsive-lg" style="height: 400px">
+			<ul>
+			<li>
+				<div class="row border-bottom border-3 bg-light text-dark" style="width: 1200px;">
+						<div class="col-auto d-none d-sd-block"><strong>{{ _('No.') }}</strong></div>
 						<div class="col-3"><strong>{{ _('Title') }}</strong></div>
 						<div class="col-auto"><strong>&nbsp;&nbsp;&nbsp;{{ _('Key') }}&nbsp;&nbsp;&nbsp;</strong></div>
 						<div class="col-auto"><strong>{{ _('order') }}</strong></div>
@@ -140,8 +142,8 @@
 			<ul id="sortable">
 			{% for s in songlist %}
 				<li data-item-id="{{ s.id }}">	
-					<div class="row bg-light text-dark">
-						<div class="col-auto">{{ s.id }}</div>
+					<div class="row bg-light text-dark " style="width: 1200px;">
+						<div class="col-auto d-none d-sd-block">{{ s.id }}</div>
 						<div class="col-3">
 						{% for song in s.song %}
 						<a href="{{ url_for('.view_song', id=song.id) }}">{{ song.title }}</a>

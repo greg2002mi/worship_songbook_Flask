@@ -12,15 +12,15 @@
 	</div>	
 	<br>
 	<div class="row">	
-		<div class="col-9">
+		<div class="col-md-9 col-xs-12">
 			<table class="table table-hover">
 			<thead>
 			  <tr>
-				 <th>{{ _('No.') }}</th>
+				 <th class="d-none d-sd-block">{{ _('No.') }}</th>
 				 <th>{{ _('Title') }}</th>
-				 <th>{{ _('Artist/singer') }}</th>
+				 <th class="d-none d-sd-block">{{ _('Artist/singer') }}</th>
 				 <th>{{ _('Key') }}</th>
-				 <th>{{ _('Language') }}</th>
+				 <th class="d-none d-sd-block">{{ _('Language') }}</th>
 				 <th>{{ _('Action') }}</th>
 			  </tr>
 			</thead>
@@ -30,14 +30,14 @@
 			{% endfor %}
 			</tbody>
 			</table>
-		<nav aria-label="...">
-			<ul class="pager">
-				<li class="previous{% if not prev_url %} disabled{% endif %}">
+		<nav class="nav justify-content-center flex-sm-row" aria-label="...">
+			<ul class="pager list-unstyled list-group list-group-horizontal">
+				<li class="previous{% if not prev_url %} disabled{% endif %} list-group-item">
 					<a href="{{ prev_url or '#' }}">
 						<span aria-hidden="true">&larr;</span> {{ _('Previous') }}
 					</a>
 				</li>
-				<li class="next{% if not next_url %} disabled{% endif %}">
+				<li class="next{% if not next_url %} disabled{% endif %} list-group-item">
 					<a href="{{ next_url or '#' }}">
 						{{ _('Next') }} <span aria-hidden="true">&rarr;</span>
 					</a>
@@ -45,7 +45,7 @@
 			</ul>
 		</nav>
 		</div>
-		<div class="col-3">
+		<div class="col-md-3 col-xs-12">
 		<div class="row"><table class="table table-responsive-sm table-hover">
 			<thead>
 			  <tr>

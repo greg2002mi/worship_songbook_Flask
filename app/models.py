@@ -7,45 +7,6 @@ from time import time
 import jwt
 
 
-          
-# class Permission:
-#     FOLLOW = 1
-#     COMMENT = 2
-#     WRITE = 4
-#     MODERATE = 8
-#     ADMIN = 16
-
-# setting permissions for site
-# class Role(db.Model):
-#     __tablename__ = 'roles'
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(64), unique=True)
-#     default = db.Column(db.Boolean, default=False, index=True)
-#     permissions = db.Column(db.Integer)
-#     users = db.relationship('User', backref='role')
-    
-#     def __init__(self, **kwargs):
-#         super(Role, self).__init__(**kwargs)
-#         if self.permissions is None:
-#             self.permissions = 0
-    
-#     def add_permission(self, perm):
-#         if not self.has_permission(perm):
-#             self.permissions += perm
-    
-#     def remove_permission(self, perm):
-#         if self.has_permission(perm):
-#             self.permissions -= perm
-    
-#     def reset_permissions(self):
-#         self.permissions = 0
-    
-#     def has_permission(self, perm):
-#         return self.permissions & perm == perm
-    
-#     def __repr__(self):
-#         return '<Role {}>'.format(self.name)
-
 # many to many relationship followed and followers --> user folloring another user
 followers = db.Table('followers',
     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
@@ -68,6 +29,7 @@ rolestable = db.Table('RolesTable',
                     )
 
 class User(UserMixin, db.Model):
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
@@ -139,6 +101,7 @@ def load_user(id):
     return User.query.get(int(id)) #flask-login passes id as string, thus converted to int.
     
 class Post(db.Model):
+    __tablename__ = 'post'
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -167,6 +130,7 @@ songlistitem = db.Table('songlistitem',
 
     
 class Song(db.Model):
+    __tablename__ = 'song'
     __searchable__ = ['title', 'singer', 'lyrics']
     
     id = db.Column(db.Integer, primary_key=True)
@@ -206,14 +170,16 @@ class Song(db.Model):
     
    
 class Tag(db.Model):
+    __tablename__ = 'tag'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
+    name = db.Column(db.String(70))
     
 class Mlinks(db.Model): # this table will have M-M relationship with Song Table
+    __tablename__ = 'mlinks'
     id  = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(255), index=True)
     mtype = db.Column(db.Integer)
-    murl = db.Column(db.String)
+    murl = db.Column(db.String(140))
     
 
 eventitems = db.Table('Eventitems',
@@ -222,15 +188,16 @@ eventitems = db.Table('Eventitems',
                     )
 
 class Lists(db.Model):
+    __tablename__ = 'lists'
     id = db.Column(db.Integer, primary_key=True)
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     date_time = db.Column(db.DateTime, index=True)
     date_end = db.Column(db.DateTime)
     # ability to add youtube clips for lists of songs
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    mlink = db.Column(db.String)
+    mlink = db.Column(db.String(140))
     status = db.Column(db.Integer, default=0) # 0 - in progress, 1 = Ready, 2 - past 
-    list_title = db.Column(db.String, default='Sunday service')
+    list_title = db.Column(db.String(100), default='Sunday service')
     # many-to-many relationship with user. so we can assign specific people to this list
     assigned = db.relationship('User', secondary=list_user, backref=db.backref('minister', lazy='dynamic'), lazy='dynamic')
     items = db.relationship('ListItem', secondary=eventitems, backref=db.backref('list', lazy='dynamic'), lazy='dynamic')

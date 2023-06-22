@@ -33,24 +33,24 @@
 			
 			
 		<div class="row">
-		<div class="col-8">
-		{{ html|safe }}
-		</div>
-		<div class="col-4">
-		
-		<div class="card" style="width: 18rem;">
-		  <div class="card-body">
-			<h5 class="card-title">{{ _('Description') }}</h5>
-			<h6 class="card-subtitle mb-2 text-muted">{{ _('Functionality and features') }}</h6>
-			<p class="card-text">{{ _('Underneath of title and singer/author there are several tabs:') }}<br>
-			<ul>
-			  <li>{{ _('Lyrics with chords - is a current page with main features, which will be described below.') }}</li>
-			  <li>{{ _('Lyrics - page without any chords.') }}</li>
-			  <li>{{ _('Media - media section, where there will be links and players. Gives you a chance to listen, learn and prepare for service.') }}</li>
-			  <li>{{ _('Translations - page to bind translation versions of current song to the database.') }}</li>
-			</ul></p>
+			<div class="col-md-8 col-xs-12">
+			{{ html|safe }}
+			</div>
+			<div class="col-md-4 col-xs-12 d-none d-sm-block">
+				<div class="card" style="width: 18rem;">
+				  <div class="card-body">
+					<h5 class="card-title">{{ _('Description') }}</h5>
+					<h6 class="card-subtitle mb-2 text-muted">{{ _('Functionality and features') }}</h6>
+					<p class="card-text">{{ _('Underneath of title and singer/author there are several tabs:') }}<br>
+						<ul>
+						  <li>{{ _('Lyrics with chords - is a current page with main features, which will be described below.') }}</li>
+						  <li>{{ _('Lyrics - page without any chords.') }}</li>
+						  <li>{{ _('Media - media section, where there will be links and players. Gives you a chance to listen, learn and prepare for service.') }}</li>
+						  <li>{{ _('Translations - page to bind translation versions of current song to the database.') }}</li>
+						</ul>
+					</p>
 
-		  </div>
-		</div>
-		</div>
+				  </div>
+				</div>
+			</div>
 		</div>

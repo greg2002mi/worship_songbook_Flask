@@ -1,9 +1,9 @@
         <tr valign="top">
-            <td>{{ song.id }}</td>
+            <td class="d-none d-sd-block">{{ song.id }}</td>
 			<td><a href="{{ url_for('.view_song', id=song.id) }}">{{ song.title }}</a></td>
-            <td>{{ song.singer }}</td>
+            <td class="d-none d-sd-block">{{ song.singer }}</td>
 			<td>{{ keyset[song.key] }}</td>
-			<td>{{ lang[song.language] }}</td>
+			<td class="d-none d-sd-block">{{ lang[song.language] }}</td>
 			<td>
 			{% if keyword %}
 			<form action="{{ url_for('.add_to_cart', songid=song.id, c=c, keyword=keyword ) }}" method="post">

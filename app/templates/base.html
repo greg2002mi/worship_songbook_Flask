@@ -12,8 +12,7 @@
 	</title>
   	{% block head_js %}{% endblock %}
   	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-	
-	
+  	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 		
 </head>
 
@@ -21,7 +20,9 @@
     <div class="container-xxl sticky-top">
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 			<div class="container-fluid">
-				 <a class="navbar-brand" href="{{ url_for('index') }}">Global Victory Church</a>
+				 <a class="navbar-brand" href="{{ url_for('index') }}">
+				 <img src="{{ url_for('static', filename='logo.png') }}" alt="" width="30" height="30" class="d-inline-block align-text-top">
+				 Global Victory Church</a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
@@ -106,8 +107,7 @@
 {% block scripts %}
 	<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 	<script src="{{ url_for('static', filename='js/howler.js') }}"></script>
-
-    {{ moment.include_moment() }}
+		{{ moment.include_moment() }}
     {{ moment.lang(g.locale) }}
     <script>
         function translate(sourceElem, destElem, sourceLang, destLang) {

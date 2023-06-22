@@ -14,16 +14,18 @@
 
 {% block app_content %}
     <div class="row">
-	<div class="col-auto"><br><a onclick="goBack()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-left" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-  <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-</svg></a></div>
-	<div class="col-6">
-	<h1>{{ _('Title:') }} {{ song.title }}</h1>
-	<h2>{{ _('Artist:') }} {{ song.singer }}</h2>
-	<h6>{{ _('Prepared by:') }} {{ song.publisher.username }}</h6>
-	<h6>{{ _('Published on:') }} {{ moment(song.timestamp).format('LLL') }}</h6>
-	</div></div>
+		<div class="col-auto"><br><a onclick="goBack()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-left" viewBox="0 0 16 16">
+		  <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+		  <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+			</svg></a>
+		</div>
+		<div class="col-6">
+			<h1>{{ _('Title:') }} {{ song.title }}</h1>
+			<h2>{{ _('Artist:') }} {{ song.singer }}</h2>
+			<h6>{{ _('Prepared by:') }} {{ song.publisher.username }}</h6>
+			<h6>{{ _('Published on:') }} {{ moment(song.timestamp).format('LLL') }}</h6>
+		</div>
+	</div>
 	<ul class="nav nav-tabs" id="myTab" role="tablist">
 	  <li class="nav-item" role="presentation">
 		<button class="nav-link active" id="song-tab" data-bs-toggle="tab" data-bs-target="#song-tab-pane" type="button" role="tab" aria-controls="song-tab-pane" aria-selected="true">{{ _('Lyrics with chords') }}</button>
@@ -39,7 +41,7 @@
 	  </li>
 	</ul>
 	<div class="tab-content" id="myTabContent">
-	<br>
+		<br>
 	  <div class="tab-pane fade show active" id="song-tab-pane" role="tabpanel" aria-labelledby="song-tab" tabindex="1">
 		<br>
 		<div class="btn-toolbar justify-content-md-end" role="toolbar" aria-label="edit-delete-genre">
@@ -55,15 +57,15 @@
 				</button>
 			</div>
 		</div>	  
-	<br>
+		<br>
 	  {% include '_song_chords.html' %}
 	  </div>
 		<div class="tab-pane fade" id="lyrics-tab-pane" role="tabpanel" aria-labelledby="lyrics-tab" tabindex="2">{% include '_song_lyrics.html' %}</div>
 		<div class="tab-pane fade" id="links-tab-pane" role="tabpanel" aria-labelledby="links-tab" tabindex="3">{% include '_song_links.html' %}</div>
-		<div class="tab-pane fade" id="translation-tab-pane" role="tabpanel" aria-labelledby="translation-tab" tabindex="3">{% include '_translations.html' %}</div>
+		<div class="tab-pane fade" id="translation-tab-pane" role="tabpanel" aria-labelledby="translation-tab" tabindex="4">{% include '_translations.html' %}</div>
 	</div>
 	
-				<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+	<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
 				<div class="offcanvas-header">
 					<h5 class="offcanvas-title" id="offcanvasRightLabel">{{ _('Genre and tags') }}</h5>
 					<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>

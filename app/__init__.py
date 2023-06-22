@@ -21,11 +21,11 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
-app.config['MAIL_SERVER'] = 'smtp.mail.ru'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'unfailing_soul'
-app.config['MAIL_PASSWORD'] = 'Shunya1104@'
+app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = 1
+app.config['MAIL_USERNAME'] = 'pc.c4rpenter'
+app.config['MAIL_PASSWORD'] = 'Ethan0401Levi3108@'
 app.config['IMAGE_EXTENSIONS'] = ['.jpg', '.png', '.gif', '.svg', '.bmp', '.webp']
 app.config['AUDIO_EXTENSIONS'] = ['.wav', '.mp3', '.aac', '.ogg', '.oga', '.flac']
 # app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
@@ -34,6 +34,7 @@ app.config['UPLOAD_PATH']
 app.config['AUPLOAD_PATH']
 app.config['AVATAR_PATH']
 app.config['UPLOAD_FOLDER']
+app.config['MS_TRANSLATOR_KEY']
 mail = Mail(app)
 bootstrap = Bootstrap(app)
 moment = Moment(app)
@@ -79,7 +80,10 @@ def validate_audio(stream, ori_ext):
         return ori_ext.lower()
     return None
     
-from app import routes, models, error, core, email
+from app import routes, models, error, core, email, translate
+
+with app.app_context():
+    db.create_all()
 
 if not app.debug:
     if app.config['MAIL_SERVER']:

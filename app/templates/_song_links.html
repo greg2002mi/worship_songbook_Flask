@@ -11,25 +11,31 @@
     </form>
     <hr>
     {% for image in media %}
-      {% if image.mtype == 3 %}
-	  <img src="{{ url_for('upload_i', filename=image.murl) }}" style="width: 64px;cursor:zoom-in" onclick="document.getElementById('modal{{ image.id }}').style.display='block'">
-	{% endif %}
+		{% if image.mtype == 3 %}
+			<img src="{{ url_for('upload_i', filename=image.murl) }}" style="width: 64px;cursor:zoom-in" onclick="document.getElementById('modal{{ image.id }}').style.display='block'">
+		{% endif %}
 	{% endfor %}</div>
-    <div class="col-4"><h4><strong>{{ _('Audio') }}</strong></h4><br>
+    <div class="col-md-4 col-xs-12"><h4><strong>{{ _('Audio') }}</strong></h4><br>
 	{% for a in media %}
-      {% if a.mtype == 2 %}
-	  <div>
-        <h5>{{ a.filename }}</h5>
-        <audio id="audioPlayer{{ a.id }}" src="{{ a.murl }}"></audio>
-        <input type="range" id="volumeSlider{{ a.id }}" min="0" max="1" step="0.1" value="1" onchange="changeVolume({{ a.id }}, this.value)">
-        <button onclick="playSong({{ a.id }})">Play</button>
-        <button onclick="stopSong({{ a.id }})">Stop</button>
-        <div>
-          <span id="currentTime{{ a.id }}">0:00</span> / <span id="duration{{ a.id }}">0:00</span>
-        </div>
-        <input type="range" id="tracker{{ a.id }}" min="0" max="100" step="0.1" value="0" oninput="seekSong({{ a.id }}, this.value)" onchange="seekSong({{ a.id }}, this.value)">
-      </div>
-	{% endif %}
+		{% if a.mtype == 2 %}
+		  <div>
+			<h5>{{ a.filename }}</h5>
+			<audio id="audioPlayer{{ a.id }}" src="{{ a.murl }}"></audio>
+			<input type="range" id="volumeSlider{{ a.id }}" min="0" max="1" step="0.1" value="1" onchange="changeVolume({{ a.id }}, this.value)">
+			<button class="btn btn-success btn-sm" onclick="playSong({{ a.id }})"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16">
+				<path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
+				</svg>
+			</button>
+			<button class="btn btn-danger btn-sm" onclick="stopSong({{ a.id }})"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stop" viewBox="0 0 16 16">
+				<path d="M3.5 5A1.5 1.5 0 0 1 5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5zM5 4.5a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5V5a.5.5 0 0 0-.5-.5H5z"/>
+				</svg>
+			</button>
+			<div>
+			  <span id="currentTime{{ a.id }}">0:00</span> / <span id="duration{{ a.id }}">0:00</span>
+			</div>
+			<input type="range" id="tracker{{ a.id }}" min="0" max="100" step="0.1" value="0" oninput="seekSong({{ a.id }}, this.value)" onchange="seekSong({{ a.id }}, this.value)">
+		  </div>
+		{% endif %}
 	{% endfor %}
 	</div>
 <script>
@@ -124,18 +130,18 @@
     return minutes + ':' + seconds;
   }
 </script>
-    <div class="col-6"><h4><strong>Video</strong></h4><br>
-	<div class="embed-responsive embed-responsive-16by9">
-		{% for l in media %}
-		  {% if l.mtype == 1 %}
-		  <iframe width="560" height="315" src="{{ l.murl }}" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
-		{% endif %}
-		{% endfor %}
-		
-	</div>
+    <div class="col-md-6 col-xs-12"><h4><strong>Video</strong></h4><br>
+		<div class="embed-responsive embed-responsive-16by9">
+			{% for l in media %}
+			  {% if l.mtype == 1 %}
+			  <iframe width="560" height="315" src="{{ l.murl }}" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+			{% endif %}
+			{% endfor %}
+			
+		</div>
 	</div>
   </div>
-</div>
+
 	{% for image in media %}
 	{% if image.mtype == 3 %}
 	<div id="modal{{ image.id }}" class="w3-modal" onclick="this.style.display='none'">
@@ -144,9 +150,9 @@
 		  <img src="{{ url_for('upload_i', filename=image.murl) }}" style="width:100%">
 		</div>
 	  </div>
-	</div>
 	{% endif %}
 	{% endfor %}
+</div>
 	
 	
 	

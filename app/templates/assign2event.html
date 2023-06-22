@@ -15,9 +15,11 @@
 
 
 {% block app_content %}
-    <h1>{{ _('Create new Event') }}</h1>
+    
     <div class="row">
-	<div class="col-6">
+	<div class="col-md-6 col-xs-12">
+	<br>
+	<h3>{{ _('Create new Event') }}</h3>
 	<form class="form-floating needs-validation" action="{{ url_for('add2event') }}" method="post" novalidate>
         {{ addform.hidden_tag() }}
         <div class="row mb-3">
@@ -61,7 +63,9 @@
 		</div>
     </form>
 	</div>
-		<div class="col-6">
+		<div class="col-md-6 col-xs-12">
+		<br>
+		<h3>{{ _('or Add to Existing Event') }}</h3>
 			<form class="form-floating needs-validation" "form-floating needs-validation" action="{{ url_for('add2xevent') }}" method="post" novalidate>
 				{{ assignform.hidden_tag() }}
 				<div class="row mb-3">
