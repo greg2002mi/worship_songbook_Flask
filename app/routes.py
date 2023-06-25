@@ -24,9 +24,11 @@ def split_text(text):
     first_part = []
     second_part = []
     count = 0
+    half_total = len(lines)/2
+    
     
     for line in lines:
-        if count < 20:
+        if count < half_total:
             first_part.append(line)
         else:
             if line.strip() == '':
@@ -156,7 +158,7 @@ def onstage():
             first, second = split_text(s.lyrics)
             html1 = Chordpro_html(first, 1, ori_key_int, transpose)
             html2 = Chordpro_html(second, 1, ori_key_int, transpose)
-            lyrics.append('<div class="row"><div class="col-6">{}</div><div class="col-6"><br><br><br><br><br>{}</div></div>'.format(html1, html2))
+            lyrics.append('<div class="row"><div class="col-auto">&nbsp;</div><div class="col-5">{}</div><div class="col-5"><br><br><br><br><br>{}</div></div>'.format(html1, html2))
     # html = Chordpro_html(lyrics, showchords, ori_key_int, transpose)
     # only_lyrics = Chordpro_html(lyrics, False, 0, 0)
     # if form.validate_on_submit():
