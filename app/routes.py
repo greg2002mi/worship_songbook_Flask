@@ -142,7 +142,7 @@ def process_lyrics():
 
 @app.route('/onstage')
 def onstage():
-    eventid = request.args.get('eventid', 1, type=int)
+    eventid = request.args.get('eventid', type=int)
     event = Lists.query.get_or_404(eventid)
     # songs = event.items.all()
     unsorted = sorted(event.items, key=lambda x: x.listorder)
