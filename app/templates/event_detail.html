@@ -118,7 +118,9 @@
 			</nav>
 			<br>
 			<nav class="nav nav-pills justify-content-end">
-			<a class="nav-link active" aria-current="page" href="{{ url_for('.onstage', eventid=event.id) }}" target="_blank">{{ _('Stage mode') }}</a>
+			<a class="nav-link active" aria-current="page" href="{{ url_for('.onstage', eventid=event.id, viewtype=1) }}" target="_blank">{{ _('Stage mode') }}</a>
+			<a class="nav-link active" aria-current="page" href="{{ url_for('.onstage', eventid=event.id, viewtype=2) }}" target="_blank">{{ _('Vocal') }}</a>
+			<a class="nav-link active" aria-current="page" href="{{ url_for('.onstage', eventid=event.id, viewtype=3) }}" target="_blank">{{ _('Music sheets') }}</a>
 			</nav>
 		</div>
 	</div>	

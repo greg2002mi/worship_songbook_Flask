@@ -14,12 +14,16 @@ from langdetect import detect, LangDetectException
 from app.translate import translate
 import os
 from flask_babel import _, get_locale
+from sqlalchemy.orm import joinedload
 #import logging
 
+# mtype 1 - Youtube  2 -Audio   3 - images 4 - 'Other'
 keyset = ('Empty', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B')
 lang = ('None', 'Eng', 'Kor', 'Rus')
 
-def split_text(text):
+# splits text into two columns 
+def split_text(text, viewtype, ori_key_int, transpose):
+    lyrics = ""
     lines = text.split('\n')
     first_part = []
     second_part = []
@@ -39,8 +43,19 @@ def split_text(text):
                 first_part.append(line)
         count += 1
     
-    return '\n'.join(first_part), '\n'.join(second_part)
-
+    first = '\n'.join(first_part) 
+    second = '\n'.join(second_part)
+    
+    if viewtype == 1:
+        html1 = Chordpro_html(first, 1, ori_key_int, transpose)
+        html2 = Chordpro_html(second, 1, ori_key_int, transpose)
+    elif viewtype ==2:
+        html1 = Chordpro_html(first, False, 0, 0)
+        html2 = Chordpro_html(second, False, 0, 0)
+    
+    lyrics = '<div class="row"><div class="col-auto">&nbsp;</div><div class="col-5">{}</div><div class="col-5"><br><br><br><br><br>{}</div></div>'.format(html1, html2)
+    
+    return lyrics
     # lines = text.split('\n')
     # first_part = '\n'.join(lines[:20])
     # second_part = '\n'.join(lines[20:])
@@ -143,29 +158,121 @@ def process_lyrics():
 @app.route('/onstage')
 def onstage():
     eventid = request.args.get('eventid', type=int)
+    viewtype = request.args.get('viewtype', type=int) # if 1 show with chords if 2 show without chords 3 show images
     event = Lists.query.get_or_404(eventid)
     # songs = event.items.all()
+    # list_obj = ListItem.query.join(Lists.items).filter(Lists.id == eventid).order_by(ListItem.listorder).all()
+    # media = Mlinks.query.join(Song.media).filter(Song.id=)
     unsorted = sorted(event.items, key=lambda x: x.listorder)
     songlist = [item for item in unsorted]
     transpose = 0
     lyrics = []
-    for i in unsorted:
-        transpose = i.desired_key
-        for s in i.song:
-            ori_key_int = s.key
-            if transpose == 0 or transpose is None:
-                transpose = ori_key_int
-            first, second = split_text(s.lyrics)
-            html1 = Chordpro_html(first, 1, ori_key_int, transpose)
-            html2 = Chordpro_html(second, 1, ori_key_int, transpose)
-            lyrics.append('<div class="row"><div class="col-auto">&nbsp;</div><div class="col-5">{}</div><div class="col-5"><br><br><br><br><br>{}</div></div>'.format(html1, html2))
+    mlinks_check = []
+    music_sh = []
+    my_dict = {}
+    if not unsorted:
+        flash(_('Error, there are no items in this event.'))
+        return redirect('lists', listid=eventid)
+    if not viewtype:
+        flash(_('Error, view condition is not defined.'))
+        return redirect('lists', listid=eventid)
+    if viewtype < 3:
+        for i in unsorted:
+            transpose = i.desired_key
+            # make sure viewtype has been passed
+
+            for s in i.song:
+                ori_key_int = s.key
+                if transpose:
+                    split = split_text(s.lyrics, viewtype, ori_key_int, transpose)
+                else:    
+                    split = split_text(s.lyrics, 2, 0, 0)
+            lyrics.append(split)
+            # if viewtype is 3, then gather as many 
+    if viewtype == 3:
+        # making a list of booleans if song.media has pictures or not
+        index_list = []
+        for i in unsorted:
+            for s in i.song:
+                if not s.media:
+                    mlinks_check.append(False)
+                else:
+                    cntrl = 0
+                    for m in s.media:
+                        if m.mtype == 3:
+                            cntrl=cntrl+1
+                    if cntrl > 1:
+                        mlinks_check.append(True)
+                    else:
+                        mlinks_check.append(False)
+                break
+                    
+        # make a list of murls of pictures in a list
+        for index, i in enumerate(unsorted):
+                       
+            index_list.append(index)
+            for ss in i.song:
+                if mlinks_check[index]:
+                    ex = []
+                    for ll in ss.media:
+                        if ll.mtype ==3:
+                            murl = ll.murl
+                            ex.append(murl) 
+                    music_sh.append(ex)
+                elif mlinks_check[index] == False:
+                    ori_key_int = ss.key
+                    transpose = i.desired_key
+                    split = split_text(ss.lyrics, 1, ori_key_int, transpose)
+                    music_sh.append(split)
+        print(index_list)
+        print(mlinks_check)  
+        print(music_sh[0])          
+        # make a dict
+        my_dict["id"]= index_list
+        my_dict["image"] = mlinks_check
+        my_dict["values"] = music_sh 
+        print(my_dict)
+                   
+        # and at the end combine 
+    return render_template('stage.html', songlist=songlist, event=event, lyrics=lyrics, viewtype=viewtype, my_dict=my_dict)
+    # for i in unsorted:
+    #     if not viewtype:
+    #         flash(_('Error, view condition is not defined.'))
+    #         return redirect('lists', listid=eventid)
+    #     elif viewtype < 3:
+    #         # stage mode lyrics with chords or lyrics
+    #         transpose = i.desired_key
+    #         for s in i.song:
+    #             ori_key_int = s.key
+    #             if transpose:
+    #                 split = split_text(s.lyrics, viewtype, ori_key_int, transpose)
+    #             else:    
+    #                 split = split_text(s.lyrics, 2, 0, 0)
+    #         lyrics.append(split)
+    #     elif viewtype == 3:
+    #         for s in i.song:
+    #             [mlink.murl for mlink in song.media if mlink.mtype == 3]
+                
+                
+    #             images = s.media.all()
+    #             images = Mlinks.(Song.media=song.language).all()    
+    #             # later can be added dynamic splitting for up to 4 columns
+                
+    #             transpose = i.desired_key
+                    
+                
+                
+           
+            # take all the pitures from the songs and place them into picture mode stage mode
+            # if no picture load text with chords instead
+    
     # html = Chordpro_html(lyrics, showchords, ori_key_int, transpose)
     # only_lyrics = Chordpro_html(lyrics, False, 0, 0)
     # if form.validate_on_submit():
     #     # Handle the submit of transpose chord action
     #     key = form.key.data
     #     return redirect(url_for('.view_song', id=song.id, key=key))
-    return render_template('stage.html', songlist=songlist, event=event, lyrics=lyrics)
+    
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])

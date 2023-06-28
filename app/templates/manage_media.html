@@ -3,6 +3,10 @@
 {% block app_content %}
 
 	<div class="row">
+		<div class="col-auto"><a class="nav-link" href="{{ url_for('.view_song', id=song.id) }}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-left" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+  <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+</svg></a></div>
 		<div class="col-md-4 col-xs-12"><h4><strong>{{ _('Add Audio') }}</strong></h4><br>
 			<form method="post" action="{{ url_for('.upload_audio', id=song.id, mtype=2) }}" enctype="multipart/form-data">
 			  <p><input type="file" name="file"></p>

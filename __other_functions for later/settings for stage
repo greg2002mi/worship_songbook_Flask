@@ -1,0 +1,50 @@
+{% elif viewtype == 3 %}
+    {% for index in range(my_dict['id']|length) %}
+        {% if my_dict['image'][index] %}
+            {% for item in my_dict['values'][index] %}
+                <div class="swiper-slide">
+                    <div class="col-12"><center><h4>Song {{ my_dict['id'][index] }} </h4></center></div>
+                    <img src="{{ url_for('upload_i', filename=item) }}" style="height:100%">
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="swiper-slide">
+                <br>
+                <br>
+                <br>
+                <div class="col-12"><center><h4>Song {{ my_dict['id'][index] }} </h4></center></div>
+                {{ my_dict['values'][index]|safe }}
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+    .swiper-slide img {
+	display: block;
+    width: auto;
+    height: auto; /* Adjusted height to auto for responsive scaling */
+    max-width: 100%; /* Ensures the image does not exceed its container */
+    object-fit: cover;
+    }
+
+
+	  {% elif viewtype == 3 %}
+			{% for dict_item in my_dict %}
+				{% if dict_item['image'] %}
+				{% for item in dict_item['values'] %}
+					<div class="swiper-slide">
+					  <div class="col-12"><center><h4>Song {{ dict_item['id']}} </h4></center></div>
+					  <img src="{{ url_for('upload_i', filename=item) }}" style="height:100%">
+					</div>
+				{% endfor %}	
+				{% else %}
+					<div class="swiper-slide">
+					  <br>
+					  <br>
+					  <br>
+					  <div class="col-12"><center><h4>Song {{ dict_item['id']}} </h4></center></div>
+					  {{ dict_item['values']|safe }}
+					</div>
+				{% endif %}
+			{% endfor %}
+	  {% endif %}

@@ -26,22 +26,21 @@
       width: 100%;
       height: 100%;
     }
-	
+
     .swiper-slide {
       text-align: center;
       font-size: 18px;
+
       justify-content: center;
       align-items: center;
     }
-	
-	.swiper-slide img {
-    display: block;
-    width: 100%;
-    height: auto; /* Adjusted height to auto for responsive scaling */
-    max-width: 100%; /* Ensures the image does not exceed its container */
-    object-fit: contain; /* Use "contain" instead of "cover" to fit the image without cropping */
-    max-height: calc(100vh - 200px); /* Set a maximum height for the image to prevent vertical scrolling */
-	}
+
+    .swiper-slide img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 	
 	.swiper-pagination-bullet {
       width: 20px;
@@ -57,6 +56,13 @@
     .swiper-pagination-bullet-active {
       color: #fff;
       background: #007aff;
+    }
+	
+	.swiper-slide img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   </style>
 </head>
@@ -153,28 +159,25 @@
 		  </div>
 		{% endfor %}
 	  
-		{% elif viewtype == 3 %}
-			{% for index in range(my_dict['id']|length) %}
-				{% if my_dict['image'][index] %}
-					{% for item in my_dict['values'][index] %}
-						<div class="swiper-slide">
-							<div class="col-12"><center><h4>Song {{ my_dict['id'][index] }} </h4></center></div>
-							<div class="image">
-							<img src="{{ url_for('upload_i', filename=item) }}">
-							</div>
-						</div>
-					{% endfor %}
+	  {% elif viewtype == 3 %}
+			{% for check in mlinks_check %}
+				{% if check %}
+				{% for song in music_sh[loop.index] %}
+					<div class="swiper-slide">
+					  <div class="col-12"><center><h4>Song </h4></center></div>
+					  <img src="{{ url_for('upload_i', filename=song) }}" style="height:100%">
+					</div>
 				{% else %}
 					<div class="swiper-slide">
-						<br>
-						<br>
-						<br>
-						<div class="col-12"><center><h4>Song {{ my_dict['id'][index] }} </h4></center></div>
-						{{ my_dict['values'][index]|safe }}
+					  <br>
+					  <br>
+					  <br>
+					  <div class="col-12"><center><h4>Song  </h4></center></div>
+					  {{ music_sh[loop.index]|safe }}
 					</div>
 				{% endif %}
 			{% endfor %}
-		{% endif %}
+	  {% endif %}
     </div>
 	
     <div class="swiper-button-next"></div>
