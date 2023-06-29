@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import SelectMultipleField, StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField, DateField, DateTimeField, widgets
-from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
+from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length, Regexp
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms.widgets import ListWidget, CheckboxInput, Input
 from app.models import User, Song, Tag, Lists
@@ -88,9 +88,11 @@ class LoginForm(FlaskForm):
     submit = SubmitField(_l('Sign In'), render_kw={"class": "btn btn-primary"})
     
 class RegistrationForm(FlaskForm):
-    username = StringField(_l('Username'), validators=[DataRequired()], render_kw={"class": "form-control"})
+    username = StringField(_l('Username'), validators=[DataRequired(), Regexp(regex=r'^[a-z]+$', 
+            message=_l("Username must contain only lowercase letters"))], render_kw={"class": "form-control"})
     email = StringField(_l('Email'), validators=[DataRequired(), Email()], render_kw={"class": "form-control"})
-    password = PasswordField(_l('Password'), validators=[DataRequired()], render_kw={"class": "form-control"})
+    password = PasswordField(_l('Password'), validators=[DataRequired(), Length(min=8), Regexp(regex="^(?=.*[a-zA-Z])(?=.*[!@#$%^&*])(?=.*[0-9])",
+            message=_l("Password must contain letters and special symbols"))], render_kw={"class": "form-control"})
     password2 = PasswordField(_l('Repeat password'), validators=[DataRequired(), EqualTo('password')], render_kw={"class": "form-control"})
     submit = SubmitField(_l('Register'), render_kw={"class": "btn btn-primary"})
     

@@ -108,7 +108,7 @@
 			<h6>{{ _('Created by:') }} {{ user.username }}</h6>
 			<h6>{{ _('Links:') }} {{ event.mlink }}</h6>
 		</div>	
-		<div class="col-md-3 col-xs-12">
+		<div class="col-md-4 col-xs-12">
 			<nav class="nav nav-pills justify-content-end">
 				<a class="nav-link active" aria-current="page" href="{{ url_for('.edit_event', listid=event.id) }}">{{ _('Edit') }}</a>&nbsp;&nbsp;
 				<form action="{{ url_for('delete_event', eventid=event.id, jump='calendar') }}" method="post">
@@ -118,15 +118,20 @@
 			</nav>
 			<br>
 			<nav class="nav nav-pills justify-content-end">
-			<a class="nav-link active" aria-current="page" href="{{ url_for('.onstage', eventid=event.id, viewtype=1) }}" target="_blank">{{ _('Stage mode') }}</a>
-			<a class="nav-link active" aria-current="page" href="{{ url_for('.onstage', eventid=event.id, viewtype=2) }}" target="_blank">{{ _('Vocal') }}</a>
+			<a class="nav-link active" aria-current="page" href="{{ url_for('.onstage', eventid=event.id, viewtype=1) }}" target="_blank">{{ _('Stage mode') }}</a>&nbsp;&nbsp;
+			<a class="nav-link active" aria-current="page" href="{{ url_for('.onstage', eventid=event.id, viewtype=2) }}" target="_blank">{{ _('Vocal') }}</a>&nbsp;&nbsp;
 			<a class="nav-link active" aria-current="page" href="{{ url_for('.onstage', eventid=event.id, viewtype=3) }}" target="_blank">{{ _('Music sheets') }}</a>
 			</nav>
 		</div>
 	</div>	
 	<br>
-
-	
+	{% if event.mlink %}
+	<div class="row">
+		<div class="col align-self-center">
+			{{ event.mlink| safe }}
+		</div>
+	</div>	
+	{% endif %}
 	<div class="row">	
 		<div class="col table-responsive-lg" style="height: 400px">
 			<ul>

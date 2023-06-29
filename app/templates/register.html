@@ -1,8 +1,22 @@
 {% extends "base.html" %}
 
+{% block head_js %}
+	<script>
+		function validatePassword() {
+			var password = document.getElementById('password').value;
+			var regex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*])/;
+			if (password.length < 8 || !regex.test(password)) {
+				alert("{{ _('Password must be at least 8 characters long and contain letters and special symbols.') }}");
+				return false;
+			}
+			return true;
+		}
+	</script>
+{% endblock %}
+
 {% block app_content %}
     <h1>{{ _('Register') }}</h1>
-    <form class="row g-3 needs-validation" method="post" novalidate>
+    <form class="row g-3 needs-validation" method="post" novalidate onsubmit="return validatePassword()">
         {{ form.hidden_tag() }}
         <div class="row mb-3">
             {{ form.username.label(class_='col-sm-2 col-form-label') }}

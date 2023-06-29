@@ -72,15 +72,16 @@
   <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
 </svg></a>
 	</div>
-	<a class="navbar-brand strong" href="#">-ON STAGE-</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 	<div class="collapse navbar-collapse" id="navbarScroll">
       <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-        <li class="nav-item">
+        <!--
+		<li class="nav-item">
           <a class="nav-link disabled">{{ _('Settings:') }}</a>
         </li>
+		-->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             {{ _('L_size') }}
@@ -129,7 +130,6 @@
           </ul>
         </li>
       </ul>
-	{{ event.list_title }} - {{ moment(event.date_time).format('LLL') }}
   </div>
 </nav>
   
@@ -141,7 +141,25 @@
   <!-- Swiper -->
   <div class="swiper mySwiper">
 	<div class="swiper-wrapper">
-      <div class="swiper-slide">Slide 1</div>
+      <div class="swiper-slide">
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<center><h3>{{ event.list_title }} - {{ moment(event.date_time).format('LLL') }}</h3></center>
+		<br>
+		<br>
+		<br>
+		<br>
+		<center><h4><em>Blessed are the pure in heart, for they shall see God.</em></h4></center>
+		<center><h4><a href="https://www.biblegateway.com/passage/?search=Matthew+5%3A8&version=NIV">Matthew 5:8 (NIV)</a></h4></center>
+		
+	  
+	  
+	  
+	  </div>
       {% if viewtype < 3 %}
 		{% for song in songlist %}
 		  <div class="swiper-slide">
@@ -188,7 +206,11 @@
 
   <!-- Initialize Swiper -->
   <script>
-    var swiper = new Swiper(".mySwiper", {
+    var popover = new bootstrap.Popover(document.querySelector('.popover-dismiss'), {
+	  trigger: 'focus'
+	})
+	
+	var swiper = new Swiper(".mySwiper", {
       navigation: {
         nextEl: ".swiper-button-next",
         prevEl: ".swiper-button-prev",
@@ -200,7 +222,7 @@
           return '<span class="' + className + '">' + (index + 1) + "</span>";
         },
       },
-    });
+    })
 	
 	function changeCharacterWidth(width) {
 	  const elements = document.getElementsByClassName("row g-0");
