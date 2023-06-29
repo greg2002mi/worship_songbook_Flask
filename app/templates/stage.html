@@ -10,7 +10,7 @@
 	On Stage mode
 	{% endif %}
 	</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/stage.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/swiper-bundle.min.css') }}">
@@ -136,79 +136,77 @@
   
   
   
- <div class="row"> 
- <div class="col">
-  <!-- Swiper -->
-  <div class="swiper mySwiper">
-	<div class="swiper-wrapper">
-      <div class="swiper-slide">
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<center><h3>{{ event.list_title }} - {{ moment(event.date_time).format('LLL') }}</h3></center>
-		<br>
-		<br>
-		<br>
-		<br>
-		<center><h4><em>Blessed are the pure in heart, for they shall see God.</em></h4></center>
-		<center><h4><a href="https://www.biblegateway.com/passage/?search=Matthew+5%3A8&version=NIV">Matthew 5:8 (NIV)</a></h4></center>
-		
-	  
-	  
-	  
-	  </div>
-      {% if viewtype < 3 %}
-		{% for song in songlist %}
-		  <div class="swiper-slide">
-		  <br>
-		  <br>
-		  <br>
-		  <div class="col-12"><center><h4>Song {{ song.listorder }} </h4></center></div>
-		  {{lyrics[song.listorder - 1]|safe}}
-		  </div>
-		{% endfor %}
-	  
-		{% elif viewtype == 3 %}
-			{% for index in range(my_dict['id']|length) %}
-				{% if my_dict['image'][index] %}
-					{% for item in my_dict['values'][index] %}
-						<div class="swiper-slide">
-							<div class="col-12"><center><h4>Song {{ my_dict['id'][index] }} </h4></center></div>
-							<div class="image">
-							<img src="{{ url_for('upload_i', filename=item) }}">
+	 <div class="row"> 
+		 <div class="col">
+		  <!-- Swiper -->
+		  <div class="swiper mySwiper">
+			<div class="swiper-wrapper">
+			  <div class="swiper-slide">
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<center><h3>{{ event.list_title }} - {{ moment(event.date_time).format('LLL') }}</h3></center>
+				<br>
+				<br>
+				<br>
+				<br>
+				<center><h4><em>Blessed are the pure in heart, for they shall see God.</em></h4></center>
+				<center><h4><a href="https://www.biblegateway.com/passage/?search=Matthew+5%3A8&version=NIV">Matthew 5:8 (NIV)</a></h4></center>
+				
+			  
+			  
+			  
+			  </div>
+			  {% if viewtype < 3 %}
+				{% for song in songlist %}
+				  <div class="swiper-slide">
+				  <br>
+				  <br>
+				  <br>
+				  <div class="col-12"><center><h4>Song {{ song.listorder }} </h4></center></div>
+				  {{lyrics[song.listorder - 1]|safe}}
+				  </div>
+				{% endfor %}
+			  
+				{% elif viewtype == 3 %}
+					{% for index in range(my_dict['id']|length) %}
+						{% if my_dict['image'][index] %}
+							{% for item in my_dict['values'][index] %}
+								<div class="swiper-slide">
+									<div class="col-12"><center><h4>Song {{ my_dict['id'][index] }} </h4></center></div>
+									<div class="image">
+									<img src="{{ url_for('upload_i', filename=item) }}">
+									</div>
+								</div>
+							{% endfor %}
+						{% else %}
+							<div class="swiper-slide">
+								<br>
+								<br>
+								<br>
+								<div class="col-12"><center><h4>Song {{ my_dict['id'][index] }} </h4></center></div>
+								{{ my_dict['values'][index]|safe }}
 							</div>
-						</div>
+						{% endif %}
 					{% endfor %}
-				{% else %}
-					<div class="swiper-slide">
-						<br>
-						<br>
-						<br>
-						<div class="col-12"><center><h4>Song {{ my_dict['id'][index] }} </h4></center></div>
-						{{ my_dict['values'][index]|safe }}
-					</div>
 				{% endif %}
-			{% endfor %}
-		{% endif %}
-    </div>
-	
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-	<div class="swiper-pagination"></div>
-  </div>
-</div>  
-</div>  
+			</div>
+			
+			<div class="swiper-button-next"></div>
+			<div class="swiper-button-prev"></div>
+			<div class="swiper-pagination"></div>
+		  </div>
+		</div>  
+	</div>  
   
 </div>  
 
   <!-- Initialize Swiper -->
   <script>
-    var popover = new bootstrap.Popover(document.querySelector('.popover-dismiss'), {
-	  trigger: 'focus'
-	})
+
 	
 	var swiper = new Swiper(".mySwiper", {
       navigation: {
@@ -222,7 +220,7 @@
           return '<span class="' + className + '">' + (index + 1) + "</span>";
         },
       },
-    })
+    });
 	
 	function changeCharacterWidth(width) {
 	  const elements = document.getElementsByClassName("row g-0");

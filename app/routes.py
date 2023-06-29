@@ -141,7 +141,7 @@ def explore():
     # prev_url = url_for('explore', page=posts.prev_num) \
     #     if posts.has_prev else None
     return render_template('explore.html', title=_('Explore'), 
-                           events=events, o_events=o_events, itemqty=itemqty, new_songs=new_songs)
+                           events=events, o_events=o_events, itemqty=itemqty, new_songs=new_songs, keyset=keyset)
 
 @app.route('/process-lyrics', methods=['POST'])
 def process_lyrics():
