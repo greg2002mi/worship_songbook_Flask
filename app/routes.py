@@ -223,55 +223,16 @@ def onstage():
                     ori_key_int = ss.key
                     transpose = i.desired_key
                     split = split_text(ss.lyrics, 1, ori_key_int, transpose)
-                    music_sh.append(split)
-        print(index_list)
-        print(mlinks_check)  
-        print(music_sh[0])          
+                    music_sh.append(split)         
         # make a dict
         my_dict["id"]= index_list
         my_dict["image"] = mlinks_check
         my_dict["values"] = music_sh 
-        print(my_dict)
+
                    
         # and at the end combine 
     return render_template('stage.html', songlist=songlist, event=event, lyrics=lyrics, viewtype=viewtype, my_dict=my_dict)
-    # for i in unsorted:
-    #     if not viewtype:
-    #         flash(_('Error, view condition is not defined.'))
-    #         return redirect('lists', listid=eventid)
-    #     elif viewtype < 3:
-    #         # stage mode lyrics with chords or lyrics
-    #         transpose = i.desired_key
-    #         for s in i.song:
-    #             ori_key_int = s.key
-    #             if transpose:
-    #                 split = split_text(s.lyrics, viewtype, ori_key_int, transpose)
-    #             else:    
-    #                 split = split_text(s.lyrics, 2, 0, 0)
-    #         lyrics.append(split)
-    #     elif viewtype == 3:
-    #         for s in i.song:
-    #             [mlink.murl for mlink in song.media if mlink.mtype == 3]
-                
-                
-    #             images = s.media.all()
-    #             images = Mlinks.(Song.media=song.language).all()    
-    #             # later can be added dynamic splitting for up to 4 columns
-                
-    #             transpose = i.desired_key
-                    
-                
-                
-           
-            # take all the pitures from the songs and place them into picture mode stage mode
-            # if no picture load text with chords instead
-    
-    # html = Chordpro_html(lyrics, showchords, ori_key_int, transpose)
-    # only_lyrics = Chordpro_html(lyrics, False, 0, 0)
-    # if form.validate_on_submit():
-    #     # Handle the submit of transpose chord action
-    #     key = form.key.data
-    #     return redirect(url_for('.view_song', id=song.id, key=key))
+
     
 
 @app.route('/', methods=['GET', 'POST'])
@@ -321,7 +282,7 @@ def songbook():
     tags = Tag.query.all()
     c = 1
     page = request.args.get('page', 1, type=int)
-    songs = Song.query.order_by(Song.title.desc()).paginate(
+    songs = Song.query.order_by(Song.title.asc()).paginate(
         page=page, per_page=app.config['SONGS_PER_PAGE'], error_out=False)
     next_url = url_for('songbook', page=songs.next_num) \
         if songs.has_next else None
